@@ -4,22 +4,22 @@ import {HeaderNotificationsMenu, Search, ThemeModeSwitcher} from '../../../parti
 // import {useLayout} from '../../core'
 import {useAuth} from '../../../../app/modules/auth'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons'
+import {faSignOutAlt,faBell} from '@fortawesome/free-solid-svg-icons'
 
 const itemClass = 'ms-1 ms-md-4'
 const btnClass =
   'btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px'
 const userAvatarClass = 'symbol-35px'
-const btnIconClass = 'fs-2'
+// const btnIconClass = 'fs-2'
 
 const Navbar = () => {
   const {logout} = useAuth()
   // const {config} = useLayout()
   return (
     <div className='app-navbar flex-shrink-0'>
-      <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
+      {/* <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
         <Search />
-      </div>
+      </div> */}
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div
@@ -28,7 +28,7 @@ const Navbar = () => {
           data-kt-menu-placement='bottom-end'
           className={btnClass}
         >
-          <KTIcon iconName='element-plus' className={btnIconClass} />
+           <FontAwesomeIcon icon={faBell} />
         </div>
         <HeaderNotificationsMenu />
       </div>

@@ -20,7 +20,7 @@ const SidebarMenuMain = () => {
       />
       <SidebarMenuItem to='/upload' icon={<FontAwesomeIcon icon={faUpload} />} title='Upload' fontIcon='bi-layers' />
       <SidebarMenuItem to='/history' icon={<FontAwesomeIcon icon={faHistory} />} title='History' fontIcon='bi-layers' />
-      <SidebarMenuItem to='/notification' icon={<FontAwesomeIcon icon={faBell} />} title='Notification' fontIcon='bi-layers' />
+      {/* <SidebarMenuItem to='/notification' icon={<FontAwesomeIcon icon={faBell} />} title='Notification' fontIcon='bi-layers' /> */}
       <SidebarMenuItem to='/profile' title='Profile' icon={<FontAwesomeIcon icon={faUser} />} fontIcon='bi-layers' />
       {/* </SidebarMenuItem> */}
     </>
