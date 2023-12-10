@@ -1,0 +1,115 @@
+main {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 65vh;
+    /* background: #f4f4f4; */
+    margin: 0;
+}
+
+.drag-area {
+    /* border: 2px dashed #ddd; */
+    height: 300px;
+    width: 500px;
+    border-radius: 10px;
+    border: 2px dashed #1475cf;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+    position: relative;
+    /* background-color: white;
+    background: white; */
+}
+
+.drag-area.active {
+    border: 2px solid #2196F3;
+}
+
+.drag-area .icon {
+    font-size: 50px;
+    color: #2196F3;
+}
+
+.drag-area header {
+    font-size: 18px;
+    font-weight: 500;
+    color: #555;
+    margin-top: 10px;
+}
+
+.drag-area span {
+    font-size: 14px;
+    font-weight: 500;
+    color: #555;
+    margin: 5px 0 10px 0;
+}
+
+.drag-area button {
+    padding: 8px 16px;
+    font-size: 14px;
+    font-weight: 500;
+    border: none;
+    outline: none;
+    background: #2196F3;
+    color: #fff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.drag-area button:hover {
+    background: #0e87e8;
+}
+
+.drag-area input {
+    display: none;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    width: 100%;
+    padding: 8px;
+    background-color: #dff0d8;
+    border: 1px solid #d6e9c6;
+    border-radius: 5px;
+}
+
+.cancel-btn {
+    cursor: pointer;
+    color: red;
+    font-size: 14px;
+    display: none;
+}
+
+.file-info p {
+    margin: 0;
+}
+
+.browse-button {
+    background-color: #007bff;
+    /* Adjust the background color as needed */
+    color: #fff;
+    /* Adjust the text color as needed */
+    padding: 5px 10px;
+    margin-right: 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.cancel-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.cancel-button:hover {
+    background: red;
+    color: white;
+}
