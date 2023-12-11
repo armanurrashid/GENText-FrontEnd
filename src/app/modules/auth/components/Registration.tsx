@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {getUserByToken, register} from '../core/_requests'
 import {Link} from 'react-router-dom'
-// import {toAbsoluteUrl} from '../../../../_metronic/helpers'
+import {toAbsoluteUrl} from '../../../../_metronic/helpers'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
 
@@ -85,27 +85,106 @@ export function Registration() {
       id='kt_login_signup_form'
       onSubmit={formik.handleSubmit}
     >
-      <div className='text-center '>
-        <h1 className='text-dark fw-bolder mb-0'>Sign Up</h1>
+      {/* begin::Heading */}
+      <div className='text-center mb-11'>
+        {/* begin::Title */}
+        <h1 className='text-dark fw-bolder mb-3'>Sign Up</h1>
+        {/* end::Title */}
+
+        <div className='text-gray-500 fw-semibold fs-6'>Your Social Campaigns</div>
       </div>
-      <div className='row g-3 mb-8'>
-        <div className='col-md-6'></div>
+      {/* end::Heading */}
+
+      {/* begin::Login options */}
+      <div className='row g-3 mb-9'>
+        {/* begin::Col */}
+        <div className='col-md-6'>
+          {/* begin::Google link */}
+          <a
+            href='#'
+            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
+          >
+            <img
+              alt='Logo'
+              src={toAbsoluteUrl('/media/svg/brand-logos/google-icon.svg')}
+              className='h-15px me-3'
+            />
+            Sign in with Google
+          </a>
+          {/* end::Google link */}
+        </div>
+        {/* end::Col */}
+
+        {/* begin::Col */}
+        <div className='col-md-6'>
+          {/* begin::Google link */}
+          <a
+            href='#'
+            className='btn btn-flex btn-outline btn-text-gray-700 btn-active-color-primary bg-state-light flex-center text-nowrap w-100'
+          >
+            <img
+              alt='Logo'
+              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black.svg')}
+              className='theme-light-show h-15px me-3'
+            />
+            <img
+              alt='Logo'
+              src={toAbsoluteUrl('/media/svg/brand-logos/apple-black-dark.svg')}
+              className='theme-dark-show h-15px me-3'
+            />
+            Sign in with Apple
+          </a>
+          {/* end::Google link */}
+        </div>
+        {/* end::Col */}
       </div>
+      {/* end::Login options */}
+
+      <div className='separator separator-content my-14'>
+        <span className='w-125px text-gray-500 fw-semibold fs-7'>Or with email</span>
+      </div>
+
       {formik.status && (
         <div className='mb-lg-15 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
 
-      {/* end::Form group */}
-      <div className='fv-row mb-4'>
-        {/* begin::Form group Lastname */}
-        <label className='form-label fw-bolder text-dark fs-6'>Full name</label>
+      {/* begin::Form group Firstname */}
+      <div className='fv-row mb-8'>
+        <label className='form-label fw-bolder text-dark fs-6'>First name</label>
         <input
-          placeholder='Full Name'
+          placeholder='First name'
           type='text'
           autoComplete='off'
-          {...formik.getFieldProps('Full Name')}
+          {...formik.getFieldProps('firstname')}
+          className={clsx(
+            'form-control bg-transparent',
+            {
+              'is-invalid': formik.touched.firstname && formik.errors.firstname,
+            },
+            {
+              'is-valid': formik.touched.firstname && !formik.errors.firstname,
+            }
+          )}
+        />
+        {formik.touched.firstname && formik.errors.firstname && (
+          <div className='fv-plugins-message-container'>
+            <div className='fv-help-block'>
+              <span role='alert'>{formik.errors.firstname}</span>
+            </div>
+          </div>
+        )}
+      </div>
+      {/* end::Form group */}
+      <div className='fv-row mb-8'>
+        {/* begin::Form group Lastname */}
+        <label className='form-label fw-bolder text-dark fs-6'>Last name</label>
+        <input
+          placeholder='Last name'
+          type='text'
+          autoComplete='off'
+          {...formik.getFieldProps('lastname')}
           className={clsx(
             'form-control bg-transparent',
             {
@@ -127,7 +206,7 @@ export function Registration() {
       </div>
 
       {/* begin::Form group Email */}
-      <div className='fv-row mb-4'>
+      <div className='fv-row mb-8'>
         <label className='form-label fw-bolder text-dark fs-6'>Email</label>
         <input
           placeholder='Email'
@@ -153,7 +232,7 @@ export function Registration() {
       {/* end::Form group */}
 
       {/* begin::Form group Password */}
-      <div className='fv-row mb-4' data-kt-password-meter='true'>
+      <div className='fv-row mb-8' data-kt-password-meter='true'>
         <div className='mb-1'>
           <label className='form-label fw-bolder text-dark fs-6'>Password</label>
           <div className='position-relative mb-3'>
@@ -199,7 +278,7 @@ export function Registration() {
       {/* end::Form group */}
 
       {/* begin::Form group Confirm password */}
-      <div className='fv-row mb-4'>
+      <div className='fv-row mb-5'>
         <label className='form-label fw-bolder text-dark fs-6'>Confirm Password</label>
         <input
           type='password'
@@ -227,7 +306,7 @@ export function Registration() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      {/* <div className='fv-row mb-8'>
+      <div className='fv-row mb-8'>
         <label className='form-check form-check-inline' htmlFor='kt_login_toc_agree'>
           <input
             className='form-check-input'
@@ -235,6 +314,17 @@ export function Registration() {
             id='kt_login_toc_agree'
             {...formik.getFieldProps('acceptTerms')}
           />
+          <span>
+            I Accept the{' '}
+            <a
+              href='https://keenthemes.com/metronic/?page=faq'
+              target='_blank'
+              className='ms-1 link-primary'
+            >
+              Terms
+            </a>
+            .
+          </span>
         </label>
         {formik.touched.acceptTerms && formik.errors.acceptTerms && (
           <div className='fv-plugins-message-container'>
@@ -243,7 +333,7 @@ export function Registration() {
             </div>
           </div>
         )}
-      </div> */}
+      </div>
       {/* end::Form group */}
 
       {/* begin::Form group */}
@@ -266,7 +356,7 @@ export function Registration() {
           <button
             type='button'
             id='kt_login_signup_form_cancel_button'
-            className='btn btn-lg btn-light-primary w-100 mb-0'
+            className='btn btn-lg btn-light-primary w-100 mb-5'
           >
             Cancel
           </button>
