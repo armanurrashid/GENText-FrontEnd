@@ -93,10 +93,15 @@ export function Registration() {
         <h1 className='text-dark fw-bolder mb-0'>Sign Up</h1>
       </div>
       <div className='row g-3 mb-8'>
-        <div className='col-md-6'></div>
+        {/* <div className='col-md-6'></div> */}
       </div>
-      {formik.status && (
-        <div className='mb-lg-15 alert alert-danger'>
+      {(formik.status && formik.status === 'An OTP was sent to your email. Please Check') && (
+        <div className='mb-lg-5 alert alert-success'>
+          <div className='alert-text font-weight-bold'>{formik.status}</div>
+        </div>
+      )}
+      {(formik.status && formik.status !== 'An OTP was sent to your email. Please Check') && (
+        <div className='mb-lg-5 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
