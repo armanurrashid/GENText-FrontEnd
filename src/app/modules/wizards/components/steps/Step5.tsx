@@ -5,7 +5,7 @@ import {Link} from 'react-router-dom'
 const Step5: FC = () => {
   return (
     <div className='w-100'>
-      <div className='pb-8 pb-lg-10'>
+      {/* <div className='pb-8 pb-lg-10'>
         <h2 className='fw-bolder text-dark'>Your Are Done!</h2>
 
         <div className='text-gray-400 fw-bold fs-6'>
@@ -40,7 +40,7 @@ const Step5: FC = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -3,7 +3,7 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
-import {requestPassword} from '../core/_requests'
+// import {requestPassword} from '../core/_requests'
 
 const initialValues = {
   email: 'admin@demo.com',
@@ -23,22 +23,45 @@ export function ForgotPassword() {
   const formik = useFormik({
     initialValues,
     validationSchema: forgotPasswordSchema,
-    onSubmit: (values, {setStatus, setSubmitting}) => {
-      setLoading(true)
-      setHasErrors(undefined)
-      setTimeout(() => {
-        requestPassword(values.email)
-          .then(({data: {result}}) => {
-            setHasErrors(false)
-            setLoading(false)
-          })
-          .catch(() => {
+    onSubmit: async (values, {setStatus, setSubmitting}) => {
+      try {
+        setLoading(true)
+        const response = await fetch('http://localhost:8000/api/user/reset-password/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: values.email,
+          }),
+        })
+        if (!response.ok) {
             setHasErrors(true)
             setLoading(false)
             setSubmitting(false)
-            setStatus('The login detail is incorrect')
-          })
-      }, 1000)
+        }
+        if (response.ok) {
+          setHasErrors(false)
+          setLoading(false)
+        }
+      } catch (error) {
+        setStatus('An error occurred during registration.')
+      }
+      // setLoading(true)
+      // setHasErrors(undefined)
+      // setTimeout(() => {
+      //   requestPassword(values.email)
+      //     .then(({data: {result}}) => {
+      //       setHasErrors(false)
+      //       setLoading(false)
+      //     })
+      //     .catch(() => {
+      //       setHasErrors(true)
+      //       setLoading(false)
+      //       setSubmitting(false)
+      //       setStatus('The login detail is incorrect')
+      //     })
+      // }, 1000)
     },
   })
 
