@@ -1,33 +1,17 @@
-/* body {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-} */
-
-:where(.container, form, .input-feild) {
+/* :where(.container, form, .input-feild) {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-}
+} */
 
-.container {
+
+/* .container {
     background: #fff;
     padding: 30px 65px;
     border-radius: 12px;
     row-gap: 20px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
-}
-
-
-/* .container header {
-    height: 65px;
-    width: 65px;
-    background: #4070f4;
-    color: #fff;
-    font-size: 2.5rem;
-    border-radius: 50%;
 } */
 
 form .input-field {
@@ -50,7 +34,7 @@ form .input-field {
     display: none;
 }
 
-form button {
+.otpButtons {
     margin-top: 25px;
     width: 100%;
     background: #6e93f7;
@@ -64,11 +48,11 @@ form button {
     transition: all 0.2s ease;
 }
 
-form button:hover {
+.otpButtons:hover {
     background: #0e4bf1;
 }
 
-form button.active {
+.otpButtons.active {
     background: #4070f4;
     pointer-events: auto;
 }
