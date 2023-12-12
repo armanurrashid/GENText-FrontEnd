@@ -4,6 +4,7 @@ import {ForgotPassword} from './components/ForgotPassword'
 import {OTP} from './components/OTP'
 import {Login} from './components/Login'
 import {AuthLayout} from './AuthLayout'
+import { SetPassword } from './components/SetPassword'
 // import ProfilePageWrapper from '../../pages/profile-builder/ProfilePageWrapper'
 
 const AuthPage = () => (
@@ -13,6 +14,7 @@ const AuthPage = () => (
       <Route path='registration' element={<Registration />} />
       <Route path='forgot-password' element={<ForgotPassword />} />
       <Route path='OTP' element={<OTP />} />
+      <Route path='set-password' element={<SetPassword />} />
       {/* <Route path='dashboard' element = {<ProfilePageWrapper />} /> */}
       <Route index element={<Login />} />
     </Route>

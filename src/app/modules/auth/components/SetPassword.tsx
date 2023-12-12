@@ -7,22 +7,11 @@ import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components
 import {useAuth} from '../core/Auth'
 
 const initialValues = {
-  name: '',
-  email: '',
   password: '',
   changepassword: '',
 }
 
 const registrationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Wrong email format')
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
-  name: Yup.string()
-    .min(3, 'Minimum 3 symbols')
-    .max(50, 'Maximum 50 symbols')
-    .required('Name is required'),
   password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
@@ -34,7 +23,7 @@ const registrationSchema = Yup.object().shape({
     .oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
 })
 
-export function Registration() {
+export function SetPassword() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
   const formik = useFormik({
@@ -43,15 +32,13 @@ export function Registration() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/register/', {
+        const response = await fetch('http://localhost:8000/api/user/set-new-password/', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            name: values.name,
-            email: values.email,
-            password: values.password,
+            new_password: values.password,
             confirm_password: values.changepassword,
           }),
         })
@@ -65,13 +52,13 @@ export function Registration() {
         }
         if (response.ok) {
           const data = await response.json()
-          setStatus('An OTP was sent to your email. Please Check')
+          setStatus('Password Changed')
           saveAuth(data.token)
           setCurrentUser(data.user)
           setLoading(false)
         }
       } catch (error) {
-        setStatus('An error occurred during registration.')
+        setStatus('An error occurred.')
       }
     },
   })
@@ -88,74 +75,22 @@ export function Registration() {
       onSubmit={formik.handleSubmit}
     >
       <div className='text-center '>
-        <h1 className='text-dark fw-bolder mb-0'>Sign Up</h1>
+        <h1 className='text-dark fw-bolder mb-5'>Set Password</h1>
       </div>
-      <div className='row g-3 mb-8'>
-        {/* <div className='col-md-6'></div> */}
-      </div>
-      {(formik.status && formik.status === 'An OTP was sent to your email. Please Check') && (
+      <div className='row g-3 mb-8'>{/* <div className='col-md-6'></div> */}</div>
+      {formik.status && formik.status === 'An OTP was sent to your email. Please Check' && (
         <div className='mb-lg-5 alert alert-success'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-      {(formik.status && formik.status !== 'An OTP was sent to your email. Please Check') && (
+      {formik.status && formik.status !== 'An OTP was sent to your email. Please Check' && (
         <div className='mb-lg-5 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-
-      <div className='fv-row mb-4'>
-        <label className='form-label fw-bolder text-dark fs-6'>Name</label>
-        <input
-          placeholder='Name'
-          type='text'
-          autoComplete='off'
-          {...formik.getFieldProps('name')}
-          className={clsx(
-            'form-control bg-transparent',
-            {
-              'is-invalid': formik.touched.name && formik.errors.name,
-            },
-            {
-              'is-valid': formik.touched.name && !formik.errors.name,
-            }
-          )}
-        />
-        {formik.touched.name && formik.errors.name && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.name}</span>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className='fv-row mb-4'>
-        <label className='form-label fw-bolder text-dark fs-6'>Email</label>
-        <input
-          placeholder='Email'
-          type='email'
-          autoComplete='off'
-          {...formik.getFieldProps('email')}
-          className={clsx(
-            'form-control bg-transparent',
-            {'is-invalid': formik.touched.email && formik.errors.email},
-            {
-              'is-valid': formik.touched.email && !formik.errors.email,
-            }
-          )}
-        />
-        {formik.touched.email && formik.errors.email && (
-          <div className='fv-plugins-message-container'>
-            <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.email}</span>
-            </div>
-          </div>
-        )}
-      </div>
-      <div className='fv-row mb-4' data-kt-password-meter='true'>
-        <div className='mb-1'>
-          <label className='form-label fw-bolder text-dark fs-6'>Password</label>
+      <div className='fv-row mb-4 ' data-kt-password-meter='true'>
+        <div className='mb-1 '>
+          <label className='form-label fw-bolder text-dark fs-6'>New Password</label>
           <div className='position-relative mb-3'>
             <input
               type='password'
@@ -195,14 +130,14 @@ export function Registration() {
         </div>
       </div>
       <div className='fv-row mb-4'>
-        <label className='form-label fw-bolder text-dark fs-6'>Confirm Password</label>
+        <label className='form-label fw-bolder text-dark fs-6 mt-4'>Confirm Password</label>
         <input
           type='password'
           placeholder='Password confirmation'
           autoComplete='off'
           {...formik.getFieldProps('changepassword')}
           className={clsx(
-            'form-control bg-transparent',
+            'form-control bg-transparent mb-5',
             {
               'is-invalid': formik.touched.changepassword && formik.errors.changepassword,
             },
@@ -220,30 +155,33 @@ export function Registration() {
         )}
       </div>
       <div className='text-center'>
-        <button
-          type='submit'
-          id='kt_sign_up_submit'
-          className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid}
-        >
-          {!loading && <span className='indicator-label'>Submit</span>}
-          {loading && (
-            <span className='indicator-progress' style={{display: 'block'}}>
-              Please wait...{' '}
-              <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-            </span>
-          )}
-        </button>
-        <Link to='/auth/OTP'>
-        {/* <Link to='/auth/login'> */}
+        <div>
           <button
-            type='button'
-            id='kt_login_signup_form_cancel_button'
-            className='btn btn-lg btn-light-primary w-100 mb-0'
+            type='submit'
+            id='kt_sign_up_submit'
+            className='btn btn-lg btn-primary w-100 mb-5 mt-5'
+            disabled={formik.isSubmitting || !formik.isValid}
           >
-            Cancel
+            {!loading && <span className='indicator-label'>Submit</span>}
+            {loading && (
+              <span className='indicator-progress' style={{display: 'block'}}>
+                Please wait...{' '}
+                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+              </span>
+            )}
           </button>
-        </Link>
+        </div>
+        <div>
+          <Link to='/auth/login'>
+            <button
+              type='button'
+              id='kt_login_signup_form_cancel_button'
+              className='btn btn-lg btn-light-primary w-100 mb-0'
+            >
+              Cancel
+            </button>
+          </Link>
+        </div>
       </div>
     </form>
   )
