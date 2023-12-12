@@ -51,7 +51,7 @@ export function Login() {
           const data = await response.json()
           saveAuth(data.token)
           setCurrentUser(data.user)
-          // console.log(data.user)
+          console.log(data.token)
         }
       } catch (error) {
         // console.error('Error during API request:', error)

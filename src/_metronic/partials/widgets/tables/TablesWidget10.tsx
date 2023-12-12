@@ -174,9 +174,16 @@ const TablesWidget10: React.FC<Props> = ({className}) => {
                   </td>
                   <td>
                     <div>
-                      <div className={clsx('app-navbar-item', itemClass)}>
+                      <div
+                        className={clsx('app-navbar-item', itemClass)}
+                        d-flex
+                        justify-content-center
+                        mt-5
+                      >
                         <div id='kt_activities_toggle' className='d-flex justify-content-center'>
-                          <button className='d-flex justify-content-center flex-shrink-0 btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'><FontAwesomeIcon icon={faEye} /></button>
+                          <button className='d-flex justify-content-center flex-shrink-0 btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+                            <FontAwesomeIcon icon={faEye} />
+                          </button>
                         </div>
                       </div>
                     </div>

@@ -1,0 +1,51 @@
+.allImageContainer {
+    width: 1000px;
+    margin-top: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    /* scrollbar-width: 4px;
+    scrollbar-color: #ddd #fff; */
+}
+
+.allImage {
+    display: inline-flex;
+}
+
+.imageContainer {
+    text-align: center;
+    margin: 5px;
+}
+
+.imageNumber {
+    margin-top: 5px;
+}
+
+.allImageContainer::-webkit-scrollbar {
+    width: 12px;
+    height: 6px;
+}
+
+.allImageContainer::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    /* Color of the scrollbar thumb */
+    border-radius: 6px;
+    /* Rounded corners of the scrollbar thumb */
+}
+
+.allImageContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #0095E8;
+    /* background-color: #888; */
+    /* Hover color of the scrollbar thumb */
+}
+
+.allImageContainer::-webkit-scrollbar-track {
+    background-color: #ddd;
+    /* Color of the scrollbar track */
+    border-radius: 8px;
+    /* Rounded corners of the scrollbar track */
+}
+
+.allImageContainer::-webkit-scrollbar-track:hover {
+    background-color: #ccc;
+    /* Hover color of the scrollbar track */
+}
