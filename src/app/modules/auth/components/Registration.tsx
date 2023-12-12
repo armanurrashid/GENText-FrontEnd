@@ -11,7 +11,6 @@ const initialValues = {
   email: '',
   password: '',
   changepassword: '',
-  acceptTerms: true,
 }
 
 const registrationSchema = Yup.object().shape({
@@ -33,7 +32,6 @@ const registrationSchema = Yup.object().shape({
     .max(50, 'Maximum 50 symbols')
     .required('Password confirmation is required')
     .oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
-  acceptTerms: Yup.bool().required('You must accept the terms and conditions'),
 })
 
 export function Registration() {
@@ -226,7 +224,7 @@ export function Registration() {
           type='submit'
           id='kt_sign_up_submit'
           className='btn btn-lg btn-primary w-100 mb-5'
-          disabled={formik.isSubmitting || !formik.isValid || !formik.values.acceptTerms}
+          disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className='indicator-label'>Submit</span>}
           {loading && (

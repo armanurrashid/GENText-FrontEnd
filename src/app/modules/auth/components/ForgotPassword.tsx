@@ -6,7 +6,7 @@ import {useFormik} from 'formik'
 // import {requestPassword} from '../core/_requests'
 
 const initialValues = {
-  email: 'admin@demo.com',
+  email: '',
 }
 
 const forgotPasswordSchema = Yup.object().shape({
@@ -36,16 +36,16 @@ export function ForgotPassword() {
           }),
         })
         if (!response.ok) {
-            setHasErrors(true)
-            setLoading(false)
-            setSubmitting(false)
+          setHasErrors(true)
+          setLoading(false)
+          setSubmitting(false)
         }
         if (response.ok) {
           setHasErrors(false)
           setLoading(false)
         }
       } catch (error) {
-        setStatus('An error occurred during registration.')
+        setStatus('An error occurred.')
       }
       // setLoading(true)
       // setHasErrors(undefined)
@@ -128,15 +128,17 @@ export function ForgotPassword() {
 
       {/* begin::Form group */}
       <div className='d-flex flex-wrap justify-content-center pb-lg-0'>
-        <button type='submit' id='kt_password_reset_submit' className='btn btn-primary me-4'>
-          <span className='indicator-label'>Submit</span>
-          {loading && (
-            <span className='indicator-progress'>
-              Please wait...
-              <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-            </span>
-          )}
-        </button>
+        {/* <Link to='/auth/set-password'> */}
+          <button type='submit' id='kt_password_reset_submit' className='btn btn-primary me-4'>
+            <span className='indicator-label'>Submit</span>
+            {loading && (
+              <span className='indicator-progress'>
+                Please wait...
+                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+              </span>
+            )}
+          </button>
+        {/* </Link> */}
         <Link to='/auth/login'>
           <button
             type='button'
