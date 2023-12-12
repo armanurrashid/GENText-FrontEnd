@@ -7,46 +7,59 @@ import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components
 import {useAuth} from '../core/Auth'
 
 const initialValues = {
-  password: '',
-  changepassword: '',
+  new_password: '',
+  confirm_password: '',
 }
 
-const registrationSchema = Yup.object().shape({
-  password: Yup.string()
+const setpasswordSchema = Yup.object().shape({
+  new_password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password is required'),
-  changepassword: Yup.string()
+  confirm_password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Password confirmation is required')
-    .oneOf([Yup.ref('password')], "Password and Confirm Password didn't match"),
+    .oneOf([Yup.ref('new_password')], "Password and Confirm Password didn't match"),
 })
 
 export function SetPassword() {
+  const currentPath = window.location.pathname
+  const parts = currentPath.split('/')
+  const authIndex = parts.indexOf('auth')
+  const setPasswordIndex = parts.indexOf('set-password')
+  let param1, param2
+  if (authIndex !== -1 && setPasswordIndex !== -1) {
+    param1 = parts[setPasswordIndex + 1]
+    param2 = parts[setPasswordIndex + 2]
+  }
+
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
   const formik = useFormik({
     initialValues,
-    validationSchema: registrationSchema,
+    validationSchema: setpasswordSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/set-new-password/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            new_password: values.password,
-            confirm_password: values.changepassword,
-          }),
-        })
+        const response = await fetch(
+          `http://localhost:8000/api/user/set-new-password/${param1}/${param2}/`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              new_password: values.new_password,
+              confirm_password: values.confirm_password,
+            }),
+          }
+        )
         if (!response.ok) {
           saveAuth(undefined)
           if (response.status === 400) {
             setStatus('Email already Registered')
-          } else setStatus('The registration details is incorrect')
+          } else setStatus('An error occured')
           setSubmitting(false)
           setLoading(false)
         }
@@ -96,21 +109,21 @@ export function SetPassword() {
               type='password'
               placeholder='Password'
               autoComplete='off'
-              {...formik.getFieldProps('password')}
+              {...formik.getFieldProps('new_password')}
               className={clsx(
                 'form-control bg-transparent',
                 {
-                  'is-invalid': formik.touched.password && formik.errors.password,
+                  'is-invalid': formik.touched.new_password && formik.errors.new_password,
                 },
                 {
-                  'is-valid': formik.touched.password && !formik.errors.password,
+                  'is-valid': formik.touched.new_password && !formik.errors.new_password,
                 }
               )}
             />
-            {formik.touched.password && formik.errors.password && (
+            {formik.touched.new_password && formik.errors.new_password && (
               <div className='fv-plugins-message-container'>
                 <div className='fv-help-block'>
-                  <span role='alert'>{formik.errors.password}</span>
+                  <span role='alert'>{formik.errors.new_password}</span>
                 </div>
               </div>
             )}
@@ -135,21 +148,21 @@ export function SetPassword() {
           type='password'
           placeholder='Password confirmation'
           autoComplete='off'
-          {...formik.getFieldProps('changepassword')}
+          {...formik.getFieldProps('confirm_password')}
           className={clsx(
             'form-control bg-transparent mb-5',
             {
-              'is-invalid': formik.touched.changepassword && formik.errors.changepassword,
+              'is-invalid': formik.touched.confirm_password && formik.errors.confirm_password,
             },
             {
-              'is-valid': formik.touched.changepassword && !formik.errors.changepassword,
+              'is-valid': formik.touched.confirm_password && !formik.errors.confirm_password,
             }
           )}
         />
-        {formik.touched.changepassword && formik.errors.changepassword && (
+        {formik.touched.confirm_password && formik.errors.confirm_password && (
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
-              <span role='alert'>{formik.errors.changepassword}</span>
+              <span role='alert'>{formik.errors.confirm_password}</span>
             </div>
           </div>
         )}

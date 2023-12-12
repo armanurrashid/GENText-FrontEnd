@@ -14,7 +14,7 @@ const AuthPage = () => (
       <Route path='registration' element={<Registration />} />
       <Route path='forgot-password' element={<ForgotPassword />} />
       <Route path='OTP' element={<OTP />} />
-      <Route path='set-password' element={<SetPassword />} />
+      <Route path='set-password/:param1/:param2' element={<SetPassword />} />
       {/* <Route path='dashboard' element = {<ProfilePageWrapper />} /> */}
       <Route index element={<Login />} />
     </Route>
