@@ -43,7 +43,7 @@ const Profile: React.FC = () => {
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
   const [userData, setUserData] = useState()
-  var authtoken ="yJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAyMjk1MDM4LCJpYXQiOjE3MDIyODYzOTksImp0aSI6IjdmMmFiY2Y2Y2EzMzRlZTk4NzgwNmViODczNjhjYmE1IiwidXNlcl9pZCI6MjZ9.uq_WwE1YOKGVmVJgFDfFIbP7lzfKuPuVVfVedBDkEM8"
+  const [authtoken,setauthtoken] = useState("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzAyMjk1MDM4LCJpYXQiOjE3MDIyODYzOTksImp0aSI6IjdmMmFiY2Y2Y2EzMzRlZTk4NzgwNmViODczNjhjYmE1IiwidXNlcl9pZCI6MjZ9.uq_WwE1YOKGVmVJgFDfFIbP7lzfKuPuVVfVedBDkEM8")
   // const [loading1, setLoading1] = useState(false)
   const fetchData = async () =>{
     try {
@@ -71,7 +71,8 @@ const Profile: React.FC = () => {
         if(new_request.ok){
           const new_access_token = await new_request.json()
           console.log(new_access_token['access'])
-          
+          setauthtoken (new_access_token['access'])
+          console.log("new_authtoken : ",authtoken)
           const response_2 = await fetch('http://localhost:8000/api/user/profile/',{
           headers: {
           Authorization: `Bearer ${new_access_token['access']}`,
@@ -105,15 +106,39 @@ const Profile: React.FC = () => {
       ...passwordUpdateData,
     },
     validationSchema: passwordFormValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: async(values) => {
+      console.log(authtoken)
       setLoading2(true)
-      setTimeout((values) => {
-        setPasswordUpdateData(values)
-        setLoading2(false)
-        setPasswordForm(false)
-      }, 1000)
+      // setTimeout((values) => {
+      //   setPasswordUpdateData(values)
+      //   setLoading2(false)
+      //   setPasswordForm(false)
+      // }, 1000)
+      try {
+        const response = await fetch('http://localhost:8000/api/user/change-password/',{
+          method:'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${authtoken}`, // Replace with your actual authorization token
+            // Add other headers if needed
+          },
+          body: JSON.stringify({"current_password":values.currentPassword,"new_password":values.newPassword,"confirm_password":values.passwordConfirmation}),
+        });
+        
+        if (response.status === 201){
+          const data = await response.json();
+          console.log(data);
+          setLoading2(false);
+          setPasswordForm(false);
+        }
+        
+      }
+      catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     },
   })
+
   return (
     <>
       <div id='kt_account_signin_method' className='collapse show'>
