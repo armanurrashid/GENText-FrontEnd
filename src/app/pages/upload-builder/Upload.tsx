@@ -46,11 +46,14 @@ const Upload: React.FC = () => {
                 <div className='pe-5'>Pdf Size: 10MB</div>
                 <div className='ps-5 '>Total Page: 682</div>
               </div>
-              <div className={clsx('app-navbar-item', itemClass)} d-flex justify-content-center mt-5>
+              <div
+                className={clsx('app-navbar-item', itemClass)}
+                d-flex
+                justify-content-center
+                mt-5
+              >
                 <div id='kt_activities_toggle' className={btnClass}>
-                  <button className='bg-primary'>
-                  Process
-                </button>
+                  <button className='bg-primary'>Process</button>
                 </div>
               </div>
             </div>

@@ -15,11 +15,11 @@ const ActivityDrawer: FC = () => (
     data-kt-drawer-direction='end'
     data-kt-drawer-toggle='#kt_activities_toggle'
     data-kt-drawer-close='#kt_activities_close'
+    style={{width:"1200px"}}
   >
-    <div className='card shadow-none rounded-0'>
+    <div className='card shadow-none rounded-0' style={{width:"1200px"}}>
       <div className='card-header' id='kt_activities_header'>
         <h3 className='card-title fw-bolder text-dark'>Activity Logs</h3>
-
         <div className='card-toolbar'>
           <button
             type='button'
@@ -42,13 +42,6 @@ const ActivityDrawer: FC = () => (
         >
           <div className='timeline'>
             <Item1 />
-            {/* <Item2 />
-            <Item3 />
-            <Item4 />
-            <Item5 />
-            <Item6 />
-            <Item7 />
-            <Item8 /> */}
           </div>
         </div>
       </div>
