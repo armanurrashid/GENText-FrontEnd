@@ -16,7 +16,15 @@ const ActivityDrawer: FC = () => {
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
     image1,
-    
+    image4,
+    image5,
+    image6, image1,
+    image4,
+    image5,
+    image6, image1,
+    image4,
+    image5,
+    image6, image1,
     image4,
     image5,
     image6,
@@ -97,11 +105,10 @@ const ActivityDrawer: FC = () => {
                 </p>
               </div>
             </div>
-            <div className='row row-cols-1 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'>
+            {/* <div className='row row-cols-1 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'> */}
               <div className='d-flex justify-content-center'>
-                {/* <img src={selectedImage} width={410} height={250} alt="" /> */}
                 <div className='allImageContainer'>
-                  <div className='allImage'>
+                  {/* <div className='allImage'> */}
                     {allImg.map((img, index) => (
                       <div key={index} className='imageContainer'>
                         <img
@@ -119,13 +126,13 @@ const ActivityDrawer: FC = () => {
                       </div>
                     ))}
                   </div>
-                </div>
+                {/* </div> */}
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    // </div>
   )
 }
 

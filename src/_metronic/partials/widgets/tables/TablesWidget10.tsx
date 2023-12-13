@@ -1,6 +1,8 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
+// import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
+import {faEye} from '@fortawesome/free-solid-svg-icons'
+import pdfIcon from '../../../assets/images/pdf.svg'
 import clsx from 'clsx'
 type Props = {
   className: string
@@ -139,10 +141,11 @@ const TablesWidget10: React.FC<Props> = ({className}) => {
                     <div className='d-flex align-items-center'>
                       <div className='symbol symbol-45px me-5'>
                         <div>
-                          <FontAwesomeIcon
+                          <img src={pdfIcon} height="35px" alt="" />
+                          {/* <FontAwesomeIcon
                             icon={faFilePdf}
                             style={{fontSize: '27px', color: '#F1416C'}}
-                          />
+                          /> */}
                         </div>
                       </div>
                       <div className='d-flex justify-content-start flex-column'>

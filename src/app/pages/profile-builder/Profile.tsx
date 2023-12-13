@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 // import {KTIcon} from '../../../../../../_metronic/helpers'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
@@ -8,6 +8,12 @@ import {
   // updateEmail,
   updatePassword,
 } from '../../modules/accounts/components/settings/SettingsModel'
+import { resolveSoa } from 'dns'
+import {useAuth} from "../../../app/modules/auth/core/Auth"
+import {getAuth} from '../../modules/auth/core/AuthHelpers'
+
+
+
 // import {KTIcon} from '../../../_metronic/helpers'
 
 // const emailFormValidationSchema = Yup.object().shape({
@@ -38,26 +44,51 @@ const passwordFormValidationSchema = Yup.object().shape({
     .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
 })
 const Profile: React.FC = () => {
+  const {currentUser} = useAuth()
+  const token = getAuth()
   // const [emailUpdateData, setEmailUpdateData] = useState<IUpdateEmail>(updateEmail)
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
 
-  // const [loading1, setLoading1] = useState(false)
   const [loading2, setLoading2] = useState(false)
   const formik2 = useFormik<IUpdatePassword>({
     initialValues: {
       ...passwordUpdateData,
     },
     validationSchema: passwordFormValidationSchema,
-    onSubmit: (values) => {
+    onSubmit: async(values) => {
+      console.log(token)
       setLoading2(true)
-      setTimeout((values) => {
-        setPasswordUpdateData(values)
-        setLoading2(false)
-        setPasswordForm(false)
-      }, 1000)
+      // setTimeout((values) => {
+      //   setPasswordUpdateData(values)
+      //   setLoading2(false)
+      //   setPasswordForm(false)
+      // }, 1000)
+      try {
+        const response = await fetch('http://localhost:8000/api/user/change-password/',{
+          method:'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token?.api_token}`, // Replace with your actual authorization token
+            // Add other headers if needed
+          },
+          body: JSON.stringify({"current_password":values.currentPassword,"new_password":values.newPassword,"confirm_password":values.passwordConfirmation}),
+        });
+        
+        if (response.status === 201){
+          const data = await response.json();
+          console.log(data);
+          setLoading2(false);
+          setPasswordForm(false);
+        }
+        
+      }
+      catch (error) {
+        console.error('Error fetching user data:', error);
+      }
     },
   })
+
   return (
     <>
       <div id='kt_account_signin_method' className='collapse show'>
@@ -65,14 +96,14 @@ const Profile: React.FC = () => {
           <div className='d-flex flex-wrap align-items-center'>
             <div >
               <div className='fs-6 fw-bolder mb-1'>Name</div>
-              <div className='fw-bold text-gray-600'>Armanur Rashid</div>
+              {currentUser && (<div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>)}
             </div>
           </div>
           <div className='separator separator-dashed my-6'></div>
           <div className='d-flex flex-wrap align-items-center'>
             <div id='kt_signin_email'>
               <div className='fs-6 fw-bolder mb-1'>Email Address</div>
-              <div className='fw-bold text-gray-600'>armanurrashid105086@gmail.com</div>
+              {currentUser && (<div className='fw-bold text-gray-600'>{currentUser?.email}</div>)}
             </div>
           </div>
 

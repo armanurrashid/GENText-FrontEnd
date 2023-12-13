@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import {KTIcon} from '../../../helpers'
+// import {KTIcon} from '../../../helpers'
 import {HeaderNotificationsMenu, Search, ThemeModeSwitcher} from '../../../partials'
 // import {useLayout} from '../../core'
 import {useAuth} from '../../../../app/modules/auth'
@@ -23,7 +23,7 @@ const Navbar = () => {
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <div
-          data-kt-menu-trigger="{default: 'click'}"
+          data-kt-menu-trigger="{default: 'hover'}"
           data-kt-menu-attach='parent'
           data-kt-menu-placement='bottom-end'
           className={btnClass}
