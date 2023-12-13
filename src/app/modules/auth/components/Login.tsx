@@ -49,9 +49,13 @@ export function Login() {
         }
         if (response.ok) {
           const data = await response.json()
-          saveAuth(data.token)
+          const authData = {
+            api_token: data.token.access,
+            refreshToken: data.token.refresh
+          }
+
+          saveAuth(authData)
           setCurrentUser(data.user)
-          // console.log(data.user)
         }
       } catch (error) {
         // console.error('Error during API request:', error)

@@ -3,6 +3,8 @@ import {useIntl} from 'react-intl'
 // import {toAbsoluteUrl} from '../../../_metronic/helpers'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {TablesWidget10, CardsWidget20,} from '../../../_metronic/partials/widgets'
+import {getAuth} from '../../modules/auth/core/AuthHelpers'
+import {useAuth } from '../../modules/auth'
 
 const cardsData = [
   {
@@ -28,10 +30,10 @@ const cardsData = [
 ];
 
 const DashboardPage: FC = () => (
-  
   <>
     <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
     {cardsData.map((card, index) => (
+          
           <CardsWidget20
             key={index}
             className='h-md-50 mb-5 mb-xl-10'
@@ -52,6 +54,9 @@ const DashboardPage: FC = () => (
 
 const DashboardWrapper: FC = () => {
   const intl = useIntl()
+  const User= getAuth();
+  console.log(User?.api_token)
+  console.log(User?.refreshToken)
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
