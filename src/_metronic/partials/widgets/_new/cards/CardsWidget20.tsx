@@ -10,7 +10,6 @@ const CardsWidget20 = ({className, description, color}: Props) => (
     className={`card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end ${className}`}
     style={{
       backgroundColor: color,
-      // backgroundImage: `url('${img}')`,
     }}
   >
     <div className='card-header pt-5'>

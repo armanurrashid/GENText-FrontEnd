@@ -10,6 +10,7 @@ import UploadPageWrapper from '../pages/upload-builder/UploadPageWrapper'
 import HistoryPageWrapper from '../pages/history-builder/HistoryPageWrapper'
 import NotificationPageWrapper from '../pages/notification-builder/NotificationPageWrapper'
 import ProfilePageWrapper from '../pages/profile-builder/ProfilePageWrapper'
+import ProcessPageWrapper from '../pages/process-builder/ProcessPageWrapper'
 
 const PrivateRoutes = () => {
   // const ProfilePage = lazy(() => import('../modules/profile/ProfilePage'))
@@ -30,6 +31,7 @@ const PrivateRoutes = () => {
         <Route path='history' element={<HistoryPageWrapper />} />
         <Route path='notification' element={<NotificationPageWrapper />} />
         <Route path='profile' element={<ProfilePageWrapper />} />
+        <Route path='process' element={<ProcessPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
         {/* <Route
           path='crafted/widgets/*'

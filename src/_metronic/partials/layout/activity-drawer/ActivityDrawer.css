@@ -1,0 +1,81 @@
+.allImageContainer {
+    width: 1000px;
+    width: 100%;
+    margin-top: 20px;
+    overflow-x: auto;
+    white-space: nowrap;
+    display: inline-flex;
+    /* flex-wrap: wrap; */
+}
+
+
+/* .allImage {
+    display: flex;
+} */
+
+.imageContainer {
+    text-align: center;
+    margin: 5px;
+}
+
+.imageNumber {
+    margin-top: 5px;
+}
+
+.allImageContainer::-webkit-scrollbar {
+    width: 12px;
+    height: 6px;
+}
+
+.allImageContainer::-webkit-scrollbar-thumb {
+    background-color: #aaa;
+    border-radius: 6px;
+}
+
+.allImageContainer::-webkit-scrollbar-thumb:hover {
+    background-color: #0095E8;
+}
+
+.allImageContainer::-webkit-scrollbar-track {
+    background-color: #ddd;
+    border-radius: 8px;
+}
+
+.allImageContainer::-webkit-scrollbar-track:hover {
+    background-color: #ccc;
+}
+
+
+/* 
+@media screen and (max-width: 767px) {
+    .card-body {
+        padding-top: 2rem;
+    }
+    .imageContainer {
+        margin-right: 1rem;
+    }
+    .imageContainer img {
+        width: 60px;
+        height: 60px;
+    }
+    .imageContainer .imageNumber {
+        font-size: 12px;
+    }
+    .allImageContainer {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+@media screen and (max-width: 575px) {
+    .col {
+        flex: 0 0 100%;
+    }
+    .allImageContainer {
+        display: flex;
+        justify-content: center;
+    }
+    .allImage {
+        flex-wrap: nowrap;
+    }
+} */

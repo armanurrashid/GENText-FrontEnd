@@ -1,5 +1,5 @@
-import {FC} from 'react'
 import clsx from 'clsx'
+import {FC} from 'react'
 import {WithChildren} from '../react18MigrationHelpers'
 
 // Wrapper on html card:
@@ -8,7 +8,7 @@ import {WithChildren} from '../react18MigrationHelpers'
 type Props = {
   className?: string
   shadow?: boolean
-  flush?: boolean // https://preview.keenthemes.com/metronic8/demo1/documentation/base/cards.html#flush
+  flush?: boolean // https://preview.keenthemes.com/demo1/documentation/base/cards.html#flush
   resetSidePaddings?: boolean // https://preview.keenthemes.com/metronic8/demo1/documentation/base/cards.html#reset-side-paddings
   border?: boolean // https://preview.keenthemes.com/metronic8/demo1/documentation/base/cards.html#bordered
   dashed?: boolean // https://preview.keenthemes.com/metronic8/demo1/documentation/base/cards.html#dashed
