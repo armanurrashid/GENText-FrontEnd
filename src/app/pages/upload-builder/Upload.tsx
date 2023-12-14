@@ -2,6 +2,8 @@ import React, {useState} from 'react'
 import clsx from 'clsx'
 import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
+import {Link} from 'react-router-dom'
+import {getAuth, useAuth} from '../../modules/auth'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 const itemClass = 'ms-1 ms-md-4'
@@ -10,17 +12,55 @@ const btnClass = 'd-flex justify-content-center mt-5'
 const Upload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
+  const [loading, setLoading] = useState(false)
+  const token = getAuth()
+  const {currentUser} = useAuth()
 
+  const processfile = async () => {
+    
+    try {
+      const formData = new FormData()
+      if (file) {
+        if (file) {
+          const basePath = 'C:/Users/User/Downloads/';
+          const fullPath = `${basePath}${file.name}`;  // Using template literals
+          console.log(fullPath);
+          formData.append('file', file);
+          // formData.append('file', JSON.stringify({"file":fullPath}));
+        }
+      }
+      // formData.append('additionalData', JSON.stringify(additionalData));
+      setLoading(true)
+      const response = await fetch(`http://localhost:8000/api/ocr/pdf2text/${currentUser?.id}/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token?.api_token}`,
+          //  'Content-Type': 'multipart/form-data',
+          // 'Content-Type': 'application/json',
+        },
+        body: formData,
+      })
+
+      if (!response.ok) {
+        console.error('File upload failed:', response.statusText)
+        setLoading(false)
+      }
+      if (response.ok) {
+        const responseData = await response.json()
+        console.log('File uploaded successfully:', responseData)
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false)
+    }
+  }
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
     setFile(selectedFile)
-
-    // Get the number of pages
     if (selectedFile) {
       const reader = new FileReader()
       reader.onloadend = () => {
         const arrayBuffer = reader.result as ArrayBuffer | null
-        // const typedArray = new Uint8Array(arrayBuffer)
         if (arrayBuffer) {
           const typedArray = new Uint8Array(arrayBuffer)
           pdfjs.getDocument(typedArray).promise.then((pdf) => {
@@ -31,8 +71,6 @@ const Upload: React.FC = () => {
       reader.readAsArrayBuffer(selectedFile)
     }
   }
-
-  // const [file, setFile] = useState<File | null>(null)
 
   const browseFile = () => {
     document.getElementById('file-input')?.click()
@@ -76,11 +114,11 @@ const Upload: React.FC = () => {
                 )}
               </div>
               <div d-flex justify-content-center mt-5>
-      
-                  <div className={btnClass}>
-                    <button className='bg-primary'>Process</button>
-                  </div>
-                
+                <div className={btnClass}>
+                  <button className='bg-primary' onClick={() => processfile()}>
+                    Process
+                  </button>
+                </div>
               </div>
             </div>
           ) : (

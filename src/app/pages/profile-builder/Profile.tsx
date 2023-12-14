@@ -8,7 +8,7 @@ import {
   // updateEmail,
   updatePassword,
 } from '../../modules/accounts/components/settings/SettingsModel'
-import { resolveSoa } from 'dns'
+// import { resolveSoa } from 'dns'
 import {useAuth} from "../../../app/modules/auth/core/Auth"
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 

@@ -1,7 +1,7 @@
 import React, {FC, useState} from 'react'
 import './ActivityDrawer.css'
 import {KTIcon} from '../../../helpers'
-import logo from '../../../assets/images/img-1.jpg'
+// import logo from '../../../assets/images/img-1.jpg'
 import image1 from '../../../assets/images/img-1.jpg'
 import image2 from '../../../assets/images/img-2.jpg'
 import image3 from '../../../assets/images/img-3.jpg'
