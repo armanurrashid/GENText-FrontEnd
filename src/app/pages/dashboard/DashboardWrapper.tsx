@@ -68,7 +68,7 @@ const DashboardWrapper: FC = () => {
           const data = await response.json();
           setCardsData(data.data);
         }
-        
+
       }
       catch (error) {
         console.error('Error fetching user data:', error);

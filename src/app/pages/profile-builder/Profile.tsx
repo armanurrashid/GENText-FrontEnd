@@ -82,6 +82,7 @@ const Profile: React.FC = () => {
           setPasswordForm(false);
         }
         
+        
       }
       catch (error) {
         console.error('Error fetching user data:', error);
