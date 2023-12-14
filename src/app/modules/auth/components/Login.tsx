@@ -53,7 +53,6 @@ export function Login() {
             api_token: data.token.access,
             refreshToken: data.token.refresh
           }
-
           saveAuth(authData)
           setCurrentUser(data.user)
         }
