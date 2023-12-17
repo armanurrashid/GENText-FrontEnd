@@ -2,66 +2,80 @@ import {FC, useState, useEffect} from 'react'
 import {useLocation} from 'react-router-dom'
 import '../../../../src/_metronic/partials/layout/activity-drawer/ActivityDrawer.css'
 import image1 from '../../../../src/_metronic/assets/images/img-1.jpg'
-import image4 from '../../../../src/_metronic/assets/images/img-4.jpg'
-import image5 from '../../../../src/_metronic/assets/images/img-5.jpg'
-import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
+// import image4 from '../../../../src/_metronic/assets/images/img-4.jpg'
+// import image5 from '../../../../src/_metronic/assets/images/img-5.jpg'
+// import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
 
 // import { KTIcon } from '../../../_metronic/helpers'
 
 const Process: FC = () => {
-  // const location = useLocation()
-  // const {data} = location.state
-  // console.log("Hello")
-  // console.log(data)
-
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const dataParam = queryParams.get('data')
   const data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
   console.log(data)
   const [selectedImage, setSelectedImage] = useState(image1)
-  const [allImg, setAllImg] = useState([
-    image1,
-    image4,
-    image5,
-    image6,
-    image1,
-    image4,
-    image5,
-    image6,
-    image1,
-    image4,
-    image5,
-    image6,
-    image1,
-    image4,
-    image5,
-    image6,
-  ])
+  const [allImg, setAllImg] = useState<string[]>([])
 
   useEffect(() => {
-    // Log data when the component mounts
-    console.log('Component Mounted with data:', data)
-
-    // If data is available, log specific properties
+    // If data is available, extract image locations
     if (data) {
-      data.forEach((item, index) => {
-        const {image_location, page_number, text} = item
-        console.log(`Item ${index + 1}:`)
-        console.log('Page Number:', page_number)
-        console.log('Image Location:', image_location)
-        console.log('Text:', text)
-      })
+      const imagePaths = data.map((item) => item.image_location);
+  
+      // Check if the imagePaths are different before updating the state
+      if (!areArraysEqual(imagePaths, allImg)) {
+        setAllImg(imagePaths);
+      }
     }
-  }, [data])
+  }, [data, allImg]);
+  
+  // Helper function to check if two arrays are equal
+  function areArraysEqual(arr1, arr2) {
+    if (arr1.length !== arr2.length) {
+      return false;
+    }
+  
+    for (let i = 0; i < arr1.length; i++) {
+      if (arr1[i] !== arr2[i]) {
+        return false;
+      }
+    }
+  
+    return true;
+  }
+  // const [allImg, setAllImg] = useState([
+  //   image1,
+  //   image4,
+  //   image5,
+  //   image6,
+  //   image1,
+  //   image4,
+  //   image5,
+  //   image6,
+  //   image1,
+  //   image4,
+  //   image5,
+  //   image6,
+  //   image1,
+  //   image4,
+  //   image5,
+  //   image6,
+  // ])
 
+  // useEffect(() => {
+  //   console.log('Component Mounted with data:', data)
+  //   if (data) {
+  //     data.forEach((item, index) => {
+  //       const {image_location, page_number, text} = item
+  //       console.log(`Item ${index + 1}:`)
+  //       console.log('Page Number:', page_number)
+  //       console.log('Image Location:', image_location)
+  //       console.log('Text:', text)
+  //     })
+  //   }
+  // }, [data])
+  let normalizedImagePath
   return (
-    // data.forEach(item => {
-    //   const { image_location, page_number, text } = item;
-    //   console.log('Page Number:', page_number);
-    //   console.log('Image Location:', image_location);
-    //   console.log('Text:', text);
-    // });
     <div style={{width: '100%', maxWidth: '1500px'}}>
       <div>hello</div>
       <div className='position-relative' id='kt_activities_body'>
@@ -97,27 +111,21 @@ const Process: FC = () => {
               </p>
             </div>
           </div>
-          <div>hello</div>
-          {/* <div className='row row-cols-1 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'> */}
           <div className='d-flex justify-content-center'>
             <div>herrlq</div>
             <div className='allImageContainer'>
-              {/* <div className='allImage'> */}
-              {/* if (data)
-              {data.forEach((item, index) => {
-                const {image_location, page_number, text} = item
-                console.log(`Item ${index + 1}:`)
-                console.log('Page Number:', page_number)
-                console.log('Image Location:', image_location)
-                console.log('Text:', text)
-              })} */}
               {allImg.map((img, index) => (
                 <div key={index} className='imageContainer'>
                   <img
                     key={index}
+                    // src='E:/GENText Backend/GENText_backend/media/Armanur Rashid/CTGDHAKA.pdf/pdf_Image/page_1.jpg'
+                    // src="C:\\Users\\User\\Downloads\\Capture.png"
+                    // normalizedImagePath = new URL({img}).href;
                     src={img}
+                    // console.log(src)
+                    // src ="C:\Users\User\Downloads\Capture.png"
                     onClick={() => setSelectedImage(img)}
-                    alt=''
+                    alt='h'
                     width={80}
                     height={80}
                     style={img === selectedImage ? {border: '2px solid red', height: '70px'} : {}}
