@@ -27,7 +27,7 @@ export function OTP() {
     setInputValues(newInputValues)
     const allValuesAsString = newInputValues.join('')
     setAllValuesAsString(allValuesAsString)
-    console.log(allValuesAsString)
+    // console.log(allValuesAsString)
   }
 
   const handleKeyUp = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {

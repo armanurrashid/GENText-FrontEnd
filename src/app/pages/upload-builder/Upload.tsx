@@ -1,16 +1,10 @@
 import {useEffect, useState} from 'react'
-// import clsx from 'clsx'
 import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
-// import {Link} from 'react-router-dom'
 import {getAuth, useAuth} from '../../modules/auth'
-// import ProcessPageWrapper from '../process-builder/ProcessPageWrapper'
-// import { Navigate } from 'react-router-dom'
 import {useNavigate} from 'react-router-dom'
-// import {Link} from 'react-router-dom'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-// const itemClass = 'ms-1 ms-md-4'
 const btnClass = 'd-flex justify-content-center mt-5'
 
 const Upload: React.FC = () => {
@@ -51,16 +45,12 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        console.log('File uploaded successfully:', responseData)
-
-        // Set flag to make the second API call
+        console.log('File uploaded successfully:', responseData.id)
         setSecondApiCall(true)
       }
     } catch (error) {
       console.error('Error processing file:', error)
-    } finally {
-      setLoading(false)
-    }
+    } 
   }
 
   const [secondApiCall, setSecondApiCall] = useState<boolean>(false)
@@ -69,54 +59,28 @@ const Upload: React.FC = () => {
     if (secondApiCall) {
       const fetchData = async () => {
         try {
-          const response = await fetch('http://localhost:8000/api/file/detail/105/', {
+          const response = await fetch(`http://localhost:8000/api/file/detail/121/`, {
             headers: {
               Authorization: `Bearer ${token?.api_token}`,
             },
           })
 
           if (response.ok) {
-            // const data = await response.json()
-            // console.log(data[0])
-            // data.forEach(item => {
-            //   const {image_location, page_number, text } = item;
-            //   console.log('Page Number:', page_number);
-            //   console.log('image_location:', image_location);
-            //   console.log('Text:', text);
-            // });
-            // navigate('/process')
-
-            // navigate('/process', { state: { data } });
             const data = await response.json()
             const dataParam = encodeURIComponent(JSON.stringify(data))
+            console.log(dataParam)
             navigate(`/process?data=${dataParam}`)
           }
         } catch (error) {
           console.error('Error fetching user data:', error)
+        }finally {
+          setLoading(false)
         }
       }
 
       fetchData()
     }
   }, [secondApiCall, token])
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const response = await fetch('http://localhost:8000/api/file/detail/85/', {
-  //         headers: {
-  //           Authorization: `Bearer ${token?.api_token}`,
-  //         },
-  //       })
-  //       if (response.ok) {
-  //         const data = await response.json()
-  //         console.log('success')
-  //       }
-  //     } catch (error) {
-  //       console.error('Error fetching user data:', error)
-  //     }
-  //   }
-  //   fetchData()
-  // }, [])
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
@@ -175,7 +139,6 @@ const Upload: React.FC = () => {
                 <div className='d-flex justify-content-center mt-5'>
                   <div className={btnClass}>
                     <button className='bg-primary btn-lg mx-5 w-100'>Continue</button>
-                    {/* <Link to='/auth/OTP'> */}
                     <button
                       type='button'
                       id='kt_login_signup_form_cancel_button'
@@ -183,10 +146,6 @@ const Upload: React.FC = () => {
                     >
                       Cancel
                     </button>
-                    {/* </Link> */}
-                    {/* <button className='bg-primary' onClick={() => processfile()}>
-                      Cancel
-                    </button> */}
                   </div>
                 </div>
               </div>
@@ -202,7 +161,13 @@ const Upload: React.FC = () => {
                 <div className='d-flex justify-content-center mt-5'>
                   <div className={btnClass}>
                     <button className='bg-primary' onClick={() => processfile()}>
-                      Process
+                      {!loading && <span className='indicator-label'>Process</span>}
+                      {loading && (
+                        <span className='indicator-progress' style={{display: 'block'}}>
+                          Please wait...
+                          <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                        </span>
+                      )}
                     </button>
                   </div>
                 </div>

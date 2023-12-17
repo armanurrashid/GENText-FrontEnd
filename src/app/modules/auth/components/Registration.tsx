@@ -67,7 +67,7 @@ export function Registration() {
         if (response.ok) {
           console.log("API Response OK")
           const data = await response.json()
-          console.log(values.email)
+          // console.log(values.email)
           const email = values.email
           // console.log(email)
           // console.log(data.email)
