@@ -3,30 +3,11 @@ import React, {useEffect, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {
-  // IUpdateEmail,
   IUpdatePassword,
-  // updateEmail,
   updatePassword,
 } from '../../modules/accounts/components/settings/SettingsModel'
-// import { resolveSoa } from 'dns'
 import {useAuth} from "../../../app/modules/auth/core/Auth"
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
-
-
-
-// import {KTIcon} from '../../../_metronic/helpers'
-
-// const emailFormValidationSchema = Yup.object().shape({
-//   newEmail: Yup.string()
-//     .email('Wrong email format')
-//     .min(3, 'Minimum 3 symbols')
-//     .max(50, 'Maximum 50 symbols')
-//     .required('Email is required'),
-//   confirmPassword: Yup.string()
-//     .min(3, 'Minimum 3 symbols')
-//     .max(50, 'Maximum 50 symbols')
-//     .required('Password is required'),
-// })
 
 const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()

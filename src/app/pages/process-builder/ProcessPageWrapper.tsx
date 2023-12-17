@@ -1,8 +1,8 @@
 import React, {FC} from 'react'
 import {PageTitle} from '../../../_metronic/layout/core'
-import {Process} from './Process'
+import { Process } from './Process'
 
-const BuilderPageWrapper: FC = () => {
+const ProcessPageWrapper: FC = () => {
   return (
     <>
       <PageTitle breadcrumbs={[]}>View Generated Text</PageTitle>
@@ -11,4 +11,4 @@ const BuilderPageWrapper: FC = () => {
   )
 }
 
-export default BuilderPageWrapper
+export default ProcessPageWrapper

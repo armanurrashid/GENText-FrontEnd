@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
 
@@ -35,6 +35,7 @@ const registrationSchema = Yup.object().shape({
 })
 
 export function Registration() {
+  const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
   const formik = useFormik({
@@ -65,9 +66,8 @@ export function Registration() {
         }
         if (response.ok) {
           const data = await response.json()
-          setStatus('An OTP was sent to your email. Please Check')
-          saveAuth(data.token)
-          setCurrentUser(data.user)
+          // setStatus('An OTP was sent to your email. Please Check')
+          navigate('/auth/OTP')
           setLoading(false)
         }
       } catch (error) {
@@ -90,15 +90,13 @@ export function Registration() {
       <div className='text-center '>
         <h1 className='text-dark fw-bolder mb-0'>Sign Up</h1>
       </div>
-      <div className='row g-3 mb-8'>
-        {/* <div className='col-md-6'></div> */}
-      </div>
-      {(formik.status && formik.status === 'An OTP was sent to your email. Please Check') && (
+      <div className='row g-3 mb-8'>{/* <div className='col-md-6'></div> */}</div>
+      {formik.status && formik.status === 'An OTP was sent to your email. Please Check' && (
         <div className='mb-lg-5 alert alert-success'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-      {(formik.status && formik.status !== 'An OTP was sent to your email. Please Check') && (
+      {formik.status && formik.status !== 'An OTP was sent to your email. Please Check' && (
         <div className='mb-lg-5 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
@@ -235,7 +233,6 @@ export function Registration() {
           )}
         </button>
         <Link to='/auth/OTP'>
-        {/* <Link to='/auth/login'> */}
           <button
             type='button'
             id='kt_login_signup_form_cancel_button'

@@ -2,7 +2,7 @@ import React, {FC} from 'react'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {Upload} from './Upload'
 
-const BuilderPageWrapper: FC = () => {
+const UploadPageWrapper: FC = () => {
   return (
     <>
       <PageTitle breadcrumbs={[]}>Upload</PageTitle>
@@ -11,4 +11,4 @@ const BuilderPageWrapper: FC = () => {
   )
 }
 
-export default BuilderPageWrapper
+export default UploadPageWrapper

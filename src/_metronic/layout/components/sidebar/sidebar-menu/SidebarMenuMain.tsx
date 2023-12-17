@@ -5,7 +5,7 @@ import {useIntl} from 'react-intl'
 // import {SidebarMenuItemWithSub} from './SidebarMenuItemWithSub'
 import {SidebarMenuItem} from './SidebarMenuItem'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faChartBar , faUpload, faHistory, faBell, faUser } from '@fortawesome/free-solid-svg-icons';
+import {faChartBar , faUpload, faHistory, faUser } from '@fortawesome/free-solid-svg-icons';
 
 const SidebarMenuMain = () => {
   const intl = useIntl()

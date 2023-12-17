@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useRef} from 'react'
-import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import './OTP.css'
@@ -9,6 +8,8 @@ const initialValues = {
 }
 
 export function OTP() {
+  const [allValuesAsString, setAllValuesAsString] = useState('')
+  const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const [inputValues, setInputValues] = useState(['', '', '', '', '', ''])
@@ -19,6 +20,9 @@ export function OTP() {
     const newInputValues = [...inputValues]
     newInputValues[index] = value
     setInputValues(newInputValues)
+    const allValuesAsString = newInputValues.join('')
+    setAllValuesAsString(allValuesAsString)
+    // console.log('All Input Values:', allValuesAsString)
   }
 
   const handleKeyUp = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -46,6 +50,7 @@ export function OTP() {
         inputRefs.current[nextIndex]?.focus()
       }
     }
+    // console.log(`Input ${index + 1}: ${currentInput.value}`);
   }
 
   useEffect(() => {
@@ -53,7 +58,7 @@ export function OTP() {
     setButtonActive(isAllFilled)
   }, [inputValues])
 
-  const [timeRemaining, setTimeRemaining] = useState(10) // 2 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(30) // 2 minutes in seconds
   const [timerExpired, setTimerExpired] = useState(false)
   useEffect(() => {
     if (timeRemaining <= 0) {
@@ -74,14 +79,22 @@ export function OTP() {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`
   }
 
-  // const handleButtonClick = () => {
-  //   console.log('Button clicked!')
-  // }
+  useEffect(() => {
+    console.log('All Input Values:', allValuesAsString);
+  }, [allValuesAsString])
 
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
+      console.log('Input:', allValuesAsString)
       try {
+        const allValuesFilled = inputValues.every((value) => value !== '');
+        if (allValuesFilled) {
+          const otpValue = inputValues.join('')
+          setOtp(otpValue)
+          await setAllValuesAsString(otpValue);
+          console.log('All Input Values:', allValuesAsString);
+        }
         setLoading(true)
         const response = await fetch('http://localhost:8000/api/user/confirm-otp/', {
           method: 'POST',
@@ -89,15 +102,17 @@ export function OTP() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            otp: values.otp,
+            otp: otp,
           }),
         })
         if (!response.ok) {
+          console.log('Not ok')
           setHasErrors(true)
           setLoading(false)
           setSubmitting(false)
         }
         if (response.ok) {
+          console.log('ok')
           setHasErrors(false)
           setLoading(false)
         }
@@ -120,8 +135,6 @@ export function OTP() {
           An OTP was sent to your email. Please Check
         </div>
       </div>
-      {/* <div> */}
-      {/* <h4>Enter OTP Code</h4> */}
       <div className='input-field d-flex justify-content-center'>
         {inputValues.map((value, index) => (
           <input
@@ -132,35 +145,9 @@ export function OTP() {
             onChange={(e) => handleInputChange(index, e.target.value)}
             onKeyUp={(e) => handleKeyUp(index, e)}
             ref={(ref) => (inputRefs.current[index] = ref)}
-            // {...formik.getFieldProps('otp')} // Check if this is necessary
-            // className={clsx(
-            //   'form-control bg-transparent',
-            //   {'is-invalid': formik.touched.otp && formik.errors.otp},
-            //   {'is-valid': formik.touched.otp && !formik.errors.otp}
-            // )}
           />
         ))}
-
-        {/* {inputValues.map((value, index) => (
-            <input
-              key={index}
-              type='number'
-              value={value}
-              onChange={(e) => handleInputChange(index, e.target.value)}
-              onKeyUp={(e) => handleKeyUp(index, e)}
-              ref={(ref) => (inputRefs.current[index] = ref)}
-              {...formik.getFieldProps('otp')}
-              className={clsx(
-                'form-control bg-transparent',
-                {'is-invalid': formik.touched.otp && formik.errors.otp},
-                {'is-valid': formik.touched.otp && !formik.errors.otp}
-              ) }
-            />
-          ))} */}
       </div>
-
-      {/* <button disabled={!buttonActive}>Verify OTP</button> */}
-      {/* </div> */}
 
       {hasErrors === true && (
         <div className='mb-lg-15 alert alert-danger'>
@@ -170,25 +157,7 @@ export function OTP() {
         </div>
       )}
 
-      {/* {hasErrors === false && (
-        <div className='mb-10 bg-light-info p-8 rounded'>
-          <div className='text-info'>Sent password reset. Please check your email</div>
-        </div>
-      )} */}
-
       <div className='fv-row mb-5'>
-        {/* <label className='form-label fw-bolder text-gray-900 fs-6'>OTP</label> */}
-        {/* <input
-          type='number'
-          placeholder=''
-          autoComplete='off'
-          {...formik.getFieldProps('otp')}
-          className={clsx(
-            'form-control bg-transparent',
-            {'is-invalid': formik.touched.otp && formik.errors.otp},
-            {'is-valid': formik.touched.otp && !formik.errors.otp,}
-          )}
-        /> */}
         {formik.touched.otp && formik.errors.otp && (
           <div className='fv-plugins-message-container'>
             <div className='fv-help-block'>
@@ -198,67 +167,44 @@ export function OTP() {
         )}
       </div>
       <div className='pt-0 pb-2 text-center timer'>
-        {timerExpired ? null : ( // </button> //   Resend OTP // <button className='btn btn-primary resendOTP' onClick={handleButtonClick}> // <p></p>
+        {timerExpired ? null : (
           <p className='text-danger'>Time Remaining: {formatTime(timeRemaining)}</p>
         )}
       </div>
       <div className='d-flex flex-wrap justify-content-center pb-lg-0'>
         <div className='mx-5'>
-          {/* <button
-            type='submit'
-            id='kt_password_reset_submit'
-            className='btn btn-primary me-4 mt-2'
-            disabled={!buttonActive}
-            style={{width: '120px'}}
-          >
-            {timerExpired ? (
-          <span className='indicator-label'>Resend</span>
-        ) : (
-          <span className='indicator-label'>Verify</span>
-        )}
-            {loading && (
-              <span className='indicator-progress'>
-                Please wait...
-                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-              </span>
-            )}
-          </button> */}
           {timerExpired ? (
-            // <Link to='/auth/login'>
-              <button
-                type='submit'
-                id='kt_password_reset_submit'
-                className='btn btn-primary me-4 mt-2 otpButtons'
-                // disabled={!buttonActive}
-                style={{width: '120px'}}
-              >
-                <span className='indicator-label'>Resend</span>
-                {loading && (
-                  <span className='indicator-progress'>
-                    Please wait...
-                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-                  </span>
-                )}
-              </button>
-            // </Link>
+            <button
+              type='submit'
+              id='kt_sign_up_submit'
+              className='btn btn-lg btn-primary w-100 mb-5'
+              style={{width: '120px'}}
+              disabled={formik.isSubmitting || !formik.isValid}
+            >
+              <span className='indicator-label'>Resend</span>
+              {loading && (
+                <span className='indicator-progress'>
+                  Please wait...
+                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                </span>
+              )}
+            </button>
           ) : (
-            // <Link to='../../../pages/profile-builder/ProfilePageWrapper.tsx'>
-              <button
-                type='submit'
-                id='kt_password_reset_submit'
-                className='btn btn-primary me-4 mt-2 otpButtons'
-                disabled={!buttonActive}
-                style={{width: '120px'}}
-              >
-                <span className='indicator-label'>Verify</span>
-                {loading && (
-                  <span className='indicator-progress'>
-                    Please wait...
-                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-                  </span>
-                )}
-              </button>
-            // </Link>
+            <button
+              type='submit'
+              id='kt_sign_up_submit'
+              className='btn btn-lg btn-primary w-100 mb-5'
+              disabled={formik.isSubmitting || !buttonActive}
+              style={{width: '120px'}}
+            >
+              <span className='indicator-label'>Verify</span>
+              {loading && (
+                <span className='indicator-progress'>
+                  Please wait...
+                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                </span>
+              )}
+            </button>
           )}
         </div>
         <Link to='/auth/login'>
