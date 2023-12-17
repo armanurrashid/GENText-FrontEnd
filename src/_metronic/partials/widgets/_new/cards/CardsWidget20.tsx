@@ -1,20 +1,23 @@
 type Props = {
   className: string
   description: string
-  color: string
+  count: string
+  colors : string
   // img: string
 }
 
-const CardsWidget20 = ({className, description, color}: Props) => (
+
+const CardsWidget20 = ({className, description, count, colors}: Props) => (
   <div
     className={`card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end ${className}`}
     style={{
-      backgroundColor: color,
+      backgroundColor: colors,
+      // backgroundImage: `url('${img}')`,
     }}
   >
     <div className='card-header pt-5'>
       <div className='card-title d-flex flex-column'>
-        <span className='fs-2hx fw-bold text-white me-2 lh-1 ls-n2'>20</span>
+        <span className='fs-2hx fw-bold text-white me-2 lh-1 ls-n2'>{count}</span>
         <span className='text-white opacity-75 pt-1 fw-semibold fs-6'>{description}</span>
       </div>
     </div>
@@ -31,7 +34,7 @@ const CardsWidget20 = ({className, description, color}: Props) => (
             className='bg-white rounded h-8px'
             role='progressbar'
             style={{width: '72%'}}
-            aria-valuenow={50}
+            aria-valuenow={70}
             aria-valuemin={0}
             aria-valuemax={100}
           ></div>
