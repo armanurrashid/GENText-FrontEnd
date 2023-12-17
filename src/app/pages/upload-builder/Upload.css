@@ -42,7 +42,7 @@ main {
 .drag-area span {
     font-size: 14px;
     font-weight: 500;
-    color: #555;
+    /* color: #555; */
     margin: 5px 0 10px 0;
 }
 

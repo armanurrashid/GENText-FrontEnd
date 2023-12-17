@@ -13,6 +13,7 @@ import image8 from '../../../assets/images/img-8.jpg'
 import image9 from '../../../assets/images/img-9.jpg'
 
 const ActivityDrawer: FC = () => {
+  // console.log("OJAsia")
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
     image1,
@@ -43,7 +44,7 @@ const ActivityDrawer: FC = () => {
     >
       <div className='card shadow-none rounded-0' style={{width: '100%', maxWidth: '1115px'}}>
         <div className='card-header' id='kt_activities_header'>
-          <h3 className='card-title fw-bolder text-dark my-0'>Activity Logs</h3>
+          <h3 className='card-title fw-bolder text-dark my-0'>PDF View</h3>
           <div className='card-toolbar'>
             <button
               type='button'

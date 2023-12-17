@@ -3,6 +3,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
 // import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
+// import {ActivityDrawer} from '../partials'
 
 type Props = {
   className: string
@@ -23,13 +24,17 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  console.log(tableData)
-  const action = (
-    <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
-      {' '}
-      <FontAwesomeIcon icon={faEye} />{' '}
-    </div>
-  )
+  const handleIconClick = () => {
+    console.log('Hello')
+    // Add your logic here...
+  }
+  // console.log(tableData)
+  // const action = (
+  //   <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+  //     {' '}
+  //     <FontAwesomeIcon icon={faEye} />{' '}
+  //   </div>
+  // )
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -104,9 +109,9 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                           {' '}
                           <span>
                             {file['upload_status'] === 'complete'
-                              ? 'Sucessful'
+                              ? 'Successful'
                               : file['upload_status'] === 'incomplete'
-                              ? 'Unsucessful'
+                              ? 'Unsuccessful'
                               : 'Processing'}
                           </span>
                         </div>
@@ -120,10 +125,17 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             mt-5
                           >
                             <div
-                              id='kt_activities_toggle'
+                              // id='kt_activities_toggle'
                               className='d-flex justify-content-center'
                             >
-                              {action}
+                              <div
+                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                                onClick={handleIconClick}
+                                role='button'
+                              >
+                                {' '}
+                                <FontAwesomeIcon icon={faEye} />{' '}
+                              </div>
                             </div>
                           </div>
                         </div>
