@@ -1,6 +1,7 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {useFormik} from 'formik'
+import {useLocation} from 'react-router-dom'
 import './OTP.css'
 
 const initialValues = {
@@ -14,7 +15,11 @@ export function OTP() {
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const [inputValues, setInputValues] = useState(['', '', '', '', '', ''])
   const [buttonActive, setButtonActive] = useState(false)
+  const [isResending, setIsResending] = useState(false) // Track whether it's a resend operation
   const inputRefs = useRef<Array<HTMLInputElement | null>>(inputValues.map(() => null))
+  const location = useLocation()
+  const {email} = location.state || {}
+  const navigate = useNavigate()
 
   const handleInputChange = (index: number, value: string) => {
     const newInputValues = [...inputValues]
@@ -22,7 +27,7 @@ export function OTP() {
     setInputValues(newInputValues)
     const allValuesAsString = newInputValues.join('')
     setAllValuesAsString(allValuesAsString)
-    // console.log('All Input Values:', allValuesAsString)
+    console.log(allValuesAsString)
   }
 
   const handleKeyUp = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -50,7 +55,6 @@ export function OTP() {
         inputRefs.current[nextIndex]?.focus()
       }
     }
-    // console.log(`Input ${index + 1}: ${currentInput.value}`);
   }
 
   useEffect(() => {
@@ -60,6 +64,13 @@ export function OTP() {
 
   const [timeRemaining, setTimeRemaining] = useState(30) // 2 minutes in seconds
   const [timerExpired, setTimerExpired] = useState(false)
+  useEffect(() => {
+    if (isResending) {
+      // Reset the timer when isResending becomes true
+      setTimeRemaining(30)
+      setTimerExpired(false)
+    }
+  }, [isResending])
   useEffect(() => {
     if (timeRemaining <= 0) {
       setTimerExpired(true)
@@ -79,48 +90,90 @@ export function OTP() {
     return `${minutes}:${remainingSeconds < 10 ? '0' : ''}${remainingSeconds}`
   }
 
-  useEffect(() => {
-    console.log('All Input Values:', allValuesAsString);
-  }, [allValuesAsString])
+  useEffect(() => {}, [allValuesAsString])
 
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
-      console.log('Input:', allValuesAsString)
-      try {
-        const allValuesFilled = inputValues.every((value) => value !== '');
-        if (allValuesFilled) {
-          const otpValue = inputValues.join('')
-          setOtp(otpValue)
-          await setAllValuesAsString(otpValue);
-          console.log('All Input Values:', allValuesAsString);
+      console.log("Resend verify")
+      console.log("First ", isResending)
+      if (!isResending) {
+        console.log('Input:', allValuesAsString)
+        try {
+          const allValuesFilled = inputValues.every((value) => value !== '')
+          if (allValuesFilled) {
+            const otpValue = inputValues.join('')
+            setOtp(otpValue)
+            await setAllValuesAsString(otpValue)
+          }
+          setLoading(true)
+          const response = await fetch('http://localhost:8000/api/user/confirm-otp/', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              OTP: allValuesAsString,
+              email: email,
+            }),
+          })
+          if (!response.ok) {
+            console.log('Not ok')
+            setHasErrors(true)
+            setLoading(false)
+            setSubmitting(false)
+          }
+          if (response.ok) {
+            console.log('ok')
+            navigate('/auth/login')
+            setHasErrors(false)
+            setLoading(false)
+          }
+        } catch (error) {
+          setStatus('An error occurred.')
         }
-        setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/confirm-otp/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            otp: otp,
-          }),
-        })
-        if (!response.ok) {
-          console.log('Not ok')
-          setHasErrors(true)
-          setLoading(false)
-          setSubmitting(false)
-        }
-        if (response.ok) {
-          console.log('ok')
-          setHasErrors(false)
-          setLoading(false)
-        }
-      } catch (error) {
-        setStatus('An error occurred.')
+      }
+      else{
+        console.log("Resend")
       }
     },
   })
+
+  const handleButtonClick = async () => {
+    console.log('Button Clicked:', allValuesAsString)
+
+    try {
+      const allValuesFilled = inputValues.every((value) => value !== '')
+      if (allValuesFilled) {
+        const otpValue = inputValues.join('')
+        setOtp(otpValue)
+        await setAllValuesAsString(otpValue)
+      }
+      setLoading(true)
+      const response = await fetch('http://localhost:8000/api/user/request-otp/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      })
+      console.log('Response:', response)
+      if (!response.ok) {
+        setLoading(false)
+      }
+
+      if (response.ok) {
+        setHasErrors(false)
+        setLoading(false)
+        //aikhane change
+        setIsResending(false)
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  }
 
   return (
     <form
@@ -150,10 +203,8 @@ export function OTP() {
       </div>
 
       {hasErrors === true && (
-        <div className='mb-lg-15 alert alert-danger'>
-          <div className='alert-text font-weight-bold'>
-            Sorry, looks like there are some errors detected, please try again.
-          </div>
+        <div className='mb-lg-15 alert alert-danger mt-3 mt-0'>
+          <div className='alert-text font-weight-bold'>Incorrect OTP</div>
         </div>
       )}
 
@@ -174,22 +225,49 @@ export function OTP() {
       <div className='d-flex flex-wrap justify-content-center pb-lg-0'>
         <div className='mx-5'>
           {timerExpired ? (
-            <button
-              type='submit'
-              id='kt_sign_up_submit'
-              className='btn btn-lg btn-primary w-100 mb-5'
-              style={{width: '120px'}}
-              disabled={formik.isSubmitting || !formik.isValid}
-            >
-              <span className='indicator-label'>Resend</span>
-              {loading && (
-                <span className='indicator-progress'>
-                  Please wait...
-                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-                </span>
-              )}
-            </button>
+            isResending ? (
+              // "Verify" button inside this block
+              <button
+                type='submit'
+                id='kt_sign_up_submit'
+                className='btn btn-lg btn-primary w-100 mb-5'
+                disabled={formik.isSubmitting || (!isResending && !buttonActive)}
+                style={{width: '120px'}}
+                
+              >
+                <div>{isResending}uytr</div>
+                <span className='indicator-label'>Verify</span>
+               
+                {loading && (
+                  <span className='indicator-progress'>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                )}
+              </button>
+            ) : (
+              // "Resend" button inside this block
+              <button
+                type='button'
+                id='kt_sign_up_submit'
+                className='btn btn-lg btn-primary w-100 mb-5'
+                style={{width: '120px'}}
+                onClick={() => {
+                  setIsResending(!isResending)
+                  handleButtonClick()
+                }}
+              >
+                <span className='indicator-label'>Resend</span>
+                {loading && (
+                  <span className='indicator-progress'>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                )}
+              </button>
+            )
           ) : (
+            // "Verify" button outside this block
             <button
               type='submit'
               id='kt_sign_up_submit'
@@ -211,7 +289,7 @@ export function OTP() {
           <button
             type='button'
             id='kt_login_password_reset_form_cancel_button'
-            className='btn btn-light mx-5  mt-2 otpButtons'
+            className='btn btn-light mx-5 mt-2 otpButtons'
             disabled={formik.isSubmitting || !formik.isValid}
             style={{width: '120px'}}
           >
