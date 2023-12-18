@@ -12,21 +12,20 @@ const Upload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  let sameFileRequest: number | null = null
+  // let sameFileRequest: number | null = null
+  const [sameFileRequest, setSameFileRequest] = useState<number | null>(null);
   const token = getAuth()
   const {currentUser} = useAuth()
 
   const processfile = async () => {
     try {
       const formData = new FormData()
-
+      setLoading(true)
       if (file) {
         const basePath = 'C:/Users/User/Downloads/'
         const fullPath = `${basePath}${file.name}`
         formData.append('file', file)
       }
-
-      setLoading(true)
 
       const response = await fetch(`http://localhost:8000/api/ocr/pdf2text/${currentUser?.id}/`, {
         method: 'POST',
@@ -38,19 +37,20 @@ const Upload: React.FC = () => {
 
       if (!response.ok) {
         if (response.status === 406) {
-          sameFileRequest = 406
+          setSameFileRequest(406);
         }
         setLoading(false)
       }
 
       if (response.ok) {
         const responseData = await response.json()
-        console.log('File uploaded successfully:', responseData.id)
-        setSecondApiCall(responseData.id);
+        // console.log('File uploaded successfully:', responseData.id)
+        setLoading(false)
+        setSecondApiCall(responseData.id)
       }
     } catch (error) {
       console.error('Error processing file:', error)
-    } 
+    }
   }
 
   const [secondApiCall, setSecondApiCall] = useState<boolean>(false)
@@ -59,7 +59,8 @@ const Upload: React.FC = () => {
     if (secondApiCall) {
       const fetchData = async () => {
         try {
-          console.log(secondApiCall)
+          setLoading(true)
+          // console.log(secondApiCall)
           const response = await fetch(`http://localhost:8000/api/file/detail/${secondApiCall}/`, {
             headers: {
               Authorization: `Bearer ${token?.api_token}`,
@@ -69,12 +70,13 @@ const Upload: React.FC = () => {
           if (response.ok) {
             const data = await response.json()
             const dataParam = encodeURIComponent(JSON.stringify(data))
-            console.log(dataParam)
+            // console.log(dataParam)
+            setLoading(false)
             navigate(`/process?data=${dataParam}`)
           }
         } catch (error) {
           console.error('Error fetching user data:', error)
-        }finally {
+        } finally {
           setLoading(false)
         }
       }
@@ -153,19 +155,27 @@ const Upload: React.FC = () => {
             ) : (
               <div>
                 <div className='text-muted d-flex mt-3'>
+                
                   <div className='pe-5'>Pdf Size: {file ? formatBytes(file.size || 0) : 'N/A'}</div>
                   <div className='ps-5'>Total Page: {numPages}</div>
+                  <div className='ps-5'>Total Page:{sameFileRequest}</div>
                   {file && (
                     <Document file={file} onLoadSuccess={(info) => setNumPages(info.numPages)} />
                   )}
                 </div>
+                {/* <div></div> */}
                 <div className='d-flex justify-content-center mt-5'>
-                  <div className={btnClass}>
-                    <button className='bg-primary' onClick={() => processfile()}>
+                  <div>
+                    <button
+                      className='btn btn-primary me-4 '
+                      type='submit'
+                      id='kt_password_reset_submit'
+                      onClick={() => processfile()}
+                    >
                       {!loading && <span className='indicator-label'>Process</span>}
                       {loading && (
                         <span className='indicator-progress' style={{display: 'block'}}>
-                          Please wait...
+                          Please wait...{' '}
                           <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                         </span>
                       )}
@@ -175,7 +185,7 @@ const Upload: React.FC = () => {
               </div>
             )
           ) : (
-            <b>OR</b>
+            <b style={{color: '#555555'}}>OR</b>
           )}
         </span>
         {file ? (
@@ -183,8 +193,19 @@ const Upload: React.FC = () => {
             <i className='fas fa-times text-danger'></i>
           </button>
         ) : (
-          <button onClick={browseFile} className='browse-button'>
-            Browse PDF File
+          <button
+            type='submit'
+            id='kt_password_reset_submit'
+            onClick={browseFile}
+            className='btn btn-primary me-4'
+          >
+            <span className='indicator-label'>Browse PDF File</span>
+            {/* {loading && (
+              <span className='indicator-progress' style={{display: 'block'}}>
+                Please wait...
+                <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+              </span>
+            )} */}
           </button>
         )}
         <input type='file' accept='.pdf' hidden id='file-input' onChange={handleFile} />
