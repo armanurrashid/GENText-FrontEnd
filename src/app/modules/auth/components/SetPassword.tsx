@@ -57,9 +57,7 @@ export function SetPassword() {
         )
         if (!response.ok) {
           saveAuth(undefined)
-          if (response.status === 400) {
-            setStatus('Email already Registered')
-          } else setStatus('An error occured')
+          setStatus('An error occurred')
           setSubmitting(false)
           setLoading(false)
         }
@@ -70,8 +68,9 @@ export function SetPassword() {
           setCurrentUser(data.user)
           setLoading(false)
         }
-      } catch (error) {
-        setStatus('An error occurred.')
+      } 
+      catch (error) {
+        setStatus('An error occurred')
       }
     },
   })
@@ -91,12 +90,12 @@ export function SetPassword() {
         <h1 className='text-dark fw-bolder mb-5'>Set Password</h1>
       </div>
       <div className='row g-3 mb-8'>{/* <div className='col-md-6'></div> */}</div>
-      {formik.status && formik.status === 'An OTP was sent to your email. Please Check' && (
+      {formik.status && formik.status !== 'An error occurred' && (
         <div className='mb-lg-5 alert alert-success'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
       )}
-      {formik.status && formik.status !== 'An OTP was sent to your email. Please Check' && (
+      {formik.status && formik.status === 'An error occurred' && (
         <div className='mb-lg-5 alert alert-danger'>
           <div className='alert-text font-weight-bold'>{formik.status}</div>
         </div>
