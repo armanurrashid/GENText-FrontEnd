@@ -24,17 +24,13 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const handleIconClick = () => {
-    console.log('Hello')
-    // Add your logic here...
-  }
-  // console.log(tableData)
-  // const action = (
-  //   <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
-  //     {' '}
-  //     <FontAwesomeIcon icon={faEye} />{' '}
-  //   </div>
-  // )
+  console.log(tableData)
+  const action = (
+    <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+      {' '}
+      <FontAwesomeIcon icon={faEye} />{' '}
+    </div>
+  )
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -125,17 +121,10 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             mt-5
                           >
                             <div
-                              // id='kt_activities_toggle'
+                              id='kt_activities_toggle'
                               className='d-flex justify-content-center'
                             >
-                              <div
-                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                                onClick={handleIconClick}
-                                role='button'
-                              >
-                                {' '}
-                                <FontAwesomeIcon icon={faEye} />{' '}
-                              </div>
+                              {action}
                             </div>
                           </div>
                         </div>

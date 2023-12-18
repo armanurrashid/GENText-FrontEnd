@@ -46,7 +46,7 @@ const Upload: React.FC = () => {
       if (response.ok) {
         const responseData = await response.json()
         console.log('File uploaded successfully:', responseData.id)
-        setSecondApiCall(true)
+        setSecondApiCall(responseData.id);
       }
     } catch (error) {
       console.error('Error processing file:', error)
@@ -59,7 +59,8 @@ const Upload: React.FC = () => {
     if (secondApiCall) {
       const fetchData = async () => {
         try {
-          const response = await fetch(`http://localhost:8000/api/file/detail/121/`, {
+          console.log(secondApiCall)
+          const response = await fetch(`http://localhost:8000/api/file/detail/${secondApiCall}/`, {
             headers: {
               Authorization: `Bearer ${token?.api_token}`,
             },
