@@ -27,6 +27,10 @@ const ThemeModeSwitcher = ({
     updateMode(_mode)
   }
   const {setLayoutType} = useLayout()
+  const handleLinkClick = (event) => {
+    event.preventDefault(); // Prevent the default behavior of the link
+    setLayoutType('light-sidebar');
+  };
   return (
     <>
       {/* begin::Menu toggle */}
@@ -97,7 +101,7 @@ const ThemeModeSwitcher = ({
         </div>
 
         <div className='menu-item px-2 my-0'>
-          <a onClick={() => setLayoutType('light-sidebar')} className='menu-link'>
+          <a href="#" onClick={handleLinkClick} className={clsx('menu-link')}>
             <span className='menu-icon' data-kt-element='icon'>
               <KTIcon iconName='night-day' className='fs-1' />
             </span>

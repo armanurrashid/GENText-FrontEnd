@@ -101,7 +101,7 @@ const TablesWidget11: React.FC<{className:any, tableData:any}> = ({ className , 
                         <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{file['total_page']}</span></div>
                       </td>
                       <td className={`text-center ${getStatusStyle(file['upload_status'])}`}>
-                        <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{(file['upload_status']==='complete')?"Sucessful":(file['upload_status']==='incomplete')?"Unsucessful":"Processing"}</span></div>
+                        <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{(file['upload_status']==='complete')?"Successful":(file['upload_status']==='incomplete')?"Unsuccessful":"Processing"}</span></div>
                       </td>
                       <td>
                         <div className='d-flex justify-content-center flex-shrink-0'>{action}</div>

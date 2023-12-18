@@ -48,25 +48,25 @@ const SidebarLogo = (props: PropsType) => {
   }, [toggleRef, props.sidebarRef])
 
   return (
-    <div className='app-sidebar-logo px-6' id='kt_app_sidebar_logo'>
+    <div className='app-sidebar-logo px-6 d-flex' id='kt_app_sidebar_logo'>
       <Link to='/dashboard'>
         {config.layoutType === 'dark-sidebar' ? (
           <img
             alt='Logo'
             src={toAbsoluteUrl('/media/logos/logo.png')}
-            className='h-25px app-sidebar-logo-default'
+            className='h-70px app-sidebar-logo-default'
           />
         ) : (
           <>
             <img
               alt='Logo'
               src={toAbsoluteUrl('/media/logos/logo.png')}
-              className='h-25px app-sidebar-logo-default theme-light-show'
+              className='h-70px app-sidebar-logo-default theme-light-show'
             />
             <img
               alt='Logo'
               src={toAbsoluteUrl('/media/logos/logo.png')}
-              className='h-25px app-sidebar-logo-default theme-dark-show'
+              className='h-70px app-sidebar-logo-default theme-dark-show'
             />
           </>
         )}
@@ -74,7 +74,7 @@ const SidebarLogo = (props: PropsType) => {
         <img
           alt='Logo'
           src={toAbsoluteUrl('/media/logos/logo.png')}
-          className='h-20px app-sidebar-logo-minimize'
+          className='h-30px app-sidebar-logo-minimize'
         />
       </Link>
 

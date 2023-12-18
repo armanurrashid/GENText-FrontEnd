@@ -90,16 +90,14 @@ main {
     margin: 0;
 }
 
-.browse-button {
+
+/* .browse-button {
     background-color: #007bff;
-    /* Adjust the background color as needed */
     color: #fff;
-    /* Adjust the text color as needed */
     padding: 5px 10px;
-    margin-right: 10px;
     border: none;
     cursor: pointer;
-}
+} */
 
 .cancel-button {
     position: absolute;
