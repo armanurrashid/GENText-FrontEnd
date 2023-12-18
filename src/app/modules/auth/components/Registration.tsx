@@ -65,16 +65,9 @@ export function Registration() {
           setLoading(false)
         }
         if (response.ok) {
-          console.log("API Response OK")
           const data = await response.json()
-          // console.log(values.email)
           const email = values.email
-          // console.log(email)
-          // console.log(data.email)
-          // const otpUrl = `/auth/OTP?name=${encodeURIComponent(email)}`
           navigate('/auth/OTP', { state: { email } });
-          // navigate(otpUrl)
-          // navigate('/auth/OTP')
           setLoading(false)
         }
       } catch (error) {
@@ -239,7 +232,7 @@ export function Registration() {
             </span>
           )}
         </button>
-        <Link to='/auth/OTP'>
+        <Link to='/auth/login'>
           <button
             type='button'
             id='kt_login_signup_form_cancel_button'

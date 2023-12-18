@@ -62,7 +62,7 @@ export function OTP() {
     setButtonActive(isAllFilled)
   }, [inputValues])
 
-  const [timeRemaining, setTimeRemaining] = useState(30) // 2 minutes in seconds
+  const [timeRemaining, setTimeRemaining] = useState(120) // 2 minutes in seconds
   const [timerExpired, setTimerExpired] = useState(false)
   useEffect(() => {
     if (isResending) {
@@ -229,17 +229,14 @@ export function OTP() {
               // "Verify" button inside this block
               <button
                 type='submit'
-                id='kt_sign_up_submit'
+                // id='kt_sign_up_submit'
                 className='btn btn-lg btn-primary w-100 mb-5'
                 disabled={formik.isSubmitting || (!isResending && !buttonActive)}
                 style={{width: '120px'}}
-                
               >
-                <div>{isResending}uytr</div>
-                <span className='indicator-label'>Verify</span>
-               
+                {!loading && <span className='indicator-label'>Verify</span>}
                 {loading && (
-                  <span className='indicator-progress'>
+                  <span className='indicator-progress' style={{display: 'block'}}>
                     Please wait...
                     <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                   </span>
@@ -249,7 +246,7 @@ export function OTP() {
               // "Resend" button inside this block
               <button
                 type='button'
-                id='kt_sign_up_submit'
+                // id='kt_sign_up_submit'
                 className='btn btn-lg btn-primary w-100 mb-5'
                 style={{width: '120px'}}
                 onClick={() => {
@@ -257,9 +254,9 @@ export function OTP() {
                   handleButtonClick()
                 }}
               >
-                <span className='indicator-label'>Resend</span>
+                 {!loading && <span className='indicator-label'>Resend</span>}
                 {loading && (
-                  <span className='indicator-progress'>
+                  <span className='indicator-progress' style={{display: 'block'}}>
                     Please wait...
                     <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
                   </span>
@@ -270,22 +267,25 @@ export function OTP() {
             // "Verify" button outside this block
             <button
               type='submit'
-              id='kt_sign_up_submit'
+              // id='kt_sign_up_submit'
               className='btn btn-lg btn-primary w-100 mb-5'
               disabled={formik.isSubmitting || !buttonActive}
               style={{width: '120px'}}
             >
-              <span className='indicator-label'>Verify</span>
-              {loading && (
-                <span className='indicator-progress'>
-                  Please wait...
-                  <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-                </span>
-              )}
+               {!loading && <span className='indicator-label'>Verify</span>}
+                {loading && (
+                  <span className='indicator-progress' style={{display: 'block'}}>
+                    Please wait...
+                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                  </span>
+                )}
             </button>
           )}
         </div>
-        <Link to='/auth/login'>
+        <Link to='/auth/registration'>
+          <button className='btn btn-lg btn-light-primary w-100 mb-0'>Cancel</button>
+        </Link>{' '}
+        {/* <Link to='/auth/registration'>
           <button
             type='button'
             id='kt_login_password_reset_form_cancel_button'
@@ -295,7 +295,7 @@ export function OTP() {
           >
             Cancel
           </button>
-        </Link>{' '}
+        </Link>{' '} */}
       </div>
     </form>
   )
