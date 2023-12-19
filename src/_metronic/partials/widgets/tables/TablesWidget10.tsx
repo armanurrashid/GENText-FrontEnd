@@ -1,61 +1,38 @@
-import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilePdf, faEye } from '@fortawesome/free-solid-svg-icons';
-import { getAuth, useAuth } from '../../../../app/modules/auth';
+import React, { useState } from 'react'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
+import clsx from 'clsx'
+import { currentFile, setFileID } from '../../../layout/file_manage'
+import cookieUtils from '../../../layout/cookie'
+import { Account } from '../../../../app/modules/profile/components/account/Account'
+import { ActivityDrawer } from '../../layout/activity-drawer/ActivityDrawer'
 
 type Props = {
-  className: string;
-};
+  className: string
+}
 
-// interface FileData {
-//   id : number;
-//   pdf_file_name: string;
-//   file_location: string;
-//   uploaded_date: Date;
-//   upload_status: number;
-//   total_page: number;
-//   total_size: number;
-// }
-
+const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
   switch (status) {
     case 'complete':
-      return 'text-success';
+      return 'text-success'
     case 'incomplete':
-      return 'text-danger';
+      return 'text-danger'
     case 'pending':
-      return 'text-primary';
+      return 'text-primary'
     default:
-      return '';
+      return ''
   }
-};
+}
 
-// const data: FileData[] = [
-//   {
-//     fileName: 'Robotics for kids.pdf', fileSize: '12 MB' , uploadDate: '07-Dec-2023', totalPage: 20, status: 'Processing',
-//     action: ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> ),
-//   },
-//   {
-//     fileName: 'Robotics Level2.pdf' , fileSize: '14 MB', uploadDate: '05-Dec-2023', totalPage: 40, status: 'Unsuccessful',
-//     action: ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> ),
-//   },
-//   {
-//     fileName: 'Tappware.pdf' , fileSize: '28 MB', uploadDate: '04-Dec-2023', totalPage: 92, status: 'Successful',
-//     action: ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> ),
-//   },
-//   {
-//     fileName: 'New Document.pdf', fileSize: '57 MB', uploadDate: '03-Dec-2023', totalPage: 324, status: 'Successful',
-//     action: ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> ),
-//   },
-//   {
-//     fileName: 'Document.pdf' , fileSize: '98 MB', uploadDate: '01-Dec-2023', totalPage: 234, status: 'Unsuccessful',
-//     action: ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> ),
-//   },
-// ];
+const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
 
-const TablesWidget10: React.FC<{className:any, tableData:any}> = ({ className , tableData }) => {
-  console.log(tableData)
-  const action= ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> )
+  const action = (
+    <button className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+      {' '}
+      <FontAwesomeIcon icon={faEye} />{' '}
+    </button>
+  )
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -68,55 +45,94 @@ const TablesWidget10: React.FC<{className:any, tableData:any}> = ({ className , 
           <table className='table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4'>
             <thead>
               <tr className='fw-bold text-muted'>
-                <th className='min-w-100px text-center ' style={{ width: '40%' }}> File Name </th>
-                <th className='min-w-100px text-center ' style={{ width: '20%' }}> Upload Date </th>
-                <th className='min-w-100px text-center ' style={{ width: '20%' }}> Total Page </th>
-                <th className='min-w-100px text-center ' style={{ width: '20%' }}> Status </th>
-                <th className='min-w-100px text-center ' style={{ width: '20%' }}> Actions </th>
+                <th className='min-w-100px text-center ' style={{width: '40%'}}>
+                  {' '}
+                  File Name{' '}
+                </th>
+                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                  {' '}
+                  Upload Date{' '}
+                </th>
+                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                  {' '}
+                  Total Page{' '}
+                </th>
+                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                  {' '}
+                  Status{' '}
+                </th>
+                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                  {' '}
+                  Actions{' '}
+                </th>
               </tr>
             </thead>
             <tbody>
-
-              {
-                tableData ? (
-                  tableData.map((file, index) => (
+              {tableData
+                ? tableData.map((file, index) => (
                     <tr key={index}>
                       <td>
                         <div className='d-flex align-items-center'>
                           <div className='symbol symbol-45px me-5'>
                             <div>
-                              <FontAwesomeIcon icon={faFilePdf} style={{ fontSize: '27px', color: '#F1416C' }} />
+                              <FontAwesomeIcon
+                                icon={faFilePdf}
+                                style={{fontSize: '27px', color: '#F1416C'}}
+                              />
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
-                            <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>{file['pdf_file_name']} </a>
-                            <span className='text-muted fw-semibold text-muted d-block fs-7'>{file['total_size']}</span>
+                            <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
+                              {file['pdf_file_name']}{' '}
+                            </a>
+                            <span className='text-muted fw-semibold text-muted d-block fs-7'>
+                              {file['total_size']} KB
+                            </span>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <span className='fw-semibold d-block fs-7 text-center fw-bold'>{file['uploaded_date']}</span>
+                        <span className='fw-semibold d-block fs-7 text-center fw-bold'>
+                          {file['uploaded_date']}
+                        </span>
                       </td>
                       <td className='text-center'>
-                        <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{file['total_page']}</span></div>
+                        <div className='d-flex flex-column w-100 me-2 fw-bold'>
+                          {' '}
+                          <span>{file['total_page']}</span>
+                        </div>
                       </td>
                       <td className={`text-center ${getStatusStyle(file['upload_status'])}`}>
-                        <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{(file['upload_status']==='complete')?"Sucessful":(file['upload_status']==='incomplete')?"Unsucessful":"Processing"}</span></div>
+                        <div className='d-flex flex-column w-100 me-2 fw-bold'>
+                          {' '}
+                          <span>
+                            {file['upload_status'] === 'complete'
+                              ? 'Sucessful'
+                              : file['upload_status'] === 'incomplete'
+                              ? 'Unsucessful'
+                              : 'Processing'}
+                          </span>
+                        </div>
                       </td>
                       <td>
-                        <div className='d-flex justify-content-center flex-shrink-0'>{action}</div>
+                        <div className={clsx('app-navbar-item', itemClass)} d-flex justify-content-center mt-5>
+                          {/* <div className='d-flex justify-content-center'>{action} */}
+                          <div id='kt_activities_toggle' className='d-flex justify-content-center' onClick={()=>{
+                            setFileID(file['id'])
+                            console.log({currentFile});
+                        }}>{action}
+                          </div>
+                        </div>
                       </td>
                     </tr>
-                  )
-                  )
-                ):null
-              }
+                  ))
+                : null}
             </tbody>
           </table>
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { TablesWidget10 };
+export {TablesWidget10}

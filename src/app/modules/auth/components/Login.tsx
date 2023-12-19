@@ -6,6 +6,7 @@ import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {useAuth} from '../core/Auth'
 
+
 const loginSchema = Yup.object().shape({
   email: Yup.string()
     .email('Wrong email format')
@@ -33,6 +34,7 @@ export function Login() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
+
         const response = await fetch('http://localhost:8000/api/user/login/', {
           method: 'POST',
           headers: {
@@ -53,7 +55,7 @@ export function Login() {
             api_token: data.token.access,
             refreshToken: data.token.refresh
           }
-          saveAuth(authData)
+          saveAuth(data.user)
           setCurrentUser(data.user)
         }
       } catch (error) {

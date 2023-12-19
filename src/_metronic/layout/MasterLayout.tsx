@@ -1,4 +1,4 @@
-import {useEffect} from 'react'
+import {useEffect, useState} from 'react'
 import {Outlet, useLocation} from 'react-router-dom'
 import {HeaderWrapper} from './components/header'
 import {RightToolbar} from '../partials/layout/RightToolbar'
@@ -10,9 +10,11 @@ import {ActivityDrawer, InviteUsers, UpgradePlan} from '../partials'
 import {PageDataProvider} from './core'
 import {reInitMenu} from '../helpers'
 import {ToolbarWrapper} from './components/toolbar'
+import {currentFile} from './file_manage'
+
 
 const MasterLayout = () => {
-  const location = useLocation()
+  const location = useLocation() ; 
   useEffect(() => {
     reInitMenu()
   }, [location.key])
@@ -38,7 +40,7 @@ const MasterLayout = () => {
       </div>
 
       {/* begin:: Drawers */}
-      <ActivityDrawer />
+      <ActivityDrawer/> 
       <RightToolbar />
       {/* <DrawerMessenger /> */}
       {/* end:: Drawers */}
@@ -51,5 +53,6 @@ const MasterLayout = () => {
     </PageDataProvider>
   )
 }
+
 
 export {MasterLayout}

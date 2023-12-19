@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilePdf, faEye } from '@fortawesome/free-solid-svg-icons';
+import { currentFile,setFileID } from '../../../layout/file_manage';
 import { getAuth, useAuth } from '../../../../app/modules/auth';
 
 type Props = {
@@ -104,7 +105,7 @@ const TablesWidget11: React.FC<{className:any, tableData:any}> = ({ className , 
                         <div className='d-flex flex-column w-100 me-2 fw-bold'> <span>{(file['upload_status']==='complete')?"Sucessful":(file['upload_status']==='incomplete')?"Unsucessful":"Processing"}</span></div>
                       </td>
                       <td>
-                        <div className='d-flex justify-content-center flex-shrink-0'>{action}</div>
+                        <div className='d-flex justify-content-center flex-shrink-0' onClick={()=>{setFileID(file['id'])}}>{action}</div>
                       </td>
                     </tr>
                   )

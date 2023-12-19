@@ -5,6 +5,7 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {TablesWidget10, CardsWidget20,} from '../../../_metronic/partials/widgets'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 import {useAuth } from '../../modules/auth'
+import { setupAxios } from '../../modules/auth/core/AuthHelpers'
 
 
 const colors = [
@@ -54,6 +55,7 @@ const DashboardWrapper: FC = () => {
   const intl = useIntl()
   const token= getAuth();
   const {currentUser} = useAuth()
+  console.log({currentUser})
   const [cardsData,setCardsData] = useState(null)
   const [tableData,setTableData] =useState(null)
   useEffect(() => {
