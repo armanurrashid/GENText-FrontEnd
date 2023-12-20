@@ -69,7 +69,9 @@ const Upload: React.FC = () => {
 
           if (response.ok) {
             const data = await response.json()
+            console.log(data)
             const dataParam = encodeURIComponent(JSON.stringify(data))
+            // const dataParam = encodeURIComponent(JSON.stringify(data))
             // console.log(dataParam)
             setLoading(false)
             navigate(`/process?data=${dataParam}`)
@@ -118,6 +120,7 @@ const Upload: React.FC = () => {
   }
 
   const cancelFile = () => {
+    setSameFileRequest(null)
     setFile(null)
   }
 
@@ -142,13 +145,13 @@ const Upload: React.FC = () => {
                 <div className='d-flex justify-content-center mt-5'>
                   <div className={btnClass}>
                     <button className='bg-primary btn-lg mx-5 w-100'>Continue</button>
-                    <button
+                    {/* <button
                       type='button'
                       id='kt_login_signup_form_cancel_button'
                       className='btn btn-lg btn-light-primary w-100 mb-0 mx-5'
                     >
                       Cancel
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
