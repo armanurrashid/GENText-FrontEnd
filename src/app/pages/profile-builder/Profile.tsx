@@ -1,12 +1,11 @@
 import React, {useEffect, useState} from 'react'
-// import {KTIcon} from '../../../../../../_metronic/helpers'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
 import {
   IUpdatePassword,
   updatePassword,
 } from '../../modules/accounts/components/settings/SettingsModel'
-import {useAuth} from "../../../app/modules/auth/core/Auth"
+import {useAuth} from '../../../app/modules/auth/core/Auth'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 
 const passwordFormValidationSchema = Yup.object().shape({
@@ -27,7 +26,6 @@ const passwordFormValidationSchema = Yup.object().shape({
 const Profile: React.FC = () => {
   const {currentUser} = useAuth()
   const token = getAuth()
-  // const [emailUpdateData, setEmailUpdateData] = useState<IUpdateEmail>(updateEmail)
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
 
@@ -37,35 +35,30 @@ const Profile: React.FC = () => {
       ...passwordUpdateData,
     },
     validationSchema: passwordFormValidationSchema,
-    onSubmit: async(values) => {
-      // console.log(token)
+    onSubmit: async (values) => {
       setLoading2(true)
-      // setTimeout((values) => {
-      //   setPasswordUpdateData(values)
-      //   setLoading2(false)
-      //   setPasswordForm(false)
-      // }, 1000)
       try {
-        const response = await fetch('http://localhost:8000/api/user/change-password/',{
-          method:'POST',
+        const response = await fetch('http://localhost:8000/api/user/change-password/', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token?.api_token}`, // Replace with your actual authorization token
-            // Add other headers if needed
+            Authorization: `Bearer ${token?.api_token}`, 
           },
-          body: JSON.stringify({"current_password":values.currentPassword,"new_password":values.newPassword,"confirm_password":values.passwordConfirmation}),
-        });
-        
-        if (response.status === 201){
-          const data = await response.json();
+          body: JSON.stringify({
+            current_password: values.currentPassword,
+            new_password: values.newPassword,
+            confirm_password: values.passwordConfirmation,
+          }),
+        })
+
+        if (response.status === 201) {
+          const data = await response.json()
           // console.log(data);
-          setLoading2(false);
-          setPasswordForm(false);
+          setLoading2(false)
+          setPasswordForm(false)
         }
-        
-      }
-      catch (error) {
-        console.error('Error fetching user data:', error);
+      } catch (error) {
+        console.error('Error fetching user data:', error)
       }
     },
   })
@@ -75,16 +68,16 @@ const Profile: React.FC = () => {
       <div id='kt_account_signin_method' className='collapse show'>
         <div className='card-body border-top p-9'>
           <div className='d-flex flex-wrap align-items-center'>
-            <div >
+            <div>
               <div className='fs-6 fw-bolder mb-1'>Name</div>
-              {currentUser && (<div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>)}
+              {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>}
             </div>
           </div>
           <div className='separator separator-dashed my-6'></div>
           <div className='d-flex flex-wrap align-items-center'>
             <div id='kt_signin_email'>
               <div className='fs-6 fw-bolder mb-1'>Email Address</div>
-              {currentUser && (<div className='fw-bold text-gray-600'>{currentUser?.email}</div>)}
+              {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.email}</div>}
             </div>
           </div>
 
@@ -113,8 +106,9 @@ const Profile: React.FC = () => {
                         Current Password
                       </label>
                       <input
+                        style={{background: '#E0E3E9'}}
                         type='password'
-                        className='form-control form-control-lg form-control-solid '
+                        className='form-control form-control-lg form-control-solid'
                         id='currentpassword'
                         {...formik2.getFieldProps('currentPassword')}
                       />
@@ -132,8 +126,9 @@ const Profile: React.FC = () => {
                         New Password
                       </label>
                       <input
+                        style={{background: '#E0E3E9'}}
                         type='password'
-                        className='form-control form-control-lg form-control-solid '
+                        className='form-control form-control-lg form-control-solid'
                         id='newpassword'
                         {...formik2.getFieldProps('newPassword')}
                       />
@@ -148,11 +143,12 @@ const Profile: React.FC = () => {
                   <div className='col-lg-4'>
                     <div className='fv-row mb-0'>
                       <label htmlFor='confirmpassword' className='form-label fs-6 fw-bolder mb-3'>
-                        Confirm New Password
+                        Confirm Password
                       </label>
                       <input
+                        style={{background: '#E0E3E9'}}
                         type='password'
-                        className='form-control form-control-lg form-control-solid '
+                        className='form-control form-control-lg form-control-solid'
                         id='confirmpassword'
                         {...formik2.getFieldProps('passwordConfirmation')}
                       />
@@ -185,6 +181,7 @@ const Profile: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
+                      formik2.resetForm();
                       setPasswordForm(false)
                     }}
                     id='kt_password_cancel'

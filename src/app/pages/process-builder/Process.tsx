@@ -20,7 +20,6 @@ const Process: FC = () => {
   const dataParam = queryParams.get('data')
   interface ProcessData {
     text: string
-    // Add other properties as needed
   }
 
   // const data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
@@ -28,6 +27,9 @@ const Process: FC = () => {
   let initialSelectedText = ''
   try {
     data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
+    const fileState = location.state
+    const fileId = fileState ? fileState.key1 : null
+    console.log(fileId)
     initialSelectedText = data && data.length > 0 ? data[0].text : ''
   } catch (error) {
     console.error('Error decoding URI component:', error)
@@ -175,6 +177,7 @@ const Process: FC = () => {
                   </span>
                 </button>
               </div>
+
               <img
                 ref={imageref}
                 src={selectedImage}
@@ -184,8 +187,10 @@ const Process: FC = () => {
                   height: '400px',
                   cursor: 'move',
                   // padding:'50px',
-                  transform: `scale(${scale})`,
-                  transition: 'transform 0.3s ease-in-out',
+                  transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
+                    transition: "transform 0.1s ease-in-out"
+                  // userDrag: 'none',
+                  // userSelect: 'none',
                 }}
                 draggable={false}
               />

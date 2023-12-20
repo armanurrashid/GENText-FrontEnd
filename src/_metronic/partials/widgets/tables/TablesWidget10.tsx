@@ -3,6 +3,8 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
 // import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
+import {Link} from 'react-router-dom'
+import {Process} from '../../../../app/pages/process-builder/Process'
 // import {ActivityDrawer} from '../partials'
 
 type Props = {
@@ -121,12 +123,14 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             mt-5
                           >
                             <div
-                              id='kt_activities_toggle'
+                              // id='kt_activities_toggle'
                               className='d-flex justify-content-center'
                             >
                               <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
                                 {' '}
-                                <FontAwesomeIcon icon={faEye} />{' '}
+                                <Link to='/process'>
+                                  <FontAwesomeIcon icon={faEye} />{' '}
+                                </Link>
                               </div>
                             </div>
                           </div>
