@@ -56,6 +56,13 @@ const Profile: React.FC = () => {
           // console.log(data);
           setLoading2(false)
           setPasswordForm(false)
+          alert("Password Successfully Changed")
+        }
+        if(response.status !== 201){
+          formik2.resetForm();
+          setLoading2(false)
+          setPasswordForm(false)
+          alert("Current Password Wrong")
         }
       } catch (error) {
         console.error('Error fetching user data:', error)

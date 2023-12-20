@@ -1,20 +1,20 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
-import {Link, LinkProps} from 'react-router-dom'
+import {Link} from 'react-router-dom'
 import clsx from 'clsx'
 // import { getAuth, useAuth } from '../../../../app/modules/auth';
-interface CustomLinkProps {
-  to: {
-    pathname: string
-    state: {
-      key1: string
-    }
-  }
-}
-type Props = {
-  className: string
-}
+// interface CustomLinkProps {
+//   to: {
+//     pathname: string
+//     state: {
+//       key1: string
+//     }
+//   }
+// }
+// type Props = {
+//   className: string
+// }
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
   switch (status) {
