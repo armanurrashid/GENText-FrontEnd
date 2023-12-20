@@ -13,8 +13,10 @@ import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
 import image7 from '../../../../src/_metronic/assets/images/img-7.jpg'
 import image8 from '../../../../src/_metronic/assets/images/img-8.jpg'
 import image9 from '../../../../src/_metronic/assets/images/img-9.jpg'
+import {getAuth} from '../../modules/auth'
 
 const Process: FC = () => {
+  const token = getAuth()
   const location = useLocation()
   const queryParams = new URLSearchParams(location.search)
   const dataParam = queryParams.get('data')
@@ -23,21 +25,21 @@ const Process: FC = () => {
   }
 
   // const data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
-  let data: ProcessData[] | null = null
+  const [data, setData] = useState<ProcessData[] | null>(null);
   let initialSelectedText = ''
+  let fileId: string | null = null
   try {
-    data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
+    // data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
     const fileState = location.state
-    const fileId = fileState ? fileState.key1 : null
-    console.log(fileId)
-    initialSelectedText = data && data.length > 0 ? data[0].text : ''
+    fileId = fileState ? fileState.key1 : null
+    // console.log(fileId)
   } catch (error) {
     console.error('Error decoding URI component:', error)
-    data = null
+    // data = null
   }
 
   // Declare your state variables at the top level
-  const [selectedText, setSelectedText] = useState(initialSelectedText)
+  const [selectedText, setSelectedText] = useState("")
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
     image1,
@@ -57,9 +59,40 @@ const Process: FC = () => {
     image6,
     image7,
   ])
+
+  useEffect(() => {
+    // if (secondApiCall) {
+    const fetchData = async () => {
+      try {
+        // setLoading(true)
+        console.log({fileId})
+        const response = await fetch(`http://localhost:8000/api/file/detail/${fileId}/`, {
+          headers: {
+            Authorization: `Bearer ${token?.api_token}`,
+          },
+        })
+
+        if (response.ok) {
+          const result = await response.json()
+          setData(result)
+          setSelectedText(result[0].text)
+          // const dataParam = encodeURIComponent(JSON.stringify(data))
+          // setLoading(false)
+          // navigate(`/process?data=${dataParam}`)
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      } finally {
+        // setLoading(false)
+      }
+    }
+    fetchData()
+    // }
+  }, [])
+
   const handleImageClick = (index: number) => {
     setSelectedImage(allImg[index])
-    if (data && data[index]) {
+    if (data) {
       setSelectedText(data[index].text)
     }
   }
@@ -188,7 +221,7 @@ const Process: FC = () => {
                   cursor: 'move',
                   // padding:'50px',
                   transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
-                    transition: "transform 0.1s ease-in-out"
+                  transition: 'transform 0.1s ease-in-out',
                   // userDrag: 'none',
                   // userSelect: 'none',
                 }}

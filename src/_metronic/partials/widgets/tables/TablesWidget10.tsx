@@ -26,6 +26,7 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
+  const dataToPass = (fileId: string) => ({ key1: fileId });
   console.log(tableData)
   const action = (
     <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
@@ -128,8 +129,8 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             >
                               <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
                                 {' '}
-                                <Link to='/process'>
-                                  <FontAwesomeIcon icon={faEye} />{' '}
+                                <Link to='/process' state={dataToPass(file['id'])}>
+                                  <FontAwesomeIcon icon={faEye} />
                                 </Link>
                               </div>
                             </div>
