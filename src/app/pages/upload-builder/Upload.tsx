@@ -5,20 +5,20 @@ import {getAuth, useAuth} from '../../modules/auth'
 import {Link, useNavigate} from 'react-router-dom'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-const btnClass = 'd-flex justify-content-center mt-5'
+// const btnClass = 'd-flex justify-content-center mt-5'
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string) => ({ key1: fileId });
+  const dataToPass = (fileId: string) => ({key1: fileId})
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  // let sameFileRequest: number | null = null
-  const [sameFileRequest, setSameFileRequest] = useState<number | null>(null);
+  const [sameFileRequest, setSameFileRequest] = useState<number | null>(null)
   const token = getAuth()
   const {currentUser} = useAuth()
 
-  const processfile = async () => {
+  const processfile = async (url) => {
+    console.log('In Process File')
     try {
       const formData = new FormData()
       setLoading(true)
@@ -28,7 +28,7 @@ const Upload: React.FC = () => {
         formData.append('file', file)
       }
 
-      const response = await fetch(`http://localhost:8000/api/ocr/pdf2text/${currentUser?.id}/`, {
+      const response = await fetch(`${url}${currentUser?.id}/`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token?.api_token}`,
@@ -38,58 +38,20 @@ const Upload: React.FC = () => {
 
       if (!response.ok) {
         if (response.status === 406) {
-          setSameFileRequest(406);
+          setSameFileRequest(406)
         }
         setLoading(false)
       }
 
       if (response.ok) {
         const responseData = await response.json()
-        // console.log(responseData.id);
         setLoading(false)
-        navigate('/process', { state: dataToPass(responseData.id) });
-        // return (
-          // <Link to='/process' state={dataToPass(responseData.id)}>
-          // </Link>
-        // );
-        // setSecondApiCall(responseData.id)
+        navigate('/process', {state: dataToPass(responseData.id)})
       }
     } catch (error) {
       console.error('Error processing file:', error)
     }
   }
-
-  // const [secondApiCall, setSecondApiCall] = useState<boolean>(false)
-
-  // useEffect(() => {
-  //   if (secondApiCall) {
-  //     const fetchData = async () => {
-  //       try {
-  //         setLoading(true)
-  //         // console.log(secondApiCall)
-  //         const response = await fetch(`http://localhost:8000/api/file/detail/${secondApiCall}/`, {
-  //           headers: {
-  //             Authorization: `Bearer ${token?.api_token}`,
-  //           },
-  //         })
-
-  //         if (response.ok) {
-  //           const data = await response.json()
-  //           console.log(data)
-  //           const dataParam = encodeURIComponent(JSON.stringify(data))
-  //           setLoading(false)
-  //           navigate(`/process?data=${dataParam}`)
-  //         }
-  //       } catch (error) {
-  //         console.error('Error fetching user data:', error)
-  //       } finally {
-  //         setLoading(false)
-  //       }
-  //     }
-
-  //     fetchData()
-  //   }
-  // }, [secondApiCall, token])
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
@@ -139,23 +101,41 @@ const Upload: React.FC = () => {
           </div>
         )}
         <header style={{fontWeight: file ? 'normal' : 'bold'}}>
-          {file ? <p style={{ wordBreak: 'break-word', fontSize:"15px" , padding:"0px 8px" }}>{file.name}</p> : <strong>Drag & Drop to Upload PDF File</strong>}
+          {file ? (
+            <p style={{wordBreak: 'break-word', fontSize: '15px', padding: '0px 8px'}}>
+              {file.name}
+            </p>
+          ) : (
+            <strong>Drag & Drop to Upload PDF File</strong>
+          )}
         </header>
         <span className='fs-3'>
           {file ? (
             sameFileRequest === 406 ? (
               <div>
                 <p className='text-danger'>There is already a file with the same name. </p>
-                <div className='d-flex justify-content-center mt-5'>
-                  <div className={btnClass}>
-                    <button className='bg-primary btn-lg mx-5 w-100'>Continue</button>
+                {/* <div className='d-flex justify-content-center mt-5'> */}
+                  <div className='text-center'>
+                    <button
+                      className='btn btn-primary'
+                      type='submit'
+                      id='kt_password_reset_submit'
+                      onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/force/')}
+                    >
+                      {!loading && <span className='indicator-label'>Continue</span>}
+                      {loading && (
+                        <span className='indicator-progress' style={{display: 'block'}}>
+                          Please wait...{' '}
+                          <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                        </span>
+                      )}
+                    </button>
                   </div>
-                </div>
+                {/* </div> */}
               </div>
             ) : (
               <div>
                 <div className='text-muted d-flex mt-3'>
-                
                   <div className='pe-5'>Pdf Size: {file ? formatBytes(file.size || 0) : 'N/A'}</div>
                   <div className='ps-5'>Total Page: {numPages}</div>
                   {file && (
@@ -165,10 +145,10 @@ const Upload: React.FC = () => {
                 <div className='d-flex justify-content-center mt-5'>
                   <div>
                     <button
-                      className='btn btn-primary me-4 '
+                      className='btn btn-primary'
                       type='submit'
                       id='kt_password_reset_submit'
-                      onClick={() => processfile()}
+                      onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/')}
                     >
                       {!loading && <span className='indicator-label'>Process</span>}
                       {loading && (

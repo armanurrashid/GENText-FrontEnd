@@ -26,14 +26,14 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string) => ({ key1: fileId });
+  const dataToPass = (fileId: string) => ({key1: fileId})
   console.log(tableData)
-  const action = (
-    <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
-      {' '}
-      <FontAwesomeIcon icon={faEye} />{' '}
-    </div>
-  )
+  // const action = (
+  //   <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+  //     {' '}
+  //     <FontAwesomeIcon icon={faEye} />{' '}
+  //   </div>
+  // )
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -87,7 +87,9 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                               {file['pdf_file_name']}{' '}
                             </a>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {file['total_size']} KB
+                              {file['total_size'] < 1024
+                                ? `${file['total_size']} KB`
+                                : `${(file['total_size'] / 1024).toFixed(2)} MB`}
                             </span>
                           </div>
                         </div>
