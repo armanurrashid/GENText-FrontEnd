@@ -81,10 +81,10 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
                             <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
-                              {file['pdf_file_name']} {file['id']}{' '}
+                              {file['pdf_file_name']}{' '}
                             </a>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {file['total_size']}
+                              {file['total_size']} KB
                             </span>
                           </div>
                         </div>

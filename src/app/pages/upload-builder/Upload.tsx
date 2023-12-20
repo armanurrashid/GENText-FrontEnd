@@ -13,12 +13,12 @@ const Upload: React.FC = () => {
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
-  // let sameFileRequest: number | null = null
   const [sameFileRequest, setSameFileRequest] = useState<number | null>(null);
   const token = getAuth()
   const {currentUser} = useAuth()
 
-  const processfile = async () => {
+  const processfile = async (url) => {
+    console.log("In Process File")
     try {
       const formData = new FormData()
       setLoading(true)
@@ -28,7 +28,7 @@ const Upload: React.FC = () => {
         formData.append('file', file)
       }
 
-      const response = await fetch(`http://localhost:8000/api/ocr/pdf2text/${currentUser?.id}/`, {
+      const response = await fetch(`${url}${currentUser?.id}/`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token?.api_token}`,
@@ -45,51 +45,14 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        // console.log(responseData.id);
         setLoading(false)
         navigate('/process', { state: dataToPass(responseData.id) });
-        // return (
-          // <Link to='/process' state={dataToPass(responseData.id)}>
-          // </Link>
-        // );
-        // setSecondApiCall(responseData.id)
       }
     } catch (error) {
       console.error('Error processing file:', error)
     }
   }
 
-  // const [secondApiCall, setSecondApiCall] = useState<boolean>(false)
-
-  // useEffect(() => {
-  //   if (secondApiCall) {
-  //     const fetchData = async () => {
-  //       try {
-  //         setLoading(true)
-  //         // console.log(secondApiCall)
-  //         const response = await fetch(`http://localhost:8000/api/file/detail/${secondApiCall}/`, {
-  //           headers: {
-  //             Authorization: `Bearer ${token?.api_token}`,
-  //           },
-  //         })
-
-  //         if (response.ok) {
-  //           const data = await response.json()
-  //           console.log(data)
-  //           const dataParam = encodeURIComponent(JSON.stringify(data))
-  //           setLoading(false)
-  //           navigate(`/process?data=${dataParam}`)
-  //         }
-  //       } catch (error) {
-  //         console.error('Error fetching user data:', error)
-  //       } finally {
-  //         setLoading(false)
-  //       }
-  //     }
-
-  //     fetchData()
-  //   }
-  // }, [secondApiCall, token])
 
   const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
@@ -128,6 +91,8 @@ const Upload: React.FC = () => {
     setFile(null)
   }
 
+  
+
   return (
     <main>
       <div className={`drag-area ${file ? 'active' : ''} bg-white text-break`}>
@@ -148,7 +113,7 @@ const Upload: React.FC = () => {
                 <p className='text-danger'>There is already a file with the same name. </p>
                 <div className='d-flex justify-content-center mt-5'>
                   <div className={btnClass}>
-                    <button className='bg-primary btn-lg mx-5 w-100'>Continue</button>
+                    <button className='bg-primary btn-lg mx-5 w-100' onClick={() => processfile("http://localhost:8000/api/ocr/pdf2text/force/")}>Continue</button>
                   </div>
                 </div>
               </div>
@@ -168,7 +133,7 @@ const Upload: React.FC = () => {
                       className='btn btn-primary me-4 '
                       type='submit'
                       id='kt_password_reset_submit'
-                      onClick={() => processfile()}
+                      onClick={() => processfile("http://localhost:8000/api/ocr/pdf2text/")}
                     >
                       {!loading && <span className='indicator-label'>Process</span>}
                       {loading && (
