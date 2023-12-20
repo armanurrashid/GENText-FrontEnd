@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react'
 import {useFormik} from 'formik'
 import * as Yup from 'yup'
 import clsx from 'clsx'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
 
@@ -24,6 +24,7 @@ const setpasswordSchema = Yup.object().shape({
 })
 
 export function SetPassword() {
+  const navigate = useNavigate()
   const currentPath = window.location.pathname
   const parts = currentPath.split('/')
   const authIndex = parts.indexOf('auth')
@@ -63,7 +64,9 @@ export function SetPassword() {
         }
         if (response.ok) {
           const data = await response.json()
+          navigate('/auth/login');
           setStatus('Password Changed')
+          alert("Password Changed")
           saveAuth(data.token)
           setCurrentUser(data.user)
           setLoading(false)

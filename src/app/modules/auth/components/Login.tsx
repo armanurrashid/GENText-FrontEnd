@@ -50,7 +50,7 @@ export function Login() {
         if (response.ok) {
           const data = await response.json()
           const AuthData =  {api_token:data.token.access, refreshToken:data.token.refresh}
-          saveAuth(AuthData)
+          saveAuth(data.user)
           setCurrentUser(data.user)
           // console.log(data.token)
         }

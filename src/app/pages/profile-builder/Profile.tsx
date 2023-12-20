@@ -38,7 +38,7 @@ const Profile: React.FC = () => {
     },
     validationSchema: passwordFormValidationSchema,
     onSubmit: async(values) => {
-      console.log(token)
+      // console.log(token)
       setLoading2(true)
       // setTimeout((values) => {
       //   setPasswordUpdateData(values)
@@ -58,7 +58,7 @@ const Profile: React.FC = () => {
         
         if (response.status === 201){
           const data = await response.json();
-          console.log(data);
+          // console.log(data);
           setLoading2(false);
           setPasswordForm(false);
         }

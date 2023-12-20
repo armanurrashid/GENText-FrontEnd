@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react'
+import React, {FC, useState,} from 'react'
 import './ActivityDrawer.css'
 import {KTIcon} from '../../../helpers'
 // import logo from '../../../assets/images/img-1.jpg'
@@ -13,6 +13,7 @@ import image8 from '../../../assets/images/img-8.jpg'
 import image9 from '../../../assets/images/img-9.jpg'
 
 const ActivityDrawer: FC = () => {
+  console.log("Disturb")
   // console.log("OJAsia")
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
@@ -30,6 +31,16 @@ const ActivityDrawer: FC = () => {
     image5,
     image6,
   ])
+
+  // useEffect(() => {
+  //   const drawerElement = document.getElementById('kt_activities');
+  //   const drawerParams = drawerElement?.getAttribute('data-kt-drawer-params');
+    
+  //   if (drawerParams) {
+  //     const paramsObject = JSON.parse(drawerParams);
+  //     console.log('Drawer Params:', paramsObject);
+  //   }
+  // }, []);
   return (
     <div
       id='kt_activities'
@@ -55,7 +66,7 @@ const ActivityDrawer: FC = () => {
             </button>
           </div>
         </div>
-        <div className='card-body position-relative pt-4' id='kt_activities_body'>
+        <div className='card-body position-relative pt-4 activitySide' id='kt_activities_body'>
           <div
             id='kt_activities_scroll'
             className='position-relative scroll-y me-n5 pe-5'
@@ -65,6 +76,28 @@ const ActivityDrawer: FC = () => {
             data-kt-scroll-dependencies='#kt_activities_header, #kt_activities_footer'
             data-kt-scroll-offset='5px'
           >
+            <div className='d-flex justify-content-center'>
+                <div className='allImageContainer'>
+                  {/* <div className='allImage'> */}
+                    {allImg.map((img, index) => (
+                      <div key={index} className='imageContainer'>
+                        <img
+                          key={index}
+                          src={img}
+                          onClick={() => setSelectedImage(img)}
+                          alt=''
+                          width={80}
+                          height={80}
+                          style={
+                            img === selectedImage ? {border: '2px solid red', height: '70px'} : {}
+                          }
+                        />
+                        <div className='imageNumber'>{index + 1}</div>
+                      </div>
+                    ))}
+                  </div>
+                {/* </div> */}
+              </div>
             <div className='row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'>
               <div className='col d-flex justify-content-center mb-5'>
                 <img
@@ -107,9 +140,8 @@ const ActivityDrawer: FC = () => {
               </div>
             </div>
             {/* <div className='row row-cols-1 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'> */}
-              <div className='d-flex justify-content-center'>
+              {/* <div className='d-flex justify-content-center'>
                 <div className='allImageContainer'>
-                  {/* <div className='allImage'> */}
                     {allImg.map((img, index) => (
                       <div key={index} className='imageContainer'>
                         <img
@@ -127,8 +159,7 @@ const ActivityDrawer: FC = () => {
                       </div>
                     ))}
                   </div>
-                {/* </div> */}
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
