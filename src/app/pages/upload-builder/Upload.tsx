@@ -123,7 +123,7 @@ const Upload: React.FC = () => {
 
   return (
     <main>
-      <div className={`drag-area ${file ? 'active' : ''} bg-white`}>
+      <div className={`drag-area ${file ? 'active' : ''} bg-white text-break`}>
         {file ? (
           <div></div>
         ) : (
@@ -132,7 +132,7 @@ const Upload: React.FC = () => {
           </div>
         )}
         <header style={{fontWeight: file ? 'normal' : 'bold'}}>
-          {file ? file.name : <strong>Drag & Drop to Upload PDF File</strong>}
+          {file ? <p style={{ wordBreak: 'break-word', fontSize:"15px" , padding:"0px 8px" }}>{file.name}</p> : <strong>Drag & Drop to Upload PDF File</strong>}
         </header>
         <span className='fs-3'>
           {file ? (
@@ -158,7 +158,7 @@ const Upload: React.FC = () => {
                 
                   <div className='pe-5'>Pdf Size: {file ? formatBytes(file.size || 0) : 'N/A'}</div>
                   <div className='ps-5'>Total Page: {numPages}</div>
-                  <div className='ps-5'>Total Page:{sameFileRequest}</div>
+                  {/* <div className='ps-5'>Total Page:{sameFileRequest}</div> */}
                   {file && (
                     <Document file={file} onLoadSuccess={(info) => setNumPages(info.numPages)} />
                   )}
@@ -197,7 +197,7 @@ const Upload: React.FC = () => {
             type='submit'
             id='kt_password_reset_submit'
             onClick={browseFile}
-            className='btn btn-primary me-4'
+            className='btn btn-primary'
           >
             <span className='indicator-label'>Browse PDF File</span>
             {/* {loading && (

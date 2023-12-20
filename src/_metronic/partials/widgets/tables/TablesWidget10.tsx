@@ -124,7 +124,10 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                               id='kt_activities_toggle'
                               className='d-flex justify-content-center'
                             >
-                              {action}
+                              <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+                                {' '}
+                                <FontAwesomeIcon icon={faEye} />{' '}
+                              </div>
                             </div>
                           </div>
                         </div>

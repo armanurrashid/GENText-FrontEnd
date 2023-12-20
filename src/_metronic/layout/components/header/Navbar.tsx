@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 // import {KTIcon} from '../../../helpers'
-import {HeaderNotificationsMenu, Search, ThemeModeSwitcher} from '../../../partials'
+import {HeaderNotificationsMenu, ThemeModeSwitcher} from '../../../partials'
 // import {useLayout} from '../../core'
 import {useAuth} from '../../../../app/modules/auth'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
