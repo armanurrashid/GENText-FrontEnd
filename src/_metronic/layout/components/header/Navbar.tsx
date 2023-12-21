@@ -21,7 +21,7 @@ const Navbar = () => {
         <Search />
       </div> */}
 
-      <div className={clsx('app-navbar-item', itemClass)}>
+      {/* <div className={clsx('app-navbar-item', itemClass)}>
         <div
           data-kt-menu-trigger="{default: 'hover'}"
           data-kt-menu-attach='parent'
@@ -31,7 +31,7 @@ const Navbar = () => {
            <FontAwesomeIcon icon={faBell} />
         </div>
         <HeaderNotificationsMenu />
-      </div>
+      </div> */}
 
       <div className={clsx('app-navbar-item', itemClass)}>
         <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
