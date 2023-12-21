@@ -5,7 +5,6 @@ import {getAuth, useAuth} from '../../modules/auth'
 import {useNavigate} from 'react-router-dom'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
-// const btnClass = 'd-flex justify-content-center mt-5'
 
 const Upload: React.FC = () => {
   const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2:fileName})
@@ -18,7 +17,6 @@ const Upload: React.FC = () => {
   const {currentUser} = useAuth()
 
   const processfile = async (url) => {
-    // console.log('In Process File')
     try {
       const formData = new FormData()
       setLoading(true)
@@ -45,7 +43,6 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        // console.log(file.name)
         setLoading(false)
         navigate('/process', { state: dataToPass(responseData.id, file?.name || 'DefaultFileName') });
       }
@@ -115,7 +112,6 @@ const Upload: React.FC = () => {
             sameFileRequest === 406 ? (
               <div>
                 <p className='text-danger'>There is already a file with the same name. </p>
-                {/* <div className='d-flex justify-content-center mt-5'> */}
                   <div className='text-center'>
                     <button
                       className='btn btn-primary'
@@ -132,7 +128,6 @@ const Upload: React.FC = () => {
                       )}
                     </button>
                   </div>
-                {/* </div> */}
               </div>
             ) : (
               <div>
@@ -190,12 +185,12 @@ const Upload: React.FC = () => {
 function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes'
 
-  const k = 1024
-  const dm = decimals < 0 ? 0 : decimals
+  const kilobyte = 1024
+  const decimalValue = decimals < 0 ? 0 : decimals
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  const result = Math.floor(Math.log(bytes) / Math.log(kilobyte))
 
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+  return parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)) + ' ' + sizes[result]
 }
 export {Upload}
