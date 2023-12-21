@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {useLocation} from 'react-router-dom'
 import './OTP.css'
@@ -27,7 +27,6 @@ export function OTP() {
     setInputValues(newInputValues)
     const allValuesAsString = newInputValues.join('')
     setAllValuesAsString(allValuesAsString)
-    // console.log(allValuesAsString)
   }
 
   const handleKeyUp = (index: number, e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -95,10 +94,7 @@ export function OTP() {
   const formik = useFormik({
     initialValues,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
-      console.log("Resend verify")
-      console.log("First ", isResending)
       if (!isResending) {
-        console.log('Input:', allValuesAsString)
         try {
           const allValuesFilled = inputValues.every((value) => value !== '')
           if (allValuesFilled) {
@@ -118,7 +114,6 @@ export function OTP() {
             }),
           })
           if (!response.ok) {
-            console.log('Not ok')
             setHasErrors(true)
             setLoading(false)
             setSubmitting(false)
@@ -133,14 +128,10 @@ export function OTP() {
           setStatus('An error occurred.')
         }
       }
-      else{
-        console.log("Resend")
-      }
     },
   })
 
   const handleButtonClick = async () => {
-    console.log('Button Clicked:', allValuesAsString)
 
     try {
       const allValuesFilled = inputValues.every((value) => value !== '')
@@ -159,7 +150,6 @@ export function OTP() {
           email: email,
         }),
       })
-      console.log('Response:', response)
       if (!response.ok) {
         setLoading(false)
       }
@@ -167,13 +157,36 @@ export function OTP() {
       if (response.ok) {
         setHasErrors(false)
         setLoading(false)
-        //aikhane change
         setIsResending(false)
       }
     } catch (error) {
       console.error('An error occurred:', error)
     }
   }
+
+
+  const handleCancelButton = async () => {
+
+    try {
+      const response = await fetch('http://localhost:8000/api/user/cancel-registration/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+        }),
+      })
+      if (response.ok) {
+        setHasErrors(false)
+        setIsResending(false)
+        navigate('/auth/registration')
+      }
+    } catch (error) {
+      console.error('An error occurred:', error)
+    }
+  }
+
 
   return (
     <form
@@ -226,11 +239,9 @@ export function OTP() {
         <div className='mx-5'>
           {timerExpired ? (
             isResending ? (
-              // "Verify" button inside this block
               <button
                 type='submit'
-                // id='kt_sign_up_submit'
-                className='btn btn-lg btn-primary w-100 mb-5'
+                className='btn btn-lg btn-primary mb-5'
                 disabled={formik.isSubmitting || (!isResending && !buttonActive)}
                 style={{width: '120px'}}
               >
@@ -243,11 +254,9 @@ export function OTP() {
                 )}
               </button>
             ) : (
-              // "Resend" button inside this block
               <button
                 type='button'
-                // id='kt_sign_up_submit'
-                className='btn btn-lg btn-primary w-100 mb-5'
+                className='btn btn-lg btn-primary mb-5'
                 style={{width: '120px'}}
                 onClick={() => {
                   setIsResending(!isResending)
@@ -256,19 +265,17 @@ export function OTP() {
               >
                  {!loading && <span className='indicator-label'>Resend</span>}
                 {loading && (
-                  <span className='indicator-progress' style={{display: 'block'}}>
+                  <span className='indicator-progress' style={{display: 'block', fontSize:'5px'}}>
                     Please wait...
-                    <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                    <span className='spinner-border spinner-border-sm align-middle ms-2' style={{fontSize:"5px"}}></span>
                   </span>
                 )}
               </button>
             )
           ) : (
-            // "Verify" button outside this block
             <button
               type='submit'
-              // id='kt_sign_up_submit'
-              className='btn btn-lg btn-primary w-100 mb-5'
+              className='btn btn-lg btn-primary mb-5'
               disabled={formik.isSubmitting || !buttonActive}
               style={{width: '120px'}}
             >
@@ -282,20 +289,10 @@ export function OTP() {
             </button>
           )}
         </div>
-        <Link to='/auth/registration'>
-          <button className='btn btn-lg btn-light-primary w-100 mb-0'>Cancel</button>
-        </Link>{' '}
-        {/* <Link to='/auth/registration'>
-          <button
-            type='button'
-            id='kt_login_password_reset_form_cancel_button'
-            className='btn btn-light mx-5 mt-2 otpButtons'
-            disabled={formik.isSubmitting || !formik.isValid}
-            style={{width: '120px'}}
-          >
-            Cancel
-          </button>
-        </Link>{' '} */}
+          <button type='button'
+                id='kt_sign_up_submit'
+                className='btn btn-lg btn-primary mb-5'
+                style={{width: '120px'}} onClick={handleCancelButton}>Cancel</button>
       </div>
     </form>
   )

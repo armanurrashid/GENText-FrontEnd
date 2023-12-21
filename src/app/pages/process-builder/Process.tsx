@@ -18,27 +18,21 @@ import {getAuth} from '../../modules/auth'
 const Process: FC = () => {
   const token = getAuth()
   const location = useLocation()
-  const queryParams = new URLSearchParams(location.search)
-  const dataParam = queryParams.get('data')
   interface ProcessData {
     text: string
   }
 
-  // const data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
   const [data, setData] = useState<ProcessData[] | null>(null);
-  let initialSelectedText = ''
   let fileId: string | null = null
+  let filename : string | null = null
   try {
-    // data = dataParam ? JSON.parse(decodeURIComponent(dataParam)) : null
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
-    // console.log(fileId)
+    filename = fileState ? fileState.key2 : null
   } catch (error) {
     console.error('Error decoding URI component:', error)
-    // data = null
   }
 
-  // Declare your state variables at the top level
   const [selectedText, setSelectedText] = useState("")
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
@@ -61,10 +55,8 @@ const Process: FC = () => {
   ])
 
   useEffect(() => {
-    // if (secondApiCall) {
     const fetchData = async () => {
       try {
-        // setLoading(true)
         console.log({fileId})
         const response = await fetch(`http://localhost:8000/api/file/detail/${fileId}/`, {
           headers: {
@@ -76,18 +68,13 @@ const Process: FC = () => {
           const result = await response.json()
           setData(result)
           setSelectedText(result[0].text)
-          // const dataParam = encodeURIComponent(JSON.stringify(data))
-          // setLoading(false)
-          // navigate(`/process?data=${dataParam}`)
         }
       } catch (error) {
         console.error('Error fetching user data:', error)
       } finally {
-        // setLoading(false)
       }
     }
     fetchData()
-    // }
   }, [])
 
   const handleImageClick = (index: number) => {
@@ -96,31 +83,7 @@ const Process: FC = () => {
       setSelectedText(data[index].text)
     }
   }
-  // const [allImg, setAllImg] = useState<string[]>([])
 
-  // useEffect(() => {
-  //   if (data) {
-  //     const imagePaths = data.map((item) => item.image_location);
-  //     if (!areArraysEqual(imagePaths, allImg)) {
-  //       setAllImg(imagePaths);
-  //     }
-  //   }
-  // }, [data, allImg]);
-  // function areArraysEqual(arr1, arr2) {
-  //   if (arr1.length !== arr2.length) {
-  //     return false;
-  //   }
-
-  //   for (let i = 0; i < arr1.length; i++) {
-  //     if (arr1[i] !== arr2[i]) {
-  //       return false;
-  //     }
-  //   }
-
-  //   return true;
-  // }
-
-  // let normalizedImagePath
   const [scale, setScale] = useState(1)
   const [position, setPosition] = useState({x: 0, y: 0})
   const imageref = useRef<HTMLImageElement>(null)
@@ -185,17 +148,17 @@ const Process: FC = () => {
           data-kt-scroll-dependencies='#kt_activities_header, #kt_activities_footer'
           data-kt-scroll-offset='5px'
         >
+          <div className='d-flex'>
+            <div className='mx-5'>icon</div>
+            <div className='fw-bold fs-6 pb-5' style={{wordBreak: 'break-word'}}>{filename}</div>
+          </div>
           <div className='row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'>
             <div
               className='col d-flex justify-content-center mb-5'
               style={{
-                // color:"Red",
-                // backgroundColor: "red",
-                // backgroundColor: '#ffffff',
                 borderRadius: '10px',
                 position: 'relative',
                 overflow: 'hidden',
-                // border: "1px solid black"
               }}
             >
               <div className='btn-container'>
@@ -219,11 +182,8 @@ const Process: FC = () => {
                   width: '400px',
                   height: '400px',
                   cursor: 'move',
-                  // padding:'50px',
                   transform: `scale(${scale}) translate(${position.x}px, ${position.y}px)`,
                   transition: 'transform 0.1s ease-in-out',
-                  // userDrag: 'none',
-                  // userSelect: 'none',
                 }}
                 draggable={false}
               />
