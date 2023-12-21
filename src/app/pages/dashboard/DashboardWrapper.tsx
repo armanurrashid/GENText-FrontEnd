@@ -1,6 +1,5 @@
 import {FC, useEffect, useState} from 'react'
 import {useIntl} from 'react-intl'
-// import {toAbsoluteUrl} from '../../../_metronic/helpers'
 import {PageTitle} from '../../../_metronic/layout/core'
 import {TablesWidget10, CardsWidget20,} from '../../../_metronic/partials/widgets'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
@@ -8,25 +7,14 @@ import {useAuth } from '../../modules/auth'
 
 
 const colors = [
-  {
-    color: '#50CD89',
-    // img: '/media/patterns/vector-1.png',
-  },
-  {
-    color: '#3E97FF',
-    // img: '/media/patterns/vector-1.png',
-  },
-  {
-    color: '#F1416C',
-    // img: '/media/patterns/vector-1.png',
-  },
-  {
-    color: '#7239EA',
-    // img: '/media/patterns/vector-1.png',
-  },
+  {color: '#50CD89',},
+  {color: '#3E97FF',},
+  {color: '#F1416C',},
+  {color: '#7239EA',},
 ];
 
-const DashboardPage: FC <{ data:any,tableData:any}> = ({data,tableData}) => (
+const DashboardPage: FC <{ data:any,tableData:any,total:any}> = ({data,tableData,total}) => (
+  
 
   <>
     <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
@@ -35,9 +23,9 @@ const DashboardPage: FC <{ data:any,tableData:any}> = ({data,tableData}) => (
             key={index}
             className='h-md-50 mb-5 mb-xl-10'
             description={key}
-            count={value as string}
+            count={value as number}
+            total = {total as number}
             colors = {colors[index].color}
-            // img={toAbsoluteUrl(card.img)}
           />
         ))}
     </div>
@@ -56,6 +44,11 @@ const DashboardWrapper: FC = () => {
   const {currentUser} = useAuth()
   const [cardsData,setCardsData] = useState({"complete":0,"pending":0,"incomplete":0,"total":0})
   const [tableData,setTableData] =useState(0)
+  // const [success,setSuccess] =useState(0)
+  // const [unsuccess,setUnsuccess] =useState(0)
+  // const [processing,setProcessing] =useState(0)
+  const [total,setTotal] =useState(0)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -66,6 +59,10 @@ const DashboardWrapper: FC = () => {
         });
         if (response.ok){
           const data = await response.json();
+          // setSuccess(data.data.Successful)
+          // setProcessing(data.data.Processing)
+          // setUnsuccess(data.data.Unsuccessful)
+          setTotal(data.data.Total)
           setCardsData(data.data);
         }
         
@@ -110,7 +107,7 @@ const DashboardWrapper: FC = () => {
   return (
     <>
       <PageTitle breadcrumbs={[]}>{intl.formatMessage({id: 'MENU.DASHBOARD'})}</PageTitle>
-      <DashboardPage data ={cardsData} tableData={tableData}/>
+      <DashboardPage data ={cardsData} tableData={tableData} total={total}/>
     </>
   )
 }
