@@ -4,7 +4,7 @@ import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
 // import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
-import {Process} from '../../../../app/pages/process-builder/Process'
+// import {Process} from '../../../../app/pages/process-builder/Process'
 // import {ActivityDrawer} from '../partials'
 
 type Props = {
@@ -26,8 +26,8 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName:string) => ({key1: fileId,key2:fileName})
-  console.log(tableData)
+  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2: fileName})
+  // console.log(tableData)
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -66,7 +66,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
               {tableData
                 ? tableData.map((file, index) => (
                     <tr key={index}>
-                      <td>
+                      <td style={{wordBreak: 'break-word'}}>
                         <div className='d-flex align-items-center'>
                           <div className='symbol symbol-45px me-5'>
                             <div>
@@ -77,12 +77,16 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
-                            <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
+                            {/* <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
                               {file['pdf_file_name']}{' '}
-                            </a>
-                            {/* <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
-                                  <FontAwesomeIcon icon={faEye} />
-                                </Link> */}
+                            </a> */}
+                            <Link
+                              to='/pdfView'
+                              state={dataToPass(file['id'], file['pdf_file_name'])}
+                              className='text-dark fw-bold text-hover-primary fs-6'
+                            >
+                              {file['pdf_file_name']}{' '}
+                            </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
                               {file['total_size'] < 1024
                                 ? `${file['total_size']} KB`
@@ -128,7 +132,10 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             >
                               <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
                                 {' '}
-                                <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
+                                <Link
+                                  to='/process'
+                                  state={dataToPass(file['id'], file['pdf_file_name'])}
+                                >
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>
                               </div>

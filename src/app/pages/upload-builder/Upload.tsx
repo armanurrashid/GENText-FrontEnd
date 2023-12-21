@@ -1,14 +1,14 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
 import {getAuth, useAuth} from '../../modules/auth'
-import {Link, useNavigate} from 'react-router-dom'
+import {useNavigate} from 'react-router-dom'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 // const btnClass = 'd-flex justify-content-center mt-5'
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string) => ({key1: fileId})
+  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2:fileName})
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
@@ -18,7 +18,7 @@ const Upload: React.FC = () => {
   const {currentUser} = useAuth()
 
   const processfile = async (url) => {
-    console.log('In Process File')
+    // console.log('In Process File')
     try {
       const formData = new FormData()
       setLoading(true)
@@ -45,31 +45,32 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
+        // console.log(file.name)
         setLoading(false)
-        navigate('/process', {state: dataToPass(responseData.id)})
+        navigate('/process', { state: dataToPass(responseData.id, file?.name || 'DefaultFileName') });
       }
     } catch (error) {
       console.error('Error processing file:', error)
     }
   }
 
-  const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
-    setFile(selectedFile)
-    if (selectedFile) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const arrayBuffer = reader.result as ArrayBuffer | null
-        if (arrayBuffer) {
-          const typedArray = new Uint8Array(arrayBuffer)
-          pdfjs.getDocument(typedArray).promise.then((pdf) => {
-            setNumPages(pdf.numPages)
-          })
-        }
-      }
-      reader.readAsArrayBuffer(selectedFile)
-    }
-  }
+  // const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
+  //   setFile(selectedFile)
+  //   if (selectedFile) {
+  //     const reader = new FileReader()
+  //     reader.onloadend = () => {
+  //       const arrayBuffer = reader.result as ArrayBuffer | null
+  //       if (arrayBuffer) {
+  //         const typedArray = new Uint8Array(arrayBuffer)
+  //         pdfjs.getDocument(typedArray).promise.then((pdf) => {
+  //           setNumPages(pdf.numPages)
+  //         })
+  //       }
+  //     }
+  //     reader.readAsArrayBuffer(selectedFile)
+  //   }
+  // }
 
   const browseFile = () => {
     document.getElementById('file-input')?.click()

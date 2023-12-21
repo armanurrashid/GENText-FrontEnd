@@ -1,5 +1,5 @@
 import {FC, useState, useEffect, useRef} from 'react'
-import {useLocation} from 'react-router-dom'
+import {Link, useLocation} from 'react-router-dom'
 import './Process.css'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faMinus} from '@fortawesome/free-solid-svg-icons'
@@ -13,27 +13,29 @@ import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
 import image7 from '../../../../src/_metronic/assets/images/img-7.jpg'
 import image8 from '../../../../src/_metronic/assets/images/img-8.jpg'
 import image9 from '../../../../src/_metronic/assets/images/img-9.jpg'
+import {faFilePdf} from '@fortawesome/free-solid-svg-icons'
 import {getAuth} from '../../modules/auth'
 
 const Process: FC = () => {
+  const dataToPass = (fileId: string | null, fileName: string | null) => ({key1: fileId, key2: fileName})
   const token = getAuth()
   const location = useLocation()
   interface ProcessData {
     text: string
   }
 
-  const [data, setData] = useState<ProcessData[] | null>(null);
+  const [data, setData] = useState<ProcessData[] | null>(null)
   let fileId: string | null = null
-  let filename : string | null = null
+  let fileName: string | null = null
   try {
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
-    filename = fileState ? fileState.key2 : null
+    fileName = fileState ? fileState.key2 : null
   } catch (error) {
     console.error('Error decoding URI component:', error)
   }
 
-  const [selectedText, setSelectedText] = useState("")
+  const [selectedText, setSelectedText] = useState('')
   const [selectedImage, setSelectedImage] = useState(image1)
   const [allImg, setAllImg] = useState([
     image1,
@@ -57,7 +59,7 @@ const Process: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        console.log({fileId})
+        // console.log({fileId})
         const response = await fetch(`http://localhost:8000/api/file/detail/${fileId}/`, {
           headers: {
             Authorization: `Bearer ${token?.api_token}`,
@@ -135,7 +137,8 @@ const Process: FC = () => {
       image?.removeEventListener('mouseup', handleMouseUp)
     }
   }, [imageref, scale])
-
+console.log(fileId)
+console.log(fileName)
   return (
     <div style={{width: '100%', maxWidth: '1500px'}}>
       <div className='position-relative' id='kt_activities_body'>
@@ -149,9 +152,21 @@ const Process: FC = () => {
           data-kt-scroll-offset='5px'
         >
           <div className='d-flex'>
-            <div className='mx-5'>icon</div>
-            <div className='fw-bold fs-6 pb-5' style={{wordBreak: 'break-word'}}>{filename}</div>
+            <div className='ms-5 me-3'>
+              <FontAwesomeIcon icon={faFilePdf} style={{fontSize: '18px', color: '#F1416C'}} />
+            </div>
+            <div className='fw-bold fs-6 pb-0' style={{wordBreak: 'break-word'}}>
+              <Link
+                to='/pdfView'
+                state={dataToPass(fileId,fileName)}
+                className='text-dark fw-bold text-hover-primary fs-6'
+              >
+                {fileName}{' '}
+              </Link>
+            </div>
+            {/* <div className='fw-bold fs-6 pb-0' style={{wordBreak: 'break-word'}}>{filename}</div> */}
           </div>
+          <hr />
           <div className='row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'>
             <div
               className='col d-flex justify-content-center mb-5'
@@ -188,8 +203,11 @@ const Process: FC = () => {
                 draggable={false}
               />
             </div>
-            <div className='col' style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line' }}>
-              <p style={{color: 'black', whiteSpace: 'pre-line' }}>{selectedText}</p>
+            <div
+              className='col'
+              style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line'}}
+            >
+              <p style={{color: 'black', whiteSpace: 'pre-line'}}>{selectedText}</p>
             </div>
           </div>
           <div className='d-flex justify-content-center'>

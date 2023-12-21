@@ -30,12 +30,8 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string) => ({ key1: fileId });
-  // const file = {id: "{file['id']}"}
-  // const dataToPass = {key1: file.id}
+  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2: fileName})
 
-  // console.log(tableData)
-  // const action= ( <a href='#' className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'> <FontAwesomeIcon icon={faEye} /> </a> )
   return (
     <div className={`card ${className}`}>
       <div className='card-body py-3'>
@@ -69,7 +65,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
               {tableData
                 ? tableData.map((file, index) => (
                     <tr key={index}>
-                      <td>
+                      <td style={{wordBreak: 'break-word'}}>
                         <div className='d-flex align-items-center'>
                           <div className='symbol symbol-45px me-5'>
                             <div>
@@ -80,9 +76,13 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
-                            <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
+                          <Link
+                              to='/pdfView'
+                              state={dataToPass(file['id'], file['pdf_file_name'])}
+                              className='text-dark fw-bold text-hover-primary fs-6'
+                            >
                               {file['pdf_file_name']}{' '}
-                            </a>
+                            </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
                               {file['total_size']} KB
                             </span>
@@ -126,7 +126,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                             >
                               <div className='btn btn-icon btn-bg-light btn-sm me-1'>
                                 {' '}
-                                <Link to='/process' state={dataToPass(file['id'])}>
+                                <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>
                               </div>

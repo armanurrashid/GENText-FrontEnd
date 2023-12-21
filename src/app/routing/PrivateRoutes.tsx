@@ -8,6 +8,7 @@ import {MenuTestPage} from '../pages/MenuTestPage'
 // import {WithChildren} from '../../_metronic/helpers'
 import UploadPageWrapper from '../pages/upload-builder/UploadPageWrapper'
 import HistoryPageWrapper from '../pages/history-builder/HistoryPageWrapper'
+import PdfViewPageWrapper from '../pages/pdf-builder/PdfViewPageWrapper'
 import NotificationPageWrapper from '../pages/notification-builder/NotificationPageWrapper'
 import ProfilePageWrapper from '../pages/profile-builder/ProfilePageWrapper'
 // import ProcessPageWrapper from '../pages/process-builder/ProcessPageWrapper'
@@ -34,6 +35,7 @@ const PrivateRoutes = () => {
         <Route path='notification' element={<NotificationPageWrapper />} />
         <Route path='profile' element={<ProfilePageWrapper />} />
         <Route path='process' element={<Process />} />
+        <Route path='pdfView' element={<PdfViewPageWrapper />} />
         <Route path='menu-test' element={<MenuTestPage />} />
         <Route path='activity' element={<ActivityDrawer />} />
         {/* <Route
