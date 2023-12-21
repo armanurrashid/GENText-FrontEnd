@@ -26,14 +26,8 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string) => ({key1: fileId})
+  const dataToPass = (fileId: string, fileName:string) => ({key1: fileId,key2:fileName})
   console.log(tableData)
-  // const action = (
-  //   <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
-  //     {' '}
-  //     <FontAwesomeIcon icon={faEye} />{' '}
-  //   </div>
-  // )
   return (
     <div className={`card ${className}`}>
       <div className='card-header border-0 pt-5'>
@@ -86,6 +80,9 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
                               {file['pdf_file_name']}{' '}
                             </a>
+                            {/* <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
+                                  <FontAwesomeIcon icon={faEye} />
+                                </Link> */}
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
                               {file['total_size'] < 1024
                                 ? `${file['total_size']} KB`
@@ -131,7 +128,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             >
                               <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
                                 {' '}
-                                <Link to='/process' state={dataToPass(file['id'])}>
+                                <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>
                               </div>
