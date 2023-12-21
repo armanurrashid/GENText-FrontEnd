@@ -228,8 +228,8 @@ const Process: FC = () => {
                 draggable={false}
               />
             </div>
-            <div className='col' style={{overflow: 'auto', maxHeight: '400px'}}>
-              <p style={{color: 'black'}}>{selectedText}</p>
+            <div className='col' style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line' }}>
+              <p style={{color: 'black', whiteSpace: 'pre-line' }}>{selectedText}</p>
             </div>
           </div>
           <div className='d-flex justify-content-center'>
