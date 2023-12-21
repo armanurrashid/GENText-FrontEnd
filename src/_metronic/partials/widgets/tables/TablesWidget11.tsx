@@ -84,7 +84,9 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                               {file['pdf_file_name']}{' '}
                             </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {file['total_size']} KB
+                            {file['total_size'] < 1024
+                                ? `${file['total_size']} KB`
+                                : `${(file['total_size'] / 1024).toFixed(2)} MB`}
                             </span>
                           </div>
                         </div>

@@ -59,7 +59,6 @@ const Process: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // console.log({fileId})
         const response = await fetch(`http://localhost:8000/api/file/detail/${fileId}/`, {
           headers: {
             Authorization: `Bearer ${token?.api_token}`,
@@ -164,9 +163,26 @@ console.log(fileName)
                 {fileName}{' '}
               </Link>
             </div>
-            {/* <div className='fw-bold fs-6 pb-0' style={{wordBreak: 'break-word'}}>{filename}</div> */}
           </div>
-          <hr />
+          <hr className='mb-0'/>
+          <div className='d-flex justify-content-center mb-5 mt-0'>
+            <div className='allImageContainer'>
+              {allImg.map((img, index) => (
+                <div key={index} className='imageContainer'>
+                  <img
+                    key={index}
+                    src={img}
+                    onClick={() => handleImageClick(index)}
+                    alt=''
+                    width={80}
+                    height={80}
+                    style={img === selectedImage ? {border: '2px solid red', height: '70px'} : {}}
+                  />
+                  <div className='imageNumber'>{index + 1}</div>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className='row row-cols-1 row-cols-xl-2 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'>
             <div
               className='col d-flex justify-content-center mb-5'
@@ -210,24 +226,7 @@ console.log(fileName)
               <p style={{color: 'black', whiteSpace: 'pre-line'}}>{selectedText}</p>
             </div>
           </div>
-          <div className='d-flex justify-content-center'>
-            <div className='allImageContainer'>
-              {allImg.map((img, index) => (
-                <div key={index} className='imageContainer'>
-                  <img
-                    key={index}
-                    src={img}
-                    onClick={() => handleImageClick(index)}
-                    alt=''
-                    width={80}
-                    height={80}
-                    style={img === selectedImage ? {border: '2px solid red', height: '70px'} : {}}
-                  />
-                  <div className='imageNumber'>{index + 1}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+         
         </div>
       </div>
     </div>
