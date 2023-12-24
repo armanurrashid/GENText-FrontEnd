@@ -1,8 +1,9 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
+import {faFilePdf, faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
 import {Link} from 'react-router-dom'
 import clsx from 'clsx'
+import {Tooltip} from 'react-tooltip'
 // import { getAuth, useAuth } from '../../../../app/modules/auth';
 // interface CustomLinkProps {
 //   to: {
@@ -34,6 +35,11 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
 
   return (
     <div className={`card ${className}`}>
+      <Tooltip
+        id='my-tooltip-inline'
+        className='text-dark fw-bold fs-8'
+        style={{backgroundColor: '#B8E2F2'}}
+      />
       <div className='card-body py-3'>
         <div className='table-responsive'>
           <table className='table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4'>
@@ -76,15 +82,17 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
-                          <Link
+                            <Link
                               to='/pdfView'
                               state={dataToPass(file['id'], file['pdf_file_name'])}
                               className='text-dark fw-bold text-hover-primary fs-6'
+                              data-tooltip-id='my-tooltip-inline'
+                              data-tooltip-content='View Pdf'
                             >
                               {file['pdf_file_name']}{' '}
                             </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                            {file['total_size'] < 1024
+                              {file['total_size'] < 1024
                                 ? `${file['total_size']} KB`
                                 : `${(file['total_size'] / 1024).toFixed(2)} MB`}
                             </span>
@@ -128,9 +136,22 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                             >
                               <div className='btn btn-icon btn-bg-light btn-sm me-1'>
                                 {' '}
-                                <Link to='/process' state={dataToPass(file['id'],file['pdf_file_name'])}>
+                                <Link
+                                  to='/process'
+                                  state={dataToPass(file['id'], file['pdf_file_name'])}
+                                  data-tooltip-id='my-tooltip-inline'
+                                  data-tooltip-content='View Output'
+                                >
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>
+                              </div>
+                              <div
+                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                                data-tooltip-id='my-tooltip-inline'
+                                data-tooltip-content='Download Images'
+                              >
+                                {' '}
+                                <FontAwesomeIcon icon={faDownload} />
                               </div>
                             </div>
                           </div>

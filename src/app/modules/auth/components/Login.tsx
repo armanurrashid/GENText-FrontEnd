@@ -138,7 +138,7 @@ export function Login() {
       <div className='d-flex justify-content-between mt-5'>
         <div className="form-check">
           <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
-          <label className="link-primary" htmlFor="flexCheckChecked">
+          <label className="link-primary fs-base fw-semibold" htmlFor="flexCheckChecked">
             Remember Me
           </label>
         </div>
