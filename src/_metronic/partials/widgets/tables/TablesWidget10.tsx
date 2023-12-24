@@ -1,6 +1,7 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFilePdf, faEye} from '@fortawesome/free-solid-svg-icons'
+import {faFilePdf, faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
+import {Tooltip} from 'react-tooltip'
 // import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
@@ -30,6 +31,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
   // console.log(tableData)
   return (
     <div className={`card ${className}`}>
+      <Tooltip id='my-tooltip-inline' className='text-dark fw-bold fs-8' style={{backgroundColor: '#B8E2F2'}} />
       <div className='card-header border-0 pt-5'>
         <h3 className='card-title align-items-start flex-column'>
           <span className='card-label fw-bold fs-3 mb-1'>Recent Activities</span>
@@ -84,6 +86,8 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                               to='/pdfView'
                               state={dataToPass(file['id'], file['pdf_file_name'])}
                               className='text-dark fw-bold text-hover-primary fs-6'
+                              data-tooltip-id='my-tooltip-inline'
+                              data-tooltip-content='View Pdf'
                             >
                               {file['pdf_file_name']}{' '}
                             </Link>
@@ -130,7 +134,11 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                               // id='kt_activities_toggle'
                               className='d-flex justify-content-center'
                             >
-                              <div className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'>
+                              <div
+                                className='btn btn-icon btn-bg-light btn-sm me-1'
+                                data-tooltip-id='my-tooltip-inline'
+                                data-tooltip-content='View Output'
+                              >
                                 {' '}
                                 <Link
                                   to='/process'
@@ -138,6 +146,14 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                                 >
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>
+                              </div>
+                              <div
+                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
+                                data-tooltip-id='my-tooltip-inline'
+                                data-tooltip-content='Download Images'
+                              >
+                                {' '}
+                                <FontAwesomeIcon icon={faDownload} />
                               </div>
                             </div>
                           </div>

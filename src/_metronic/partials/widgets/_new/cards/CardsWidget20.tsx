@@ -14,9 +14,9 @@ const CardsWidget20 = ({className, description, count,total,colors}: Props) => {
   console.log(total)
   return (
     <div
-      className={`card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end ${className}`}
+      className={`card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end  ${className}`}
       style={{
-        backgroundColor: colors,
+        backgroundColor: colors, 
       }}
     >
       <div className='card-header pt-5'>

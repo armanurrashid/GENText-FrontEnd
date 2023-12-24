@@ -42,7 +42,7 @@ const Profile: React.FC = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token?.api_token}`, 
+            Authorization: `Bearer ${token?.api_token}`,
           },
           body: JSON.stringify({
             current_password: values.currentPassword,
@@ -56,13 +56,13 @@ const Profile: React.FC = () => {
           // console.log(data);
           setLoading2(false)
           setPasswordForm(false)
-          alert("Password Successfully Changed")
+          alert('Password Successfully Changed')
         }
-        if(response.status !== 201){
-          formik2.resetForm();
+        if (response.status !== 201) {
+          formik2.resetForm()
           setLoading2(false)
           setPasswordForm(false)
-          alert("Current Password Wrong")
+          alert('Current Password Wrong')
         }
       } catch (error) {
         console.error('Error fetching user data:', error)
@@ -78,6 +78,39 @@ const Profile: React.FC = () => {
             <div>
               <div className='fs-6 fw-bolder mb-1'>Name</div>
               {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>}
+            </div>
+            <div
+              id='kt_signin_password_button'
+              className={'ms-auto ' + (showPasswordForm && 'd-none')}
+            >
+              <button
+                // onClick={() => {
+                //   setPasswordForm(true)
+                // }}
+                className='btn btn-light btn-active-light-primary'
+              >
+                Change Name
+              </button>
+            </div>
+          </div>
+          <div className='separator separator-dashed my-6'></div>
+          <div className='d-flex flex-wrap align-items-center'>
+            <div>
+              <div className='fs-6 fw-bolder mb-1'>User ID</div>
+              {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>}
+            </div>
+            <div
+              id='kt_signin_password_button'
+              className={'ms-auto ' + (showPasswordForm && 'd-none')}
+            >
+              <button
+                // onClick={() => {
+                //   setPasswordForm(true)
+                // }}
+                className='btn btn-light btn-active-light-primary'
+              >
+                Change UserID
+              </button>
             </div>
           </div>
           <div className='separator separator-dashed my-6'></div>
@@ -188,7 +221,7 @@ const Profile: React.FC = () => {
                   </button>
                   <button
                     onClick={() => {
-                      formik2.resetForm();
+                      formik2.resetForm()
                       setPasswordForm(false)
                     }}
                     id='kt_password_cancel'

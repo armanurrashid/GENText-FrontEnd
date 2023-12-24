@@ -3,11 +3,12 @@ import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
 import {getAuth, useAuth} from '../../modules/auth'
 import {useNavigate} from 'react-router-dom'
+// import {Tooltip} from 'react-tooltip'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2:fileName})
+  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2: fileName})
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
@@ -44,7 +45,7 @@ const Upload: React.FC = () => {
       if (response.ok) {
         const responseData = await response.json()
         setLoading(false)
-        navigate('/process', { state: dataToPass(responseData.id, file?.name || 'DefaultFileName') });
+        navigate('/process', {state: dataToPass(responseData.id, file?.name || 'DefaultFileName')})
       }
     } catch (error) {
       console.error('Error processing file:', error)
@@ -91,6 +92,11 @@ const Upload: React.FC = () => {
   return (
     <main>
       <div className={`drag-area ${file ? 'active' : ''} bg-white text-break`}>
+        {/* <Tooltip
+          id='my-tooltip-inline'
+          className='text-dark fw-bold fs-8'
+          style={{backgroundColor: '#B8E2F2'}}
+        /> */}
         {file ? (
           <div></div>
         ) : (
@@ -112,22 +118,22 @@ const Upload: React.FC = () => {
             sameFileRequest === 406 ? (
               <div>
                 <p className='text-danger'>There is already a file with the same name. </p>
-                  <div className='text-center'>
-                    <button
-                      className='btn btn-primary'
-                      type='submit'
-                      id='kt_password_reset_submit'
-                      onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/force/')}
-                    >
-                      {!loading && <span className='indicator-label'>Continue</span>}
-                      {loading && (
-                        <span className='indicator-progress' style={{display: 'block'}}>
-                          Please wait...{' '}
-                          <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
-                        </span>
-                      )}
-                    </button>
-                  </div>
+                <div className='text-center'>
+                  <button
+                    className='btn btn-primary'
+                    type='submit'
+                    id='kt_password_reset_submit'
+                    onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/force/')}
+                  >
+                    {!loading && <span className='indicator-label'>Continue</span>}
+                    {loading && (
+                      <span className='indicator-progress' style={{display: 'block'}}>
+                        Please wait...{' '}
+                        <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                      </span>
+                    )}
+                  </button>
+                </div>
               </div>
             ) : (
               <div>
@@ -191,6 +197,8 @@ function formatBytes(bytes, decimals = 2) {
 
   const result = Math.floor(Math.log(bytes) / Math.log(kilobyte))
 
-  return parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)) + ' ' + sizes[result]
+  return (
+    parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)) + ' ' + sizes[result]
+  )
 }
 export {Upload}
