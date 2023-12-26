@@ -1,7 +1,8 @@
 import React from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faFilePdf, faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
+import { faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
 import {Tooltip} from 'react-tooltip'
+import pdf_icon from '../../../assets/images/pdf.svg'
 // import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
@@ -27,8 +28,7 @@ const getStatusStyle = (status: string): string => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2: fileName})
-  // console.log(tableData)
+  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: number) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize})
   return (
     <div className={`card ${className}`}>
       <Tooltip id='my-tooltip-inline' className='text-dark fw-bold fs-8' style={{backgroundColor: '#B8E2F2'}} />
@@ -50,11 +50,11 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                   {' '}
                   Upload Date{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                <th className='min-w-100px text-center ' style={{width: '15%'}}>
                   {' '}
                   Total Page{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                <th className='min-w-100px text-center ' style={{width: '25%'}}>
                   {' '}
                   Status{' '}
                 </th>
@@ -72,10 +72,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                         <div className='d-flex align-items-center'>
                           <div className='symbol symbol-45px me-5'>
                             <div>
-                              <FontAwesomeIcon
-                                icon={faFilePdf}
-                                style={{fontSize: '27px', color: '#F1416C'}}
-                              />
+                            <img src={pdf_icon} alt="" style={{width: '30px'}}/>
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
@@ -84,7 +81,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             </a> */}
                             <Link
                               to='/pdfView'
-                              state={dataToPass(file['id'], file['pdf_file_name'])}
+                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'], file['total_size'])}
                               className='text-dark fw-bold text-hover-primary fs-6'
                               data-tooltip-id='my-tooltip-inline'
                               data-tooltip-content='View Pdf'
@@ -115,10 +112,10 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                           {' '}
                           <span>
                             {file['upload_status'] === 'complete'
-                              ? 'Successful'
+                              ? 'Text Extraction Successful'
                               : file['upload_status'] === 'incomplete'
-                              ? 'Unsuccessful'
-                              : 'Processing'}
+                              ? 'Text Extraction Unsuccessful'
+                              : 'Text Extraction in Process'}
                           </span>
                         </div>
                       </td>
@@ -142,7 +139,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                                 {' '}
                                 <Link
                                   to='/process'
-                                  state={dataToPass(file['id'], file['pdf_file_name'])}
+                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'], file['total_size'])}
                                 >
                                   <FontAwesomeIcon icon={faEye} />
                                 </Link>

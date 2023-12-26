@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import {TablesWidget11} from '../../../_metronic/partials/widgets'
 import {getAuth, useAuth} from '../../modules/auth'
 import nohistory from '../../../../src/_metronic/assets/images/nohistory.png'
+import { Process } from '../process-builder/Process'
 
 const History: React.FC = () => {
   const token = getAuth()
@@ -47,6 +48,7 @@ const History: React.FC = () => {
         <div className='col-xl-12'>
           <TablesWidget11 className='card-xxl-stretch mb-5 mb-xl-8' tableData={historytableData} />
         </div>
+        {/* <Process sourceClass="History" /> */}
       </div>
     </>
   )

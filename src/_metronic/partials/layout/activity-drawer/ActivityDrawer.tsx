@@ -32,15 +32,6 @@ const ActivityDrawer: FC = () => {
     image6,
   ])
 
-  // useEffect(() => {
-  //   const drawerElement = document.getElementById('kt_activities');
-  //   const drawerParams = drawerElement?.getAttribute('data-kt-drawer-params');
-    
-  //   if (drawerParams) {
-  //     const paramsObject = JSON.parse(drawerParams);
-  //     console.log('Drawer Params:', paramsObject);
-  //   }
-  // }, []);
   return (
     <div
       id='kt_activities'
@@ -139,27 +130,6 @@ const ActivityDrawer: FC = () => {
                 </p>
               </div>
             </div>
-            {/* <div className='row row-cols-1 row-cols-xl-1 row-cols-lg-1 row-cols-md-1 g-4 pt-0 pb-0'> */}
-              {/* <div className='d-flex justify-content-center'>
-                <div className='allImageContainer'>
-                    {allImg.map((img, index) => (
-                      <div key={index} className='imageContainer'>
-                        <img
-                          key={index}
-                          src={img}
-                          onClick={() => setSelectedImage(img)}
-                          alt=''
-                          width={80}
-                          height={80}
-                          style={
-                            img === selectedImage ? {border: '2px solid red', height: '70px'} : {}
-                          }
-                        />
-                        <div className='imageNumber'>{index + 1}</div>
-                      </div>
-                    ))}
-                  </div>
-              </div> */}
             </div>
           </div>
         </div>
