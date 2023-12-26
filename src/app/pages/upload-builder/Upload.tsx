@@ -3,15 +3,22 @@ import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
 import {getAuth, useAuth} from '../../modules/auth'
 import {useNavigate} from 'react-router-dom'
+// import { Process } from '../process-builder/Process'
 // import {Tooltip} from 'react-tooltip'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string, fileName: string) => ({key1: fileId, key2: fileName})
+  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: number) => ({
+    key1: fileId,
+    key2: fileName,
+    key3: numPages,
+    key4: fileSize,
+  })
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
+  const [fileSize, setfileSize] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [sameFileRequest, setSameFileRequest] = useState<number | null>(null)
   const token = getAuth()
@@ -45,30 +52,23 @@ const Upload: React.FC = () => {
       if (response.ok) {
         const responseData = await response.json()
         setLoading(false)
-        navigate('/process', {state: dataToPass(responseData.id, file?.name || 'DefaultFileName')})
+        // const size = formatBytes(file?.size)
+        // console.log("Arman",size)
+        // setfileSize(Number(size))
+        // console.log({fileSize})
+        const stateData = dataToPass(
+          responseData.id,
+          file?.name || 'DefaultFileName',
+          `${numPages ?? 0}`,
+          Number(formatBytes(file?.size)),
+          
+        )
+        navigate('/process', {state: stateData})
       }
     } catch (error) {
       console.error('Error processing file:', error)
     }
   }
-
-  // const onFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const selectedFile = event.currentTarget.files ? event.currentTarget.files[0] : null
-  //   setFile(selectedFile)
-  //   if (selectedFile) {
-  //     const reader = new FileReader()
-  //     reader.onloadend = () => {
-  //       const arrayBuffer = reader.result as ArrayBuffer | null
-  //       if (arrayBuffer) {
-  //         const typedArray = new Uint8Array(arrayBuffer)
-  //         pdfjs.getDocument(typedArray).promise.then((pdf) => {
-  //           setNumPages(pdf.numPages)
-  //         })
-  //       }
-  //     }
-  //     reader.readAsArrayBuffer(selectedFile)
-  //   }
-  // }
 
   const browseFile = () => {
     document.getElementById('file-input')?.click()
@@ -184,6 +184,7 @@ const Upload: React.FC = () => {
         )}
         <input type='file' accept='.pdf' hidden id='file-input' onChange={handleFile} />
       </div>
+      {/* <Process sourceClass="Upload" /> */}
     </main>
   )
 }
@@ -193,12 +194,10 @@ function formatBytes(bytes, decimals = 2) {
 
   const kilobyte = 1024
   const decimalValue = decimals < 0 ? 0 : decimals
-  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  // const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
   const result = Math.floor(Math.log(bytes) / Math.log(kilobyte))
-
   return (
-    parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)) + ' ' + sizes[result]
-  )
+    parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)))
 }
 export {Upload}
