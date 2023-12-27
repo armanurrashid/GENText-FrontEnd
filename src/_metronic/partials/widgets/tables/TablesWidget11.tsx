@@ -32,6 +32,24 @@ const getStatusStyle = (status: string): string => {
   }
 }
 
+const formatDate = (inputDate) => {
+  const date = new Date(inputDate);
+  const months = [
+    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+  ];
+  const day = date.getDate();
+  const month = months[date.getMonth()];
+  const year = date.getFullYear();
+  const formattedDate = `${day}-${month}-${year}`;
+  return formattedDate;
+};
+
+const formatTime = (inputTime) => {
+  const time = new Date(`2000-01-01T${inputTime}`);
+  return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+};
+
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
   const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: number) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize})
 
@@ -51,11 +69,15 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                   {' '}
                   File Name{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                <th className='min-w-100px text-center ' style={{width: '13%'}}>
                   {' '}
                   Upload Date{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '15%'}}>
+                <th className='min-w-100px text-center ' style={{width: '12%'}}>
+                  {' '}
+                  Upload Time{' '}
+                </th>
+                <th className='min-w-100px text-center ' style={{width: '10%'}}>
                   {' '}
                   Total Page{' '}
                 </th>
@@ -78,10 +100,6 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                           <div className='symbol symbol-45px me-5'>
                             <div>
                               <img src={pdf_icon} alt="" style={{width: '30px'}}/>
-                              {/* <FontAwesomeIcon
-                                icon={faFilePdf}
-                                style={{fontSize: '27px', color: '#F1416C'}}
-                              /> */}
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
@@ -104,7 +122,12 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                       </td>
                       <td>
                         <span className='fw-semibold d-block fs-7 text-center fw-bold'>
-                          {file['uploaded_date']}
+                        {formatDate(file['uploaded_date'])}
+                        </span>
+                      </td>
+                      <td>
+                        <span className='fw-semibold d-block fs-7 text-center fw-bold'>
+                        {formatTime(file['uploaded_time'])}
                         </span>
                       </td>
                       <td className='text-center'>
