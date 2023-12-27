@@ -8,10 +8,10 @@ import {useAuth} from '../core/Auth'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
-    .email('Wrong email format')
+    // .email('Wrong email format')
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
-    .required('Email is required'),
+    .required('Email / UserID is required'),
   password: Yup.string()
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
@@ -84,7 +84,7 @@ export function Login() {
       ) : null}
 
       <div className='fv-row mb-8'>
-        <label className='form-label fs-6 fw-bolder text-dark'>Email</label>
+        <label className='form-label fs-6 fw-bolder text-dark'>Email / UserID</label>
         <input
           placeholder='Email'
           {...formik.getFieldProps('email')}
@@ -95,7 +95,7 @@ export function Login() {
               'is-valid': formik.touched.email && !formik.errors.email,
             }
           )}
-          type='email'
+          type='text'
           name='email'
           autoComplete='off'
         />
