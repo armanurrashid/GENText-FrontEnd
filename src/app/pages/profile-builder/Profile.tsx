@@ -175,13 +175,14 @@ useEffect(()=>{
           setLoginIDForm(false)
           setCount(preCount => preCount+1)
           formik4.resetForm()
-          alert('LoginID Successfully Changed')
+          alert(data.msg)
         }
         if (response.status !== 200) {
+          const data = await response.json()
           formik4.resetForm()
           setLoading2(false)
           setLoginIDForm(false)
-          alert('LoginID not changed')
+          alert(data.error)
         }
       } catch (error) {
         console.error('Error fetching user data:', error)

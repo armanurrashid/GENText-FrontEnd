@@ -60,8 +60,7 @@ const Upload: React.FC = () => {
           responseData.id,
           file?.name || 'DefaultFileName',
           `${numPages ?? 0}`,
-          Number(formatBytes(file?.size)),
-          
+          Number(formatBytes(file?.size))
         )
         navigate('/process', {state: stateData})
       }
@@ -92,11 +91,6 @@ const Upload: React.FC = () => {
   return (
     <main>
       <div className={`drag-area ${file ? 'active' : ''} bg-white text-break`}>
-        {/* <Tooltip
-          id='my-tooltip-inline'
-          className='text-dark fw-bold fs-8'
-          style={{backgroundColor: '#B8E2F2'}}
-        /> */}
         {file ? (
           <div></div>
         ) : (
@@ -138,7 +132,14 @@ const Upload: React.FC = () => {
             ) : (
               <div>
                 <div className='text-muted d-flex mt-3'>
-                  <div className='pe-5'>Pdf Size: {file ? formatBytes(file.size || 0) : 'N/A'}</div>
+                  <div className='pe-5'>
+                    Pdf Size:{' '}
+                    {file
+                      ? (Number(formatBytes(file.size || 0)) > 1024)
+                        ? `${(file.size || 0) / 1024} MB`
+                        : `${formatBytes(file.size || 0)} KB`
+                      : 'N/A'}
+                  </div>
                   <div className='ps-5'>Total Page: {numPages}</div>
                   {file && (
                     <Document file={file} onLoadSuccess={(info) => setNumPages(info.numPages)} />
@@ -197,7 +198,6 @@ function formatBytes(bytes, decimals = 2) {
   // const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
   const result = Math.floor(Math.log(bytes) / Math.log(kilobyte))
-  return (
-    parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue)))
+  return parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue))
 }
 export {Upload}
