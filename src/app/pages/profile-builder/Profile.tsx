@@ -1,13 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
-import {
-  IUpdatePassword,
-  updatePassword,
-} from '../../modules/accounts/components/settings/SettingsModel'
+import {IUpdatePassword, updatePassword,} from '../../modules/accounts/components/settings/SettingsModel'
 import {useAuth} from '../../../app/modules/auth/core/Auth'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 
+const initialValues = {
+  name: '',
+  loginID: '',
+}
 const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
@@ -23,13 +24,56 @@ const passwordFormValidationSchema = Yup.object().shape({
     .required('Password is required')
     .oneOf([Yup.ref('newPassword')], 'Passwords must match'),
 })
+
+const nameFormValidationSchema = Yup.object().shape({
+  name: Yup.string()
+    .min(3, 'Minimum 3 symbols')
+    .max(50, 'Maximum 50 symbols')
+    .required('Name is required'),
+})
+
+const loginIDFormValidationSchema = Yup.object().shape({
+  loginID: Yup.string()
+    .min(3, 'Minimum 3 symbols')
+    .max(50, 'Maximum 50 symbols')
+    .required('UserID is required'),
+})
+
 const Profile: React.FC = () => {
-  const {currentUser} = useAuth()
+  const {currentUser,setCurrentUser} = useAuth()
+  const [count, setCount] = useState(0)
   const token = getAuth()
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
+  const [showNameForm, setNameForm] = useState<boolean>(false)
+  const [showLoginIDForm, setLoginIDForm] = useState<boolean>(false)
 
   const [loading2, setLoading2] = useState(false)
+
+useEffect(()=>{
+  const fetchData= async ()=>{
+    try {
+      const response = await fetch( `http://localhost:8000/api/user/get-user-by-token`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token?.api_token}`,
+        },
+      })
+  
+      if (response.status === 200) {
+        const data = await response.json()
+        setCurrentUser(data)
+      }
+      if (response.status !== 200) {
+        alert('Error Fetching Data')
+      }
+    } catch (error) {
+      console.error('Error fetching user data:', error)
+    }
+  }
+  fetchData();
+},[count]);
+
   const formik2 = useFormik<IUpdatePassword>({
     initialValues: {
       ...passwordUpdateData,
@@ -52,6 +96,7 @@ const Profile: React.FC = () => {
         })
 
         if (response.status === 201) {
+         
           const data = await response.json()
           // console.log(data);
           setLoading2(false)
@@ -70,23 +115,154 @@ const Profile: React.FC = () => {
     },
   })
 
+  const formik3 = useFormik({
+    initialValues,
+    validationSchema: nameFormValidationSchema,
+    onSubmit: async (values) => {
+      setLoading2(true)
+      try {
+        const response = await fetch( `http://localhost:8000/api/user/reset-name/${currentUser?.id}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token?.api_token}`,
+          },
+          body: JSON.stringify({
+            new_name: values.name,
+          }),
+        })
+
+        if (response.status === 200) {
+          const data = await response.json()
+          setLoading2(false)
+          setNameForm(false)
+          setCount(preCount => preCount+1)
+          formik3.resetForm()
+          alert('Name Successfully Changed')
+        }
+        if (response.status !== 200) {
+          formik3.resetForm()
+          setLoading2(false)
+          setNameForm(false)
+          alert('Name not changed')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    },
+  })
+
+  const formik4 = useFormik({
+    initialValues,
+    validationSchema: loginIDFormValidationSchema,
+    onSubmit: async (values) => {
+      setLoading2(true)
+      try {
+        const response = await fetch( `http://localhost:8000/api/user/set-login-id/${currentUser?.id}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token?.api_token}`,
+          },
+          body: JSON.stringify({
+            new_name: values.loginID,
+          }),
+        })
+
+        if (response.status === 200) {
+          const data = await response.json()
+          setLoading2(false)
+          setLoginIDForm(false)
+          setCount(preCount => preCount+1)
+          formik4.resetForm()
+          alert('LoginID Successfully Changed')
+        }
+        if (response.status !== 200) {
+          formik4.resetForm()
+          setLoading2(false)
+          setLoginIDForm(false)
+          alert('LoginID not changed')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    },
+  })
+
   return (
     <>
       <div id='kt_account_signin_method' className='collapse show'>
         <div className='card-body border-top p-9'>
           <div className='d-flex flex-wrap align-items-center'>
-            <div>
+            <div id='kt_signin_password' className={' ' + (showNameForm && 'd-none')}>
               <div className='fs-6 fw-bolder mb-1'>Name</div>
               {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>}
             </div>
             <div
-              id='kt_signin_password_button'
-              className={'ms-auto ' + (showPasswordForm && 'd-none')}
+              id='kt_signin_password_edit'
+              className={'flex-row-fluid ' + (!showNameForm && 'd-none')}
             >
+              <form
+                onSubmit={formik3.handleSubmit}
+                id='kt_signin_change_password'
+                className='form'
+                noValidate
+              >
+                <div className='row mb-1'>
+                  <div className='col-lg-4'>
+                    <div className='fv-row mb-0'>
+                      <label htmlFor='name' className='form-label fs-6 fw-bolder mb-3'>
+                        New Name
+                      </label>
+                      <input
+                        style={{background: '#E0E3E9'}}
+                        type='text'
+                        className='form-control form-control-lg form-control-solid'
+                        id='name'
+                        {...formik3.getFieldProps('name')}
+                      />
+                      {formik3.touched.name && formik3.errors.name && (
+                        <div className='fv-plugins-message-container'>
+                          <div className='fv-help-block'>{formik3.errors.name}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className='d-flex mt-4'>
+                  <button
+                    id='kt_password_submit'
+                    type='submit'
+                    className='btn btn-primary me-2 px-6'
+                  >
+                    {!loading2 && 'Change Name'}
+                    {loading2 && (
+                      <span className='indicator-progress' style={{display: 'block'}}>
+                        Please wait...{' '}
+                        <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      formik3.resetForm()
+                      setNameForm(false)
+                    }}
+                    id='kt_password_cancel'
+                    type='button'
+                    className='btn btn-color-gray-400 btn-active-light-primary px-6'
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div id='kt_signin_password_button' className={'ms-auto ' + (showNameForm && 'd-none')}>
               <button
-                // onClick={() => {
-                //   setPasswordForm(true)
-                // }}
+                onClick={() => {
+                  setNameForm(true)
+                }}
                 className='btn btn-light btn-active-light-primary'
               >
                 Change Name
@@ -95,18 +271,77 @@ const Profile: React.FC = () => {
           </div>
           <div className='separator separator-dashed my-6'></div>
           <div className='d-flex flex-wrap align-items-center'>
-            <div>
-              <div className='fs-6 fw-bolder mb-1'>User ID</div>
-              {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.fullname}</div>}
+            <div id='kt_signin_password' className={' ' + (showLoginIDForm && 'd-none')}>
+              <div className='fs-6 fw-bolder mb-1'>UserID</div>
+              {currentUser && <div className='fw-bold text-gray-600'>{currentUser?.UserId}</div>}
+            </div>
+            <div
+              id='kt_signin_password_edit'
+              className={'flex-row-fluid ' + (!showLoginIDForm && 'd-none')}
+            >
+              <form
+                onSubmit={formik4.handleSubmit}
+                id='kt_signin_change_password'
+                className='form'
+                noValidate
+              >
+                <div className='row mb-1'>
+                  <div className='col-lg-4'>
+                    <div className='fv-row mb-0'>
+                      <label htmlFor='loginID' className='form-label fs-6 fw-bolder mb-3'>
+                        New UserID
+                      </label>
+                      <input
+                        style={{background: '#E0E3E9'}}
+                        type='text'
+                        className='form-control form-control-lg form-control-solid'
+                        id='loginID'
+                        {...formik4.getFieldProps('loginID')}
+                      />
+                      {formik4.touched.loginID && formik4.errors.loginID && (
+                        <div className='fv-plugins-message-container'>
+                          <div className='fv-help-block'>{formik4.errors.loginID}</div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className='d-flex mt-4'>
+                  <button
+                    id='kt_password_submit'
+                    type='submit'
+                    className='btn btn-primary me-2 px-6'
+                  >
+                    {!loading2 && 'Change UserID'}
+                    {loading2 && (
+                      <span className='indicator-progress' style={{display: 'block'}}>
+                        Please wait...{' '}
+                        <span className='spinner-border spinner-border-sm align-middle ms-2'></span>
+                      </span>
+                    )}
+                  </button>
+                  <button
+                    onClick={() => {
+                      formik4.resetForm()
+                      setLoginIDForm(false)
+                    }}
+                    id='kt_password_cancel'
+                    type='button'
+                    className='btn btn-color-gray-400 btn-active-light-primary px-6'
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
             <div
               id='kt_signin_password_button'
-              className={'ms-auto ' + (showPasswordForm && 'd-none')}
+              className={'ms-auto ' + (showLoginIDForm && 'd-none')}
             >
               <button
-                // onClick={() => {
-                //   setPasswordForm(true)
-                // }}
+                onClick={() => {
+                  setLoginIDForm(true)
+                }}
                 className='btn btn-light btn-active-light-primary'
               >
                 Change UserID
