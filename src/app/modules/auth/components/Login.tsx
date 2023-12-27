@@ -38,7 +38,7 @@ export function Login() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({email: values.email, password: values.password}),
+          body: JSON.stringify({login_id: values.email, password: values.password}),
         })
 
         if (!response.ok) {
