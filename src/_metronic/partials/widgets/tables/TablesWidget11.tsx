@@ -51,8 +51,8 @@ const formatTime = (inputTime) => {
 };
 
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: number) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize})
-
+  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize})
+  let size = "N/A"
   return (
     <div className={`card ${className}`}>
       <Tooltip
@@ -105,7 +105,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                           <div className='d-flex justify-content-start flex-column'>
                             <Link
                               to='/pdfView'
-                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'], file['total_size'])}
+                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size)}
                               className='text-dark fw-bold text-hover-primary fs-6'
                               data-tooltip-id='my-tooltip-inline'
                               data-tooltip-content='View Pdf'
@@ -113,9 +113,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                               {file['pdf_file_name']}{' '}
                             </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {file['total_size'] < 1024
-                                ? `${file['total_size']} KB`
-                                : `${(file['total_size'] / 1024).toFixed(2)} MB`}
+                              {size=SizeCalculator(file['total_size'])}
                             </span>
                           </div>
                         </div>
@@ -164,7 +162,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                                 {' '}
                                 <Link
                                   to='/process'
-                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'], file['total_size'])}
+                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size)}
                                   data-tooltip-id='my-tooltip-inline'
                                   data-tooltip-content='View Output'
                                 >
@@ -194,5 +192,8 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
     </div>
   )
 }
-
+function SizeCalculator(bytes){
+  if (bytes<1024) return bytes+" KB"
+  return (bytes/1024).toFixed(2)+" MB"
+}
 export {TablesWidget11}

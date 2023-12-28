@@ -1,15 +1,15 @@
 import {useState} from 'react'
-import './Upload.css'
 import {Document, pdfjs} from 'react-pdf'
-import {getAuth, useAuth} from '../../modules/auth'
 import {useNavigate} from 'react-router-dom'
+import {getAuth, useAuth} from '../../modules/auth'
+import './Upload.css'
 // import { Process } from '../process-builder/Process'
 // import {Tooltip} from 'react-tooltip'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: number) => ({
+  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: String) => ({
     key1: fileId,
     key2: fileName,
     key3: numPages,
@@ -18,7 +18,7 @@ const Upload: React.FC = () => {
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
-  const [fileSize, setfileSize] = useState<number | null>(null)
+  // const [fileSize, setfileSize] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [sameFileRequest, setSameFileRequest] = useState<number | null>(null)
   const token = getAuth()
@@ -60,7 +60,7 @@ const Upload: React.FC = () => {
           responseData.id,
           file?.name || 'DefaultFileName',
           `${numPages ?? 0}`,
-          Number(formatBytes(file?.size))
+          formatBytes(file?.size) as String
         )
         navigate('/process', {state: stateData})
       }
@@ -133,12 +133,13 @@ const Upload: React.FC = () => {
               <div>
                 <div className='text-muted d-flex mt-3'>
                   <div className='pe-5'>
-                    Pdf Size:{' '}
-                    {file
-                      ? (Number(formatBytes(file.size || 0)) > 1024)
+                    Pdf Size:{' '} 
+                    {/* {file
+                      ? Number(formatBytes(file.size || 0)) > 1024
                         ? `${(file.size || 0) / 1024} MB`
                         : `${formatBytes(file.size || 0)} KB`
-                      : 'N/A'}
+                      : 'N/A'} */}
+                     {file ? formatBytes(file.size || 0) : 'N/A'}
                   </div>
                   <div className='ps-5'>Total Page: {numPages}</div>
                   {file && (
@@ -193,11 +194,12 @@ const Upload: React.FC = () => {
 function formatBytes(bytes, decimals = 2) {
   if (bytes === 0) return '0 Bytes'
 
-  const kilobyte = 1024
-  const decimalValue = decimals < 0 ? 0 : decimals
-  // const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
 
-  const result = Math.floor(Math.log(bytes) / Math.log(kilobyte))
-  return parseFloat((bytes / Math.pow(kilobyte, result)).toFixed(decimalValue))
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
 }
 export {Upload}

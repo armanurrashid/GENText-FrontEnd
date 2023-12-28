@@ -24,7 +24,7 @@ const Process: FC = () => {
     fileId: string | null,
     fileName: string | null,
     filePage: string | null,
-    fileSize: number | null
+    fileSize: string | null
   ) => ({
     key1: fileId,
     key2: fileName,
@@ -41,7 +41,7 @@ const Process: FC = () => {
   let fileId: string | null = null
   let fileName: string | null = null
   let filePage: string | null = null
-  let fileSize: number | null = null
+  let fileSize: string | null = null
   try {
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
@@ -205,11 +205,13 @@ const Process: FC = () => {
             <div className='mx-5 d-flex text-muted fw-semibold d-block fs-6'>Page: {filePage} </div>
             <div className='mx-5 '>
               <span className='text-muted fw-semibold d-block fs-6'>
-                {fileSize !== null && fileSize !== undefined
+                {/* {fileSize !== null && fileSize !== undefined
                   ? fileSize < 1024
                     ? `Size: ${fileSize} KB`
                     : `Size: ${(fileSize / 1024).toFixed(2)} MB`
-                  : 'File size not available'}
+                  : 'File size not available'} */
+                  fileSize? fileSize: "N/A"
+                  }
               </span>
             </div>
           </div>
@@ -269,8 +271,8 @@ const Process: FC = () => {
               />
             </div>
             <div
-              className='col'
-              style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line'}}
+              className='col solluclass'
+              style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line', fontFamily: 'SolaimanLipi'}}
             >
               <p style={{color: 'black', whiteSpace: 'pre-line'}}>{selectedText}</p>
             </div>
