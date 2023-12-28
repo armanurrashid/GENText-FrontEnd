@@ -31,6 +31,7 @@ const AuthLayout = () => {
           <img
             className='mx-auto mt-15 w-275px w-md-50 w-xl-500px mb-10 mb-lg-20'
             src={toAbsoluteUrl('/media/logos/newLogo.png')}
+            
             alt=''
           />
         </div>

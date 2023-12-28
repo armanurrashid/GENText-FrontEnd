@@ -3,15 +3,12 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
 import {Tooltip} from 'react-tooltip'
 import pdf_icon from '../../../assets/images/pdf.svg'
-// import {getAuth, useAuth} from '../../../../app/modules/auth'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
-// import {Process} from '../../../../app/pages/process-builder/Process'
-// import {ActivityDrawer} from '../partials'
 
-type Props = {
-  className: string
-}
+// type Props = {
+//   className: string
+// }
 
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
@@ -28,25 +25,36 @@ const getStatusStyle = (status: string): string => {
 }
 
 const formatDate = (inputDate) => {
-  const date = new Date(inputDate);
+  const date = new Date(inputDate)
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  const formattedDate = `${day}-${month}-${year}`;
-  return formattedDate;
-};
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+  const formattedDate = `${day}-${month}-${year}`
+  return formattedDate
+}
 
 const formatTime = (inputTime) => {
-  const time = new Date(`2000-01-01T${inputTime}`);
-  return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-};
+  const time = new Date(`2000-01-01T${inputTime}`)
+  return time.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
+}
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: number) => ({
+  let size = "N/A"
+  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string) => ({
     key1: fileId,
     key2: fileName,
     key3: filePage,
@@ -73,11 +81,11 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                   {' '}
                   File Name{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '13%'}}>
+                <th className='min-w-100px text-center ' style={{width: '10%'}}>
                   {' '}
                   Upload Date{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '12%'}}>
+                <th className='min-w-100px text-center ' style={{width: '10%'}}>
                   {' '}
                   Upload Time{' '}
                 </th>
@@ -85,11 +93,11 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                   {' '}
                   Total Page{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '25%'}}>
+                <th className='min-w-100px text-center ' style={{width: '20%'}}>
                   {' '}
                   Status{' '}
                 </th>
-                <th className='min-w-100px text-center ' style={{width: '20%'}}>
+                <th className='min-w-100px text-center ' style={{width: '10%'}}>
                   {' '}
                   Actions{' '}
                 </th>
@@ -107,9 +115,6 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             </div>
                           </div>
                           <div className='d-flex justify-content-start flex-column'>
-                            {/* <a href='#' className='text-dark fw-bold text-hover-primary fs-6'>
-                              {file['pdf_file_name']}{' '}
-                            </a> */}
                             <Link
                               to='/pdfView'
                               state={dataToPass(
@@ -125,21 +130,19 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                               {file['pdf_file_name']}{' '}
                             </Link>
                             <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {file['total_size'] < 1024
-                                ? `${file['total_size']} KB`
-                                : `${(file['total_size'] / 1024).toFixed(2)} MB`}
+                            {size = SizeCalculator(file['total_size'])}
                             </span>
                           </div>
                         </div>
                       </td>
                       <td>
                         <span className='fw-semibold d-block fs-7 text-center fw-bold'>
-                        {formatDate(file['uploaded_date'])}
+                          {formatDate(file['uploaded_date'])}
                         </span>
                       </td>
                       <td>
                         <span className='fw-semibold d-block fs-7 text-center fw-bold'>
-                        {formatTime(file['uploaded_time'])}
+                          {formatTime(file['uploaded_time'])}
                         </span>
                       </td>
                       <td className='text-center'>
@@ -168,10 +171,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                             justify-content-center
                             mt-5
                           >
-                            <div
-                              // id='kt_activities_toggle'
-                              className='d-flex justify-content-center'
-                            >
+                            <div className='d-flex justify-content-center'>
                               <div
                                 className='btn btn-icon btn-bg-light btn-sm me-1'
                                 data-tooltip-id='my-tooltip-inline'
@@ -184,7 +184,7 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                                     file['id'],
                                     file['pdf_file_name'],
                                     file['total_page'],
-                                    file['total_size']
+                                    size
                                   )}
                                 >
                                   <FontAwesomeIcon icon={faEye} />
@@ -213,4 +213,8 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
   )
 }
 
+function SizeCalculator(bytes){
+  if (bytes<1024) return bytes+" KB"
+  return (bytes/1024).toFixed(2)+" MB"
+}
 export {TablesWidget10}
