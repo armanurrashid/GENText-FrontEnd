@@ -4,6 +4,7 @@ import {PageTitle} from '../../../_metronic/layout/core'
 import {TablesWidget10, CardsWidget20,} from '../../../_metronic/partials/widgets'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 import {useAuth } from '../../modules/auth'
+import { URL } from '../../modules/auth/core/_requests'
 
 
 const colors = [
@@ -39,6 +40,7 @@ const DashboardPage: FC <{ data:any,tableData:any,total:any}> = ({data,tableData
 )
 
 const DashboardWrapper: FC = () => {
+  // const API_URL = process.env.BACKEND_API_URL
   const intl = useIntl()
   const token= getAuth();
   const {currentUser} = useAuth()
@@ -52,7 +54,7 @@ const DashboardWrapper: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/file/dashboard/${currentUser?.id}/`,{
+        const response = await fetch(`${URL}/api/file/dashboard/${currentUser?.id}/`,{
           headers: {
             Authorization: `Bearer ${token?.api_token}`
           },
@@ -77,7 +79,7 @@ const DashboardWrapper: FC = () => {
   useEffect(() => {
     const fetchTableData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/file/recent/${currentUser?.id}/`,{
+        const response = await fetch(`${URL}/api/file/recent/${currentUser?.id}/`,{
           headers: {
             Authorization: `Bearer ${token?.api_token}`
           },

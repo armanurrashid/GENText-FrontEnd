@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from 'react'
 import {useNavigate} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {useLocation} from 'react-router-dom'
+import { URL } from '../core/_requests'
 import './OTP.css'
 
 const initialValues = {
@@ -9,6 +10,7 @@ const initialValues = {
 }
 
 export function OTP() {
+  // const API_URL = process.env.BACKEND_API_URL
   const [allValuesAsString, setAllValuesAsString] = useState('')
   const [otp, setOtp] = useState('')
   const [loading, setLoading] = useState(false)
@@ -103,7 +105,7 @@ export function OTP() {
             await setAllValuesAsString(otpValue)
           }
           setLoading(true)
-          const response = await fetch('http://localhost:8000/api/user/confirm-otp/', {
+          const response = await fetch(`${URL}/api/user/confirm-otp/`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -141,7 +143,7 @@ export function OTP() {
         await setAllValuesAsString(otpValue)
       }
       setLoading(true)
-      const response = await fetch('http://localhost:8000/api/user/request-otp/', {
+      const response = await fetch(`${URL}/api/user/request-otp/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -168,7 +170,7 @@ export function OTP() {
   const handleCancelButton = async () => {
 
     try {
-      const response = await fetch('http://localhost:8000/api/user/cancel-registration/', {
+      const response = await fetch(`${URL}/api/user/cancel-registration/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

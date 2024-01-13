@@ -3,9 +3,7 @@ import {Document, pdfjs} from 'react-pdf'
 import {useNavigate} from 'react-router-dom'
 import {getAuth, useAuth} from '../../modules/auth'
 import './Upload.css'
-// import { Process } from '../process-builder/Process'
-// import {Tooltip} from 'react-tooltip'
-
+import {URL} from '../../modules/auth/core/_requests'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
@@ -18,19 +16,18 @@ const Upload: React.FC = () => {
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
   const [numPages, setNumPages] = useState<number | null>(null)
-  // const [fileSize, setfileSize] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [sameFileRequest, setSameFileRequest] = useState<number | null>(null)
   const token = getAuth()
   const {currentUser} = useAuth()
 
-  const processfile = async (url) => {
+  const uploadFile = async (url) => {
     try {
       const formData = new FormData()
       setLoading(true)
       if (file) {
-        const basePath = 'C:/Users/User/Downloads/'
-        const fullPath = `${basePath}${file.name}`
+        // const basePath = 'C:/Users/User/Downloads/'
+        // const fullPath = `${basePath}${file.name}`
         formData.append('file', file)
       }
 
@@ -52,12 +49,59 @@ const Upload: React.FC = () => {
       if (response.ok) {
         const responseData = await response.json()
         setLoading(false)
-        // const size = formatBytes(file?.size)
-        // console.log("Arman",size)
-        // setfileSize(Number(size))
-        // console.log({fileSize})
+        await pdf2image(`${responseData.id}`)
+      }
+    } catch (error) {
+      console.error('Error processing file:', error)
+    }
+  }
+
+  const pdf2image = async (fileID) => {
+    try {
+      setLoading(true)
+
+      const response = await fetch(`${URL}/api/ocr/pdf2image/${fileID}/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token?.api_token}`,
+        },
+      })
+
+      if (!response.ok) {
+        alert('PDF to image unsuccessful')
+        setLoading(false)
+      }
+
+      if (response.ok) {
+        await image2text(`${fileID}`)
+        setLoading(false)
+      }
+    } catch (error) {
+      console.error('Error processing file:', error)
+    }
+  }
+
+  const image2text = async (fileID) => {
+    try {
+      setLoading(true)
+
+      const response = await fetch(`${URL}/api/ocr/image2text/${fileID}/`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token?.api_token}`,
+        },
+      })
+
+      if (!response.ok) {
+        alert('PDF to image unsuccessful')
+        setLoading(false)
+      }
+
+      if (response.ok) {
+        const responseData = await response.json()
+        setLoading(false)
         const stateData = dataToPass(
-          responseData.id,
+          fileID,
           file?.name || 'DefaultFileName',
           `${numPages ?? 0}`,
           formatBytes(file?.size) as String
@@ -117,7 +161,7 @@ const Upload: React.FC = () => {
                     className='btn btn-primary'
                     type='submit'
                     id='kt_password_reset_submit'
-                    onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/force/')}
+                    onClick={() => uploadFile(`${URL}/api/ocr/upload-pdf/force/`)}
                   >
                     {!loading && <span className='indicator-label'>Continue</span>}
                     {loading && (
@@ -132,15 +176,7 @@ const Upload: React.FC = () => {
             ) : (
               <div>
                 <div className='text-muted d-flex mt-3'>
-                  <div className='pe-5'>
-                    Pdf Size:{' '} 
-                    {/* {file
-                      ? Number(formatBytes(file.size || 0)) > 1024
-                        ? `${(file.size || 0) / 1024} MB`
-                        : `${formatBytes(file.size || 0)} KB`
-                      : 'N/A'} */}
-                     {file ? formatBytes(file.size || 0) : 'N/A'}
-                  </div>
+                  <div className='pe-5'>Pdf Size: {file ? formatBytes(file.size || 0) : 'N/A'}</div>
                   <div className='ps-5'>Total Page: {numPages}</div>
                   {file && (
                     <Document file={file} onLoadSuccess={(info) => setNumPages(info.numPages)} />
@@ -152,7 +188,7 @@ const Upload: React.FC = () => {
                       className='btn btn-primary'
                       type='submit'
                       id='kt_password_reset_submit'
-                      onClick={() => processfile('http://localhost:8000/api/ocr/pdf2text/')}
+                      onClick={() => uploadFile(`${URL}/api/ocr/upload-pdf/`)}
                     >
                       {!loading && <span className='indicator-label'>Process</span>}
                       {loading && (

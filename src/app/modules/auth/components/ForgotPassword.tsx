@@ -3,6 +3,7 @@ import * as Yup from 'yup'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
+import { URL } from '../core/_requests'
 // import {requestPassword} from '../core/_requests'
 
 const initialValues = {
@@ -18,6 +19,7 @@ const forgotPasswordSchema = Yup.object().shape({
 })
 
 export function ForgotPassword() {
+  // const API_URL = process.env.BACKEND_API_URL
   const [loading, setLoading] = useState(false)
   const [hasErrors, setHasErrors] = useState<boolean | undefined>(undefined)
   const formik = useFormik({
@@ -26,7 +28,7 @@ export function ForgotPassword() {
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/reset-password/', {
+        const response = await fetch(`${URL}/api/user/reset-password/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

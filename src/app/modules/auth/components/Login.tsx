@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 import {useFormik} from 'formik'
 import {useAuth} from '../core/Auth'
+import { URL } from '../core/_requests'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -26,14 +27,13 @@ const initialValues = {
 export function Login() {
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
-
   const formik = useFormik({
     initialValues,
     validationSchema: loginSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/login/', {
+        const response = await fetch(`${URL}/api/user/login/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -55,12 +55,7 @@ export function Login() {
           // console.log(data.token)
         }
       } catch (error) {
-        // console.error('Error during API request:', error)
-
-        // Provide user feedback about the error
         setStatus('An error occurred during login.')
-
-        // Handle loading state for errors
       } finally {
         setLoading(false)
       }
