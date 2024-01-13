@@ -2,7 +2,7 @@ import axios from 'axios'
 import {AuthModel, UserModel} from './_models'
 
 const API_URL = process.env.REACT_APP_API_URL
-
+// const URL_A = process.env.BACKEND_API_URL
 export const GET_USER_BY_ACCESSTOKEN_URL = `${API_URL}/verify_token`
 export const LOGIN_URL = `${API_URL}/login`
 export const REGISTER_URL = `${API_URL}/register`
@@ -41,11 +41,13 @@ export function requestPassword(email: string) {
 }
 
 export function getUserByToken(token: string) {
-  return axios.post<UserModel>("http://localhost:8000/api/user/get-user-by-token", {
+  return axios.post<UserModel>('http://localhost:8000/api/user/get-user-by-token', {
     api_token: token,
     headers: {
-      'Authorization': `Bearer ${token}`
-    }
-  },
-  )
+      Authorization: `Bearer ${token}`,
+    },
+  })
 }
+
+export const URL = 'http://localhost:8000'
+// export const URL = 'https://207.180.252.5:8000'

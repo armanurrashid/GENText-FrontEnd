@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import {Link, useNavigate} from 'react-router-dom'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
+import { URL } from '../core/_requests'
 
 const initialValues = {
   name: '',
@@ -38,13 +39,14 @@ export function Registration() {
   const navigate = useNavigate()
   const [loading, setLoading] = useState(false)
   const {saveAuth, setCurrentUser} = useAuth()
+  // const API_URL = process.env.BACKEND_API_URL
   const formik = useFormik({
     initialValues,
     validationSchema: registrationSchema,
     onSubmit: async (values, {setStatus, setSubmitting}) => {
       try {
         setLoading(true)
-        const response = await fetch('http://localhost:8000/api/user/register/', {
+        const response = await fetch(`${URL}/api/user/register/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

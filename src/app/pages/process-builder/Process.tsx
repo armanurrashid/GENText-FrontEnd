@@ -4,7 +4,7 @@ import './Process.css'
 // import {useNavigate} from 'react-router-dom'
 import pdf_icon from '../../../_metronic/assets/images/pdf.svg'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faPlus, faMinus, faArrowLeft} from '@fortawesome/free-solid-svg-icons'
+import {faPlus, faMinus} from '@fortawesome/free-solid-svg-icons'
 import '../../../../src/_metronic/partials/layout/activity-drawer/ActivityDrawer.css'
 import image1 from '../../../../src/_metronic/assets/images/img-1.jpg'
 import image2 from '../../../../src/_metronic/assets/images/img-2.jpg'
@@ -15,10 +15,11 @@ import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
 import image7 from '../../../../src/_metronic/assets/images/img-7.jpg'
 import image8 from '../../../../src/_metronic/assets/images/img-8.jpg'
 import image9 from '../../../../src/_metronic/assets/images/img-9.jpg'
-// import {faFilePdf} from '@fortawesome/free-solid-svg-icons'
 import {getAuth} from '../../modules/auth'
+import { URL } from '../../modules/auth/core/_requests'
 
 const Process: FC = () => {
+  // const API_URL = process.env.BACKEND_API_URL
   // const navigate = useNavigate()
   const dataToPass = (
     fileId: string | null,
@@ -73,24 +74,10 @@ const Process: FC = () => {
     image7,
   ])
 
-  // const handleBack = () => {
-  //   console.log(sourceClass)
-  //   switch (sourceClass) {
-  //     case 'Upload':
-  //       navigate("/upload")
-  //       break;
-  //     case 'History':
-  //       console.log("Hisotry")
-  //       navigate("/history")
-  //       break;
-  //       default:
-  //   }
-  // };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/file/detail/${fileId}/`, {
+        const response = await fetch(`${URL}/api/file/detail/${fileId}/`, {
           headers: {
             Authorization: `Bearer ${token?.api_token}`,
           },
@@ -167,8 +154,6 @@ const Process: FC = () => {
       image?.removeEventListener('mouseup', handleMouseUp)
     }
   }, [imageref, scale])
-  // console.log(fileId)
-  // console.log(fileName)
   return (
     <div style={{width: '100%', maxWidth: '1500px'}}>
       <div className='position-relative' id='kt_activities_body'>
@@ -182,11 +167,6 @@ const Process: FC = () => {
           data-kt-scroll-offset='5px'
         >
           <div className='fileInfo'>
-            {/* <div>
-              <button type='submit' className='btn btn-primary'>
-                <FontAwesomeIcon icon={faArrowLeft} />
-              </button>
-            </div> */}
             <div className='me-3 d-flex'>
               <img src={pdf_icon} alt='' style={{width: '30px'}} />
             </div>
@@ -205,13 +185,7 @@ const Process: FC = () => {
             <div className='mx-5 d-flex text-muted fw-semibold d-block fs-6'>Page: {filePage} </div>
             <div className='mx-5 '>
               <span className='text-muted fw-semibold d-block fs-6'>
-                {/* {fileSize !== null && fileSize !== undefined
-                  ? fileSize < 1024
-                    ? `Size: ${fileSize} KB`
-                    : `Size: ${(fileSize / 1024).toFixed(2)} MB`
-                  : 'File size not available'} */
-                  fileSize? fileSize: "N/A"
-                  }
+                {fileSize? fileSize: "N/A"}
               </span>
             </div>
           </div>

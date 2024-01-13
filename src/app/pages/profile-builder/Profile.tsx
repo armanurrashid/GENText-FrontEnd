@@ -4,7 +4,7 @@ import {useFormik} from 'formik'
 import {IUpdatePassword, updatePassword,} from '../../modules/accounts/components/settings/SettingsModel'
 import {useAuth} from '../../../app/modules/auth/core/Auth'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
-
+import { URL } from '../../modules/auth/core/_requests'
 const initialValues = {
   name: '',
   loginID: '',
@@ -53,7 +53,7 @@ const Profile: React.FC = () => {
 useEffect(()=>{
   const fetchData= async ()=>{
     try {
-      const response = await fetch( `http://localhost:8000/api/user/get-user-by-token`, {
+      const response = await fetch( `${URL}/api/user/get-user-by-token`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token?.api_token}`,
@@ -82,7 +82,7 @@ useEffect(()=>{
     onSubmit: async (values) => {
       setLoading2(true)
       try {
-        const response = await fetch('http://localhost:8000/api/user/change-password/', {
+        const response = await fetch(`${URL}/api/user/change-password/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -96,9 +96,7 @@ useEffect(()=>{
         })
 
         if (response.status === 201) {
-         
           const data = await response.json()
-          // console.log(data);
           setLoading2(false)
           setPasswordForm(false)
           alert('Password Successfully Changed')
@@ -121,7 +119,7 @@ useEffect(()=>{
     onSubmit: async (values) => {
       setLoading2(true)
       try {
-        const response = await fetch( `http://localhost:8000/api/user/reset-name/${currentUser?.id}/`, {
+        const response = await fetch( `${URL}/api/user/reset-name/${currentUser?.id}/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -158,7 +156,7 @@ useEffect(()=>{
     onSubmit: async (values) => {
       setLoading2(true)
       try {
-        const response = await fetch( `http://localhost:8000/api/user/set-login-id/${currentUser?.id}/`, {
+        const response = await fetch( `${URL}/api/user/set-login-id/${currentUser?.id}/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

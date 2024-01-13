@@ -3,15 +3,17 @@ import {TablesWidget11} from '../../../_metronic/partials/widgets'
 import {getAuth, useAuth} from '../../modules/auth'
 import nohistory from '../../../../src/_metronic/assets/images/nohistory.png'
 import { Process } from '../process-builder/Process'
+import { URL } from '../../modules/auth/core/_requests'
 
 const History: React.FC = () => {
+  // const API_URL = process.env.BACKEND_API_URL
   const token = getAuth()
   const {currentUser} = useAuth()
   const [historytableData, setHistoryTableData] = useState(null)
   useEffect(() => {
     const fetchTableData = async () => {
       try {
-        const response = await fetch(`http://localhost:8000/api/file/info/${currentUser?.id}/`, {
+        const response = await fetch(`${URL}/api/file/info/${currentUser?.id}/`, {
           headers: {
             Authorization: `Bearer ${token?.api_token}`,
           },

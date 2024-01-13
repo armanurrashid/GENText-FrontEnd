@@ -5,6 +5,7 @@ import clsx from 'clsx'
 import {Link, useNavigate} from 'react-router-dom'
 import {PasswordMeterComponent} from '../../../../_metronic/assets/ts/components'
 import {useAuth} from '../core/Auth'
+import { URL } from '../core/_requests'
 
 const initialValues = {
   new_password: '',
@@ -24,6 +25,7 @@ const setpasswordSchema = Yup.object().shape({
 })
 
 export function SetPassword() {
+  // const API_URL = process.env.BACKEND_API_URL
   const navigate = useNavigate()
   const currentPath = window.location.pathname
   const parts = currentPath.split('/')
@@ -44,7 +46,7 @@ export function SetPassword() {
       try {
         setLoading(true)
         const response = await fetch(
-          `http://localhost:8000/api/user/set-new-password/${param1}/${param2}/`,
+          `${URL}/api/user/set-new-password/${param1}/${param2}/`,
           {
             method: 'POST',
             headers: {
