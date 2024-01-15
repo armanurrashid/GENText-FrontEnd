@@ -11,7 +11,7 @@ type Props = {
 const CardsWidget20 = ({className, description, count,total,colors}: Props) => {
 
   const countArray = Array.isArray(count) ? count : [count];
-  console.log(total)
+  // console.log(total)
   return (
     <div
       className={`card card-flush bgi-no-repeat bgi-size-contain bgi-position-x-end  ${className}`}

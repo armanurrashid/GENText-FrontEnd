@@ -6,10 +6,6 @@ import pdf_icon from '../../../assets/images/pdf.svg'
 import clsx from 'clsx'
 import {Link} from 'react-router-dom'
 
-// type Props = {
-//   className: string
-// }
-
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
   switch (status) {
@@ -54,11 +50,12 @@ const formatTime = (inputTime) => {
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
   let size = "N/A"
-  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string) => ({
+  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string, fileLocation:string) => ({
     key1: fileId,
     key2: fileName,
     key3: filePage,
     key4: fileSize,
+    key5: fileLocation,
   })
   return (
     <div className={`card ${className}`}>
@@ -121,7 +118,8 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                                 file['id'],
                                 file['pdf_file_name'],
                                 file['total_page'],
-                                file['total_size']
+                                file['total_size'],
+                                file['file_location']
                               )}
                               className='text-dark fw-bold text-hover-primary fs-6'
                               data-tooltip-id='my-tooltip-inline'
@@ -184,7 +182,8 @@ const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, 
                                     file['id'],
                                     file['pdf_file_name'],
                                     file['total_page'],
-                                    size
+                                    size,
+                                    file['file_location']
                                   )}
                                 >
                                   <FontAwesomeIcon icon={faEye} />
