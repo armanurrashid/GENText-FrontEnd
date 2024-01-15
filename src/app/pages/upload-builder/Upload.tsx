@@ -27,8 +27,6 @@ const Upload: React.FC = () => {
       const formData = new FormData()
       setLoading(true)
       if (file) {
-        // const basePath = 'C:/Users/User/Downloads/'
-        // const fullPath = `${basePath}${file.name}`
         formData.append('file', file)
       }
 
@@ -225,7 +223,6 @@ const Upload: React.FC = () => {
         )}
         <input type='file' accept='.pdf' hidden id='file-input' onChange={handleFile} />
       </div>
-      {/* <Process sourceClass="Upload" /> */}
     </main>
   )
 }
