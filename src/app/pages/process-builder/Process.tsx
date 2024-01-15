@@ -6,31 +6,22 @@ import pdf_icon from '../../../_metronic/assets/images/pdf.svg'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faMinus} from '@fortawesome/free-solid-svg-icons'
 import '../../../../src/_metronic/partials/layout/activity-drawer/ActivityDrawer.css'
-import image1 from '../../../../src/_metronic/assets/images/img-1.jpg'
-import image2 from '../../../../src/_metronic/assets/images/img-2.jpg'
-import image3 from '../../../../src/_metronic/assets/images/img-3.jpg'
-import image4 from '../../../../src/_metronic/assets/images/img-4.jpg'
-import image5 from '../../../../src/_metronic/assets/images/img-5.jpg'
-import image6 from '../../../../src/_metronic/assets/images/img-6.jpg'
-import image7 from '../../../../src/_metronic/assets/images/img-7.jpg'
-import image8 from '../../../../src/_metronic/assets/images/img-8.jpg'
-import image9 from '../../../../src/_metronic/assets/images/img-9.jpg'
 import {getAuth} from '../../modules/auth'
 import { URL } from '../../modules/auth/core/_requests'
 
 const Process: FC = () => {
-  // const API_URL = process.env.BACKEND_API_URL
-  // const navigate = useNavigate()
   const dataToPass = (
     fileId: string | null,
     fileName: string | null,
     filePage: string | null,
-    fileSize: string | null
+    fileSize: string | null,
+    fileLocation: string | null,
   ) => ({
     key1: fileId,
     key2: fileName,
     key3: filePage,
     key4: fileSize,
+    key5: fileLocation,
   })
   const token = getAuth()
   const location = useLocation()
@@ -43,36 +34,21 @@ const Process: FC = () => {
   let fileName: string | null = null
   let filePage: string | null = null
   let fileSize: string | null = null
+  let fileLocation: string | null = null
   try {
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
     fileName = fileState ? fileState.key2 : null
     filePage = fileState ? fileState.key3 : null
     fileSize = fileState ? fileState.key4 : null
+    fileLocation = fileState ? fileState.key5 : null
   } catch (error) {
     console.error('Error decoding URI component:', error)
   }
 
   const [selectedText, setSelectedText] = useState('')
-  const [selectedImage, setSelectedImage] = useState(image1)
-  const [allImg, setAllImg] = useState([
-    image1,
-    image2,
-    image3,
-    image4,
-    image5,
-    image6,
-    image7,
-    image8,
-    image9,
-    image1,
-    image2,
-    image3,
-    image4,
-    image5,
-    image6,
-    image7,
-  ])
+  const [selectedImage, setSelectedImage] = useState('')
+  const [allImg, setAllImg] = useState([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,6 +62,8 @@ const Process: FC = () => {
         if (response.ok) {
           const result = await response.json()
           setData(result)
+          const imageLocations = result.map(page => page.image_location);
+          setAllImg(imageLocations)
           setSelectedText(result[0].text)
         }
       } catch (error) {
@@ -174,13 +152,13 @@ const Process: FC = () => {
               className='fw-bold fs-6 pb-0 d-flex me-5'
               style={{wordBreak: 'break-word', alignItems: 'center'}}
             >
-              <Link
+              {/* <Link
                 to='/pdfView'
-                state={dataToPass(fileId, fileName, filePage, fileSize)}
+                state={dataToPass(fileId, fileName, filePage, fileSize, fileLocation)}
                 className='text-dark fw-bold text-hover-primary fs-6'
-              >
+              > */}
                 {fileName}{' '}
-              </Link>
+              {/* </Link> */}
             </div>
             <div className='mx-5 d-flex text-muted fw-semibold d-block fs-6'>Page: {filePage} </div>
             <div className='mx-5 '>

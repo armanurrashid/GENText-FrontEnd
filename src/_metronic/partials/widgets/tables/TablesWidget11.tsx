@@ -5,19 +5,7 @@ import {Link} from 'react-router-dom'
 import clsx from 'clsx'
 import {Tooltip} from 'react-tooltip'
 import pdf_icon from '../../../assets/images/pdf.svg'
-// import { Process } from '../../../../app/pages/process-builder/Process'
-// import { getAuth, useAuth } from '../../../../app/modules/auth';
-// interface CustomLinkProps {
-//   to: {
-//     pathname: string
-//     state: {
-//       key1: string
-//     }
-//   }
-// }
-// type Props = {
-//   className: string
-// }
+
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
   switch (status) {
@@ -51,7 +39,7 @@ const formatTime = (inputTime) => {
 };
 
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize})
+  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string, fileLocation:string) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize, key5: fileLocation})
   let size = "N/A"
   return (
     <div className={`card ${className}`}>
@@ -105,7 +93,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                           <div className='d-flex justify-content-start flex-column'>
                             <Link
                               to='/pdfView'
-                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size)}
+                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size, file['file_location'])}
                               className='text-dark fw-bold text-hover-primary fs-6'
                               data-tooltip-id='my-tooltip-inline'
                               data-tooltip-content='View Pdf'
@@ -162,7 +150,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                                 {' '}
                                 <Link
                                   to='/process'
-                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size)}
+                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size, file['file_location'])}
                                   data-tooltip-id='my-tooltip-inline'
                                   data-tooltip-content='View Output'
                                 >
@@ -188,7 +176,6 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
           </table>
         </div>
       </div>
-      {/* <Process sourceClass="Upload" /> */}
     </div>
   )
 }

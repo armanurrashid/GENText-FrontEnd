@@ -132,10 +132,10 @@ export function Login() {
       {/* begin::Wrapper */}
       <div className='d-flex justify-content-between mt-5'>
         <div className="form-check">
-          <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
+          {/* <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
           <label className="link-primary fs-base fw-semibold" htmlFor="flexCheckChecked">
             Remember Me
-          </label>
+          </label> */}
         </div>
         <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8'>
           <div />

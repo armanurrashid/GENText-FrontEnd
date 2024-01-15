@@ -14,17 +14,19 @@ const PdfView: React.FC = () => {
   const [data, setData] = useState<ProcessData[] | null>(null)
   let fileId: string | null = null
   let filename: string | null = null
+  let pdfLocation: string | null = null
   try {
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
     filename = fileState ? fileState.key2 : null
+    pdfLocation = fileState? fileState.key5 : null
   } catch (error) {
     console.error('Error decoding URI component:', error)
   }
 
-  const [viewPdf, setViewPdf] = useState<string | null>("https://arxiv.org/pdf/1903.02895.pdf");
+  const [viewPdf, setViewPdf] = useState<string | null>(pdfLocation);
   const fileType = ['application/pdf']
-
+console.log(pdfLocation)
   const newplugin = defaultLayoutPlugin()
   return (
     <div className='App'>

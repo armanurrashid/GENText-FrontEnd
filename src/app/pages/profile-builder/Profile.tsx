@@ -173,7 +173,7 @@ useEffect(()=>{
           setLoginIDForm(false)
           setCount(preCount => preCount+1)
           formik4.resetForm()
-          alert(data.msg)
+          alert(data.message)
         }
         if (response.status !== 200) {
           const data = await response.json()
