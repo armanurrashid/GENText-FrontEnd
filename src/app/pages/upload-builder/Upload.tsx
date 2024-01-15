@@ -7,11 +7,12 @@ import {URL} from '../../modules/auth/core/_requests'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
-  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: String) => ({
+  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: String, pdfLocation:string) => ({
     key1: fileId,
     key2: fileName,
     key3: numPages,
     key4: fileSize,
+    key5: pdfLocation,
   })
   const navigate = useNavigate()
   const [file, setFile] = useState<File | null>(null)
@@ -26,8 +27,6 @@ const Upload: React.FC = () => {
       const formData = new FormData()
       setLoading(true)
       if (file) {
-        // const basePath = 'C:/Users/User/Downloads/'
-        // const fullPath = `${basePath}${file.name}`
         formData.append('file', file)
       }
 
@@ -48,15 +47,16 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
+        console.log(responseData)
         setLoading(false)
-        await pdf2image(`${responseData.id}`)
+        await pdf2image(responseData.id, responseData.pdfLocation)
       }
     } catch (error) {
       console.error('Error processing file:', error)
     }
   }
 
-  const pdf2image = async (fileID) => {
+  const pdf2image = async (fileID,pdfLocation) => {
     try {
       setLoading(true)
 
@@ -73,7 +73,7 @@ const Upload: React.FC = () => {
       }
 
       if (response.ok) {
-        await image2text(`${fileID}`)
+        await image2text(fileID,pdfLocation)
         setLoading(false)
       }
     } catch (error) {
@@ -81,7 +81,7 @@ const Upload: React.FC = () => {
     }
   }
 
-  const image2text = async (fileID) => {
+  const image2text = async (fileID,pdfLocation) => {
     try {
       setLoading(true)
 
@@ -104,7 +104,8 @@ const Upload: React.FC = () => {
           fileID,
           file?.name || 'DefaultFileName',
           `${numPages ?? 0}`,
-          formatBytes(file?.size) as String
+          formatBytes(file?.size) as String,
+          pdfLocation
         )
         navigate('/process', {state: stateData})
       }
@@ -222,7 +223,6 @@ const Upload: React.FC = () => {
         )}
         <input type='file' accept='.pdf' hidden id='file-input' onChange={handleFile} />
       </div>
-      {/* <Process sourceClass="Upload" /> */}
     </main>
   )
 }

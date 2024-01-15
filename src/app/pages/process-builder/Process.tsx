@@ -1,7 +1,6 @@
 import {FC, useState, useEffect, useRef} from 'react'
 import {Link, useLocation} from 'react-router-dom'
 import './Process.css'
-// import {useNavigate} from 'react-router-dom'
 import pdf_icon from '../../../_metronic/assets/images/pdf.svg'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faMinus} from '@fortawesome/free-solid-svg-icons'
@@ -152,13 +151,13 @@ const Process: FC = () => {
               className='fw-bold fs-6 pb-0 d-flex me-5'
               style={{wordBreak: 'break-word', alignItems: 'center'}}
             >
-              {/* <Link
+              <Link
                 to='/pdfView'
                 state={dataToPass(fileId, fileName, filePage, fileSize, fileLocation)}
                 className='text-dark fw-bold text-hover-primary fs-6'
-              > */}
+              >
                 {fileName}{' '}
-              {/* </Link> */}
+              </Link>
             </div>
             <div className='mx-5 d-flex text-muted fw-semibold d-block fs-6'>Page: {filePage} </div>
             <div className='mx-5 '>
