@@ -122,13 +122,13 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
                           <span>{file['total_page']}</span>
                         </div>
                       </td>
-                      <td className={`text-center ${getStatusStyle(file['upload_status'])}`}>
+                      <td className={`text-center ${getStatusStyle(file['extraction_status'])}`}>
                         <div className='d-flex flex-column w-100 me-2 fw-bold'>
                           {' '}
                           <span>
-                          {file['upload_status'] === 'complete'
+                          {file['extraction_status'] === 'complete'
                               ? 'Text Extraction Successful'
-                              : file['upload_status'] === 'incomplete'
+                              : file['extraction_status'] === 'incomplete'
                               ? 'Text Extraction Unsuccessful'
                               : 'Text Extraction in Process'}
                           </span>
