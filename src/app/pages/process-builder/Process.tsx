@@ -67,7 +67,7 @@ const Process: FC = () => {
           console.log(result['image_location'])
           const imageLocations = result.map(page => page.image_location);
           setAllImg(imageLocations)
-          setSelectedImage(`${URL}${imageLocations[0]}`)
+          setSelectedImage(`${URL}/${imageLocations[0]}`)
           setSelectedText(result[0].text)
         }
       } catch (error) {
@@ -79,7 +79,7 @@ const Process: FC = () => {
   }, [])
 
   const handleImageClick = (index: number) => {
-    setSelectedImage(`${URL}${allImg[index]}`)
+    setSelectedImage(`${URL}/${allImg[index]}`)
     if (data) {
       setSelectedText(data[index].text)
     }
@@ -178,7 +178,7 @@ const Process: FC = () => {
                 <div key={index} className='imageContainer'>
                   <img
                     key={index}
-                    src={`${URL}${img}`}
+                    src={`${URL}/${img}`}
                     onClick={() => handleImageClick(index)}
                     alt=''
                     width={80}

@@ -27,15 +27,18 @@ const PdfView: React.FC = () => {
 
   const [viewPdf, setViewPdf] = useState<string | null>(pdfLocation)
   const fileType = ['application/pdf']
+  console.log(pdfLocation)
   const extractedPortion = pdfLocation?.substring(pdfLocation.indexOf("media"));
-  // console.log(extractedPortion)
+  console.log(extractedPortion)
+  const fileUrl=`${URL}${extractedPortion}`
+  console.log(fileUrl)
   const newplugin = defaultLayoutPlugin()
   return (
     <div className='App'>
       <div className='container '>
         <div className='pdf-container'>
           <Worker workerUrl='https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js'>
-            {viewPdf && <Viewer fileUrl={`${URL}${extractedPortion}`} plugins={[newplugin]} />}
+            {viewPdf && <Viewer fileUrl={`${URL}/${extractedPortion}`} plugins={[newplugin]} />}
             {!viewPdf && <>No PDF</>}
           </Worker>
         </div>
