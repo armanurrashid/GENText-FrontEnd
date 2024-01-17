@@ -45,9 +45,11 @@ const Process: FC = () => {
     console.error('Error decoding URI component:', error)
   }
 
+  console.log(fileLocation)
+
   const [selectedText, setSelectedText] = useState('')
   const [selectedImage, setSelectedImage] = useState('')
-  const [allImg, setAllImg] = useState([])
+  const [allImg, setAllImg] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -61,8 +63,11 @@ const Process: FC = () => {
         if (response.ok) {
           const result = await response.json()
           setData(result)
+          console.log(result)
+          console.log(result['image_location'])
           const imageLocations = result.map(page => page.image_location);
           setAllImg(imageLocations)
+          setSelectedImage(`${URL}${imageLocations[0]}`)
           setSelectedText(result[0].text)
         }
       } catch (error) {
@@ -74,7 +79,7 @@ const Process: FC = () => {
   }, [])
 
   const handleImageClick = (index: number) => {
-    setSelectedImage(allImg[index])
+    setSelectedImage(`${URL}${allImg[index]}`)
     if (data) {
       setSelectedText(data[index].text)
     }
@@ -173,7 +178,7 @@ const Process: FC = () => {
                 <div key={index} className='imageContainer'>
                   <img
                     key={index}
-                    src={img}
+                    src={`${URL}${img}`}
                     onClick={() => handleImageClick(index)}
                     alt=''
                     width={80}
