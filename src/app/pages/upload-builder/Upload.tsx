@@ -47,7 +47,6 @@ const Upload: React.FC = () => {
 
       if (response.ok) {
         const responseData = await response.json()
-        console.log(responseData)
         setLoading(false)
         await pdf2image(responseData.id, responseData.pdfLocation)
       }

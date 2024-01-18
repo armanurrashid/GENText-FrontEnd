@@ -15,8 +15,6 @@ const colors = [
 ];
 
 const DashboardPage: FC <{ data:any,tableData:any,total:any}> = ({data,tableData,total}) => (
-  
-
   <>
     <div className='row row-cols-1 row-cols-sm-2 row-cols-md-2 row-cols-lg-4 g-4'>
     {Object.entries(data).map(([key, value], index) => (
@@ -40,15 +38,11 @@ const DashboardPage: FC <{ data:any,tableData:any,total:any}> = ({data,tableData
 )
 
 const DashboardWrapper: FC = () => {
-  // const API_URL = process.env.BACKEND_API_URL
   const intl = useIntl()
   const token= getAuth();
   const {currentUser} = useAuth()
   const [cardsData,setCardsData] = useState({"complete":0,"pending":0,"incomplete":0,"total":0})
   const [tableData,setTableData] =useState(0)
-  // const [success,setSuccess] =useState(0)
-  // const [unsuccess,setUnsuccess] =useState(0)
-  // const [processing,setProcessing] =useState(0)
   const [total,setTotal] =useState(0)
 
   useEffect(() => {
@@ -61,9 +55,6 @@ const DashboardWrapper: FC = () => {
         });
         if (response.ok){
           const data = await response.json();
-          // setSuccess(data.data.Successful)
-          // setProcessing(data.data.Processing)
-          // setUnsuccess(data.data.Unsuccessful)
           setTotal(data.data.Total)
           setCardsData(data.data);
         }
@@ -96,7 +87,6 @@ const DashboardWrapper: FC = () => {
     }
     fetchTableData();
   },[]);
-  //  console.log(cardsData)
   if (cardsData === null) {
     return <div>Loading...</div>;
   }

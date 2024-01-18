@@ -45,7 +45,6 @@ const Process: FC = () => {
     console.error('Error decoding URI component:', error)
   }
 
-  console.log(fileLocation)
 
   const [selectedText, setSelectedText] = useState('')
   const [selectedImage, setSelectedImage] = useState('')
@@ -63,8 +62,6 @@ const Process: FC = () => {
         if (response.ok) {
           const result = await response.json()
           setData(result)
-          console.log(result)
-          console.log(result['image_location'])
           const imageLocations = result.map(page => page.image_location);
           setAllImg(imageLocations)
           setSelectedImage(`${URL}${imageLocations[0]}`)
