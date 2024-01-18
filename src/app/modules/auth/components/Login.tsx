@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import {useState} from 'react'
 import * as Yup from 'yup'
 import clsx from 'clsx'
@@ -9,7 +8,6 @@ import { URL } from '../core/_requests'
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
-    // .email('Wrong email format')
     .min(3, 'Minimum 3 symbols')
     .max(50, 'Maximum 50 symbols')
     .required('Email / UserID is required'),
@@ -52,7 +50,6 @@ export function Login() {
           const AuthData = {api_token: data.token.access, refreshToken: data.token.refresh}
           saveAuth(data.user)
           setCurrentUser(data.user)
-          // console.log(data.token)
         }
       } catch (error) {
         setStatus('An error occurred during login.')
@@ -127,9 +124,7 @@ export function Login() {
           </div>
         )}
       </div>
-      {/* end::Form group */}
 
-      {/* begin::Wrapper */}
       <div className='d-flex justify-content-between mt-5'>
         <div className="form-check">
           {/* <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" />
@@ -139,12 +134,9 @@ export function Login() {
         </div>
         <div className='d-flex flex-stack flex-wrap gap-3 fs-base fw-semibold mb-8'>
           <div />
-
-          {/* begin::Link */}
           <Link to='/auth/forgot-password' className='link-primary'>
             Forgot Password ?
           </Link>
-          {/* end::Link */}
         </div>
       </div>
 
@@ -164,7 +156,6 @@ export function Login() {
           )}
         </button>
       </div>
-      {/* end::Action */}
 
       <div className='text-gray-500 text-center fw-semibold fs-6'>
         Not a Member yet?{' '}

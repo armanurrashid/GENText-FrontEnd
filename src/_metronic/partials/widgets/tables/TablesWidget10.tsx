@@ -8,7 +8,6 @@ import {Link} from 'react-router-dom'
 
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
-  console.log(status)
   switch (status) {
     case 'complete':
       return 'text-success'

@@ -67,8 +67,7 @@ export function OTP() {
   const [timerExpired, setTimerExpired] = useState(false)
   useEffect(() => {
     if (isResending) {
-      // Reset the timer when isResending becomes true
-      setTimeRemaining(30)
+      setTimeRemaining(120)
       setTimerExpired(false)
     }
   }, [isResending])
@@ -121,7 +120,6 @@ export function OTP() {
             setSubmitting(false)
           }
           if (response.ok) {
-            console.log('ok')
             navigate('/auth/login')
             setHasErrors(false)
             setLoading(false)

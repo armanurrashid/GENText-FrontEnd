@@ -50,6 +50,5 @@ export function getUserByToken(token: string) {
   })
 }
 
-// export const URL = 'http://localhost:8000'
 export const URL = 'https://207.180.252.5:8000'
 

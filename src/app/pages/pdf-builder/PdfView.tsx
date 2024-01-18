@@ -29,9 +29,7 @@ const PdfView: React.FC = () => {
   const fileType = ['application/pdf']
   console.log(pdfLocation)
   const extractedPortion = pdfLocation?.substring(pdfLocation.indexOf("media"));
-  console.log(extractedPortion)
-  const fileUrl=`${URL}${extractedPortion}`
-  console.log(fileUrl)
+
   const newplugin = defaultLayoutPlugin()
   return (
     <div className='App'>
