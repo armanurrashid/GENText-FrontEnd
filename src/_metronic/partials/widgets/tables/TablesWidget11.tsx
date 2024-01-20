@@ -1,10 +1,11 @@
-import React from 'react'
+import React, {useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
 import {Link} from 'react-router-dom'
 import clsx from 'clsx'
 import {Tooltip} from 'react-tooltip'
 import pdf_icon from '../../../assets/images/pdf.svg'
+import './TableWidget.css'
 
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
@@ -21,26 +22,63 @@ const getStatusStyle = (status: string): string => {
 }
 
 const formatDate = (inputDate) => {
-  const date = new Date(inputDate);
+  const date = new Date(inputDate)
   const months = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
-  ];
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  const formattedDate = `${day}-${month}-${year}`;
-  return formattedDate;
-};
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ]
+  const day = date.getDate()
+  const month = months[date.getMonth()]
+  const year = date.getFullYear()
+  const formattedDate = `${day}-${month}-${year}`
+  return formattedDate
+}
 
 const formatTime = (inputTime) => {
-  const time = new Date(`2000-01-01T${inputTime}`);
-  return time.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-};
+  const time = new Date(`2000-01-01T${inputTime}`)
+  return time.toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
+}
 
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
-  const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string, fileLocation:string) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize, key5: fileLocation})
-  let size = "N/A"
+  const [query, setQuery] = useState('')
+  const [entriesPerPage, setEntriesPerPage] = useState(5)
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.ceil(tableData.length / entriesPerPage)
+  const handlePageChange = (newPage) => {
+    setCurrentPage(newPage)
+  }
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      handlePageChange(currentPage + 1)
+    }
+  }
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      handlePageChange(currentPage - 1)
+    }
+  }
+
+  const dataToPass = (
+    fileId: string,
+    fileName: string,
+    filePage: string,
+    fileSize: string,
+    fileLocation: string
+  ) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize, key5: fileLocation})
+  let size = 'N/A'
+
   return (
     <div className={`card ${className}`}>
       <Tooltip
@@ -49,6 +87,32 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
         style={{backgroundColor: '#B8E2F2'}}
       />
       <div className='card-body py-3'>
+        <div className='mt-2'>
+          <div className='table_header'>
+            <div className='d-flex align-items-center'>
+              <h6 className='mb-0'>Show </h6>
+              <select
+                className='form-select mx-2'
+                onChange={(e) => setEntriesPerPage(parseInt(e.target.value))}
+                value={entriesPerPage}
+                style={{flex: '1', fontWeight: 'bold'}}
+              >
+                <option value={5}>5</option>
+                <option value={10}>10</option>
+                <option value={20}>20</option>
+              </select>
+              <h6 className='mb-0'>entries </h6>
+            </div>
+
+            <div className='d-flex flex-row'>
+              <input
+                placeholder='Search'
+                className='searchInput'
+                onChange={(e) => setQuery(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
         <div className='table-responsive'>
           <table className='table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4'>
             <thead>
@@ -81,106 +145,154 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
             </thead>
             <tbody>
               {tableData
-                ? tableData.map((file, index) => (
-                    <tr key={index}>
-                      <td style={{wordBreak: 'break-word'}}>
-                        <div className='d-flex align-items-center'>
-                          <div className='symbol symbol-45px me-5'>
-                            <div>
-                              <img src={pdf_icon} alt="" style={{width: '30px'}}/>
+                ? tableData.slice((currentPage - 1) * entriesPerPage, currentPage * entriesPerPage).filter((file) =>
+                      Object.values(file).some(
+                        (field) =>
+                        typeof field === 'string' && field.toLowerCase().includes(query.toLowerCase())
+                      )
+                    )
+                    .slice(0, entriesPerPage)
+                    .map((file, index) => (
+                      <tr key={index}>
+                        <td style={{wordBreak: 'break-word'}}>
+                          <div className='d-flex align-items-center'>
+                            <div className='symbol symbol-45px me-5'>
+                              <div>
+                                <img src={pdf_icon} alt='' style={{width: '30px'}} />
+                              </div>
+                            </div>
+                            <div className='d-flex justify-content-start flex-column'>
+                              <Link
+                                to='/pdfView'
+                                state={dataToPass(
+                                  file['id'],
+                                  file['pdf_file_name'],
+                                  file['total_page'],
+                                  size,
+                                  file['file_location']
+                                )}
+                                className='text-dark fw-bold text-hover-primary fs-6'
+                                data-tooltip-id='my-tooltip-inline'
+                                data-tooltip-content='View Pdf'
+                              >
+                                {file['pdf_file_name']}{' '}
+                              </Link>
+                              <span className='text-muted fw-semibold text-muted d-block fs-7'>
+                                {(size = SizeCalculator(file['total_size']))}
+                              </span>
                             </div>
                           </div>
-                          <div className='d-flex justify-content-start flex-column'>
-                            <Link
-                              to='/pdfView'
-                              state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size, file['file_location'])}
-                              className='text-dark fw-bold text-hover-primary fs-6'
-                              data-tooltip-id='my-tooltip-inline'
-                              data-tooltip-content='View Pdf'
-                            >
-                              {file['pdf_file_name']}{' '}
-                            </Link>
-                            <span className='text-muted fw-semibold text-muted d-block fs-7'>
-                              {size=SizeCalculator(file['total_size'])}
+                        </td>
+                        <td>
+                          <span className='fw-semibold d-block fs-7 text-center fw-bold'>
+                            {formatDate(file['uploaded_date'])}
+                          </span>
+                        </td>
+                        <td>
+                          <span className='fw-semibold d-block fs-7 text-center fw-bold'>
+                            {formatTime(file['uploaded_time'])}
+                          </span>
+                        </td>
+                        <td className='text-center'>
+                          <div className='d-flex flex-column w-100 me-2 fw-bold'>
+                            {' '}
+                            <span>{file['total_page']}</span>
+                          </div>
+                        </td>
+                        <td className={`text-center ${getStatusStyle(file['extraction_status'])}`}>
+                          <div className='d-flex flex-column w-100 me-2 fw-bold'>
+                            {' '}
+                            <span>
+                              {file['extraction_status'] === 'complete'
+                                ? 'Text Extraction Successful'
+                                : file['extraction_status'] === 'incomplete'
+                                ? 'Text Extraction Unsuccessful'
+                                : 'Text Extraction in Process'}
                             </span>
                           </div>
-                        </div>
-                      </td>
-                      <td>
-                        <span className='fw-semibold d-block fs-7 text-center fw-bold'>
-                        {formatDate(file['uploaded_date'])}
-                        </span>
-                      </td>
-                      <td>
-                        <span className='fw-semibold d-block fs-7 text-center fw-bold'>
-                        {formatTime(file['uploaded_time'])}
-                        </span>
-                      </td>
-                      <td className='text-center'>
-                        <div className='d-flex flex-column w-100 me-2 fw-bold'>
-                          {' '}
-                          <span>{file['total_page']}</span>
-                        </div>
-                      </td>
-                      <td className={`text-center ${getStatusStyle(file['extraction_status'])}`}>
-                        <div className='d-flex flex-column w-100 me-2 fw-bold'>
-                          {' '}
-                          <span>
-                          {file['extraction_status'] === 'complete'
-                              ? 'Text Extraction Successful'
-                              : file['extraction_status'] === 'incomplete'
-                              ? 'Text Extraction Unsuccessful'
-                              : 'Text Extraction in Process'}
-                          </span>
-                        </div>
-                      </td>
-                      <td>
-                        <div>
-                          <div
-                            className={clsx('app-navbar-item', itemClass)}
-                            d-flex
-                            justify-content-center
-                            mt-5
-                          >
+                        </td>
+                        <td>
+                          <div>
                             <div
-                              // id='kt_activities_toggle'
-                              className='d-flex justify-content-center'
+                              className={clsx('app-navbar-item', itemClass)}
+                              d-flex
+                              justify-content-center
+                              mt-5
                             >
-                              <div className='btn btn-icon btn-bg-light btn-sm me-1'>
-                                {' '}
-                                <Link
-                                  to='/process'
-                                  state={dataToPass(file['id'], file['pdf_file_name'], file['total_page'],size, file['file_location'])}
+                              <div className='d-flex justify-content-center'>
+                                <div className='btn btn-icon btn-bg-light btn-sm me-1'>
+                                  {' '}
+                                  <Link
+                                    to='/process'
+                                    state={dataToPass(
+                                      file['id'],
+                                      file['pdf_file_name'],
+                                      file['total_page'],
+                                      size,
+                                      file['file_location']
+                                    )}
+                                    data-tooltip-id='my-tooltip-inline'
+                                    data-tooltip-content='View Output'
+                                  >
+                                    <FontAwesomeIcon icon={faEye} />
+                                  </Link>
+                                </div>
+                                <div
+                                  className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
                                   data-tooltip-id='my-tooltip-inline'
-                                  data-tooltip-content='View Output'
+                                  data-tooltip-content='Download Images'
                                 >
-                                  <FontAwesomeIcon icon={faEye} />
-                                </Link>
-                              </div>
-                              <div
-                                className='btn btn-icon btn-bg-light btn-active-color-primary btn-sm me-1'
-                                data-tooltip-id='my-tooltip-inline'
-                                data-tooltip-content='Download Images'
-                              >
-                                {' '}
-                                <FontAwesomeIcon icon={faDownload} />
+                                  {' '}
+                                  <FontAwesomeIcon icon={faDownload} />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                        </td>
+                      </tr>
+                    ))
                 : null}
             </tbody>
           </table>
+        </div>
+        <div className='d-flex justify-content-end mb-2'>
+          {totalPages > 1 ? (
+            <ul className='pagination'>
+              <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                <button
+                  className={`page-link px-3 py-2 ${
+                    currentPage === 1 ? 'text-secondary fw-bold' : 'text-primary fw-bold'
+                  }`}
+                  tabIndex={-1}
+                  onClick={handlePrevPage}
+                >
+                  {'Prev'}
+                </button>
+              </li>
+              <li className='page-item'>
+                <p className='page-link px-3 py-2 fw-bold'>
+                  {currentPage} of {totalPages} <span className='sr-only'>(current)</span>
+                </p>
+              </li>
+              <li className={`page-item ${currentPage >= totalPages ? 'disabled' : ''}`}>
+                <button
+                  className={`page-link px-3 py-2 ${
+                    currentPage >= totalPages ? 'text-secondary fw-bold' : 'text-primary fw-bold'
+                  }`}
+                  onClick={handleNextPage}
+                >
+                  {'Next'}
+                </button>
+              </li>
+            </ul>
+          ) : null}
         </div>
       </div>
     </div>
   )
 }
-function SizeCalculator(bytes){
-  if (bytes<1024) return bytes+" KB"
-  return (bytes/1024).toFixed(2)+" MB"
+function SizeCalculator(bytes) {
+  if (bytes < 1024) return bytes + ' KB'
+  return (bytes / 1024).toFixed(2) + ' MB'
 }
 export {TablesWidget11}

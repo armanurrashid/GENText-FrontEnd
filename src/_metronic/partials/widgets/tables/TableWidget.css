@@ -1,0 +1,37 @@
+.history-product-image {
+    width: 60px;
+    height: 65px;
+    border-radius: 6px;
+}
+
+.table_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+}
+
+.searchInput {
+    padding: 10px 20px;
+    margin: 0 10px;
+    outline: none;
+    border: 1px solid#157347;
+    border-radius: 6px;
+    color: #157347;
+}
+
+::placeholder {
+    color: #157347;
+}
+
+@media (max-width: 870px) {
+    .table_header {
+        flex-direction: column;
+    }
+    .table_header>div {
+        margin-top: 10px;
+    }
+    .table_header>div:last-child {
+        text-align: center;
+    }
+}

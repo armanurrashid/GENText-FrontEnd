@@ -1,67 +1,74 @@
-import clsx from 'clsx'
-// import {KTIcon} from '../../../helpers'
-import {HeaderNotificationsMenu, ThemeModeSwitcher} from '../../../partials'
-// import {useLayout} from '../../core'
-import {useAuth} from '../../../../app/modules/auth'
-import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
-import {faSignOutAlt,faBell} from '@fortawesome/free-solid-svg-icons'
+import clsx from 'clsx';
+import { ThemeModeSwitcher } from '../../../partials';
+import { useAuth } from '../../../../app/modules/auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt, faMicrophone } from '@fortawesome/free-solid-svg-icons';
+import { useState, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const itemClass = 'ms-1 ms-md-4'
-const btnClass =
-  'btn btn-icon btn-custom btn-icon-muted btn-active-light btn-active-color-primary w-35px h-35px'
-const userAvatarClass = 'symbol-35px'
-// const btnIconClass = 'fs-2'
+const itemClass = 'ms-1 ms-md-4';
 
 const Navbar = () => {
-  const {logout} = useAuth()
-  // const {config} = useLayout()
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+  const [isMicrophoneClicked, setMicrophoneClicked] = useState(false);
+  const voiceRef = useRef<SpeechRecognition | null>(null);
+
+  const handleMicrophoneClick = () => {
+    setMicrophoneClicked((prev) => !prev);
+
+    if (!isMicrophoneClicked) {
+      alert(isMicrophoneClicked)
+      voiceRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      if (voiceRef.current) {
+        voiceRef.current.lang = 'en-BD';
+        voiceRef.current.interimResults = false;
+        voiceRef.current.continuous = true;
+        voiceRef.current.onresult = function (event) {
+          const spokenText = event.results[event.results.length - 1][0].transcript;
+          const lowerCaseSpokenText = spokenText.toLowerCase();
+          if (lowerCaseSpokenText.includes('profile')) {
+            navigate('/profile');
+          } else if (lowerCaseSpokenText.includes('dashboard')) {
+            navigate('/dashboard');
+          } else if (lowerCaseSpokenText.includes('history')) {
+            navigate('/history');
+          } else if (lowerCaseSpokenText.includes('upload')) {
+            navigate('/upload');
+          }
+        };
+        if (voiceRef.current) {
+          voiceRef.current.start();
+        }
+      }
+    } else if (voiceRef.current) {
+      alert("sd")
+      voiceRef.current.stop();
+    }
+  };
+
   return (
     <div className='app-navbar flex-shrink-0'>
-      {/* <div className={clsx('app-navbar-item align-items-stretch', itemClass)}>
-        <Search />
-      </div> */}
-
-      {/* <div className={clsx('app-navbar-item', itemClass)}>
-        <div
-          data-kt-menu-trigger="{default: 'hover'}"
-          data-kt-menu-attach='parent'
-          data-kt-menu-placement='bottom-end'
-          className={btnClass}
-        >
-           <FontAwesomeIcon icon={faBell} />
-        </div>
-        <HeaderNotificationsMenu />
-      </div> */}
-
+      <div className={clsx('app-navbar-item', itemClass)} onClick={handleMicrophoneClick}>
+        <FontAwesomeIcon
+          icon={faMicrophone}
+          className='px-3'
+          style={{
+            height: '18px',
+            color: isMicrophoneClicked ? 'blue' : 'black',
+          }}
+        />
+      </div>
       <div className={clsx('app-navbar-item', itemClass)}>
         <ThemeModeSwitcher toggleBtnClass={clsx('btn-active-light-primary btn-custom')} />
       </div>
-
       <div className={clsx('app-navbar-item', itemClass)}>
-        <div
-          className={clsx('cursor-pointer symbol', userAvatarClass)}
-          data-kt-menu-trigger="{default: 'click'}"
-          data-kt-menu-attach='parent'
-          data-kt-menu-placement='bottom-end'
-        >
-          <a onClick={logout} className='menu-link px-5'>
-            <FontAwesomeIcon icon={faSignOutAlt} />
-          </a>
-        </div>
+        <a onClick={logout} className='menu-link px-5 mt-2'>
+          <FontAwesomeIcon icon={faSignOutAlt} style={{ height: '15px' }} />
+        </a>
       </div>
-
-      {/* {config.app?.header?.default?.menu?.display && (
-        <div className='app-navbar-item d-lg-none ms-2 me-n3' title='Show header menu'>
-          <div
-            className='btn btn-icon btn-active-color-primary w-35px h-35px'
-            id='kt_app_header_menu_toggle'
-          >
-            <KTIcon iconName='text-align-left' className={btnIconClass} />
-          </div>
-        </div>
-      )} */}
     </div>
-  )
-}
+  );
+};
 
-export {Navbar}
+export { Navbar };
