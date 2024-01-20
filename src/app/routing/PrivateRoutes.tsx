@@ -12,7 +12,6 @@ import {Process} from '../pages/process-builder/Process'
 import {ActivityDrawer} from '../../_metronic/partials'
 
 const PrivateRoutes = () => {
-  // const location = useLocation();
   return (
     <Routes>
       <Route element={<MasterLayout />}>
