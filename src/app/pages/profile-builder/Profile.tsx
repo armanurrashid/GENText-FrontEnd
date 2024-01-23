@@ -1,10 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import * as Yup from 'yup'
 import {useFormik} from 'formik'
-import {IUpdatePassword, updatePassword,} from '../../modules/accounts/components/settings/SettingsModel'
+import {
+  IUpdatePassword,
+  updatePassword,
+} from '../../modules/accounts/components/settings/SettingsModel'
 import {useAuth} from '../../../app/modules/auth/core/Auth'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
-import { URL } from '../../modules/auth/core/_requests'
+import {URL} from '../../modules/auth/core/_requests'
+import {useSelector} from 'react-redux'
+// import voicecommandStore from '../store/index'
 const initialValues = {
   name: '',
   loginID: '',
@@ -40,7 +45,10 @@ const loginIDFormValidationSchema = Yup.object().shape({
 })
 
 const Profile: React.FC = () => {
-  const {currentUser,setCurrentUser} = useAuth()
+  const { command } = useSelector((state: { voicecommand: { command: string } }) => state.voicecommand);
+  // alert(command)
+  // console.log(command)
+  const {currentUser, setCurrentUser} = useAuth()
   const [count, setCount] = useState(0)
   const token = getAuth()
   const [passwordUpdateData, setPasswordUpdateData] = useState<IUpdatePassword>(updatePassword)
@@ -50,29 +58,29 @@ const Profile: React.FC = () => {
 
   const [loading2, setLoading2] = useState(false)
 
-useEffect(()=>{
-  const fetchData= async ()=>{
-    try {
-      const response = await fetch( `${URL}/api/user/get-user-by-token`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token?.api_token}`,
-        },
-      })
-  
-      if (response.status === 200) {
-        const data = await response.json()
-        setCurrentUser(data)
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`${URL}/api/user/get-user-by-token`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token?.api_token}`,
+          },
+        })
+
+        if (response.status === 200) {
+          const data = await response.json()
+          setCurrentUser(data)
+        }
+        if (response.status !== 200) {
+          alert('Error Fetching Data')
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
       }
-      if (response.status !== 200) {
-        alert('Error Fetching Data')
-      }
-    } catch (error) {
-      console.error('Error fetching user data:', error)
     }
-  }
-  fetchData();
-},[count]);
+    fetchData()
+  }, [count])
 
   const formik2 = useFormik<IUpdatePassword>({
     initialValues: {
@@ -119,7 +127,7 @@ useEffect(()=>{
     onSubmit: async (values) => {
       setLoading2(true)
       try {
-        const response = await fetch( `${URL}/api/user/reset-name/${currentUser?.id}/`, {
+        const response = await fetch(`${URL}/api/user/reset-name/${currentUser?.id}/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -134,7 +142,7 @@ useEffect(()=>{
           const data = await response.json()
           setLoading2(false)
           setNameForm(false)
-          setCount(preCount => preCount+1)
+          setCount((preCount) => preCount + 1)
           formik3.resetForm()
           alert('Name Successfully Changed')
         }
@@ -156,7 +164,7 @@ useEffect(()=>{
     onSubmit: async (values) => {
       setLoading2(true)
       try {
-        const response = await fetch( `${URL}/api/user/set-login-id/${currentUser?.id}/`, {
+        const response = await fetch(`${URL}/api/user/set-login-id/${currentUser?.id}/`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -171,7 +179,7 @@ useEffect(()=>{
           const data = await response.json()
           setLoading2(false)
           setLoginIDForm(false)
-          setCount(preCount => preCount+1)
+          setCount((preCount) => preCount + 1)
           formik4.resetForm()
           alert(data.message)
         }

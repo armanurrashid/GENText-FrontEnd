@@ -4,9 +4,11 @@ import {useNavigate} from 'react-router-dom'
 import {getAuth, useAuth} from '../../modules/auth'
 import './Upload.css'
 import {URL} from '../../modules/auth/core/_requests'
+import { useSelector } from 'react-redux'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
+  // const command=useSelector((state)=>state.voicecommand);
   const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: String, pdfLocation:string) => ({
     key1: fileId,
     key2: fileName,

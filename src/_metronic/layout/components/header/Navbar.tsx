@@ -1,51 +1,54 @@
-import clsx from 'clsx';
-import { ThemeModeSwitcher } from '../../../partials';
-import { useAuth } from '../../../../app/modules/auth';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSignOutAlt, faMicrophone } from '@fortawesome/free-solid-svg-icons';
-import { useState, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import clsx from 'clsx'
+import {ThemeModeSwitcher} from '../../../partials'
+import {useAuth} from '../../../../app/modules/auth'
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
+import {faSignOutAlt, faMicrophone} from '@fortawesome/free-solid-svg-icons'
+import {useState, useRef} from 'react'
+import {useNavigate} from 'react-router-dom'
+import {useDispatch} from 'react-redux'
+import {voicecommandActions} from '../../../../app/pages/store/voice-command'
 
-const itemClass = 'ms-1 ms-md-4';
+const itemClass = 'ms-1 ms-md-4'
 
 const Navbar = () => {
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-  const [isMicrophoneClicked, setMicrophoneClicked] = useState(false);
-  const voiceRef = useRef<SpeechRecognition | null>(null);
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const {logout} = useAuth()
+  const [isMicrophoneClicked, setMicrophoneClicked] = useState(false)
+  const voiceRef = useRef<SpeechRecognition | null>(null)
 
   const handleMicrophoneClick = () => {
-    setMicrophoneClicked((prev) => !prev);
+    setMicrophoneClicked((prev) => !prev)
 
     if (!isMicrophoneClicked) {
-      alert(isMicrophoneClicked)
-      voiceRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+      // alert(isMicrophoneClicked)
+      voiceRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
       if (voiceRef.current) {
-        voiceRef.current.lang = 'en-BD';
-        voiceRef.current.interimResults = false;
-        voiceRef.current.continuous = true;
+        voiceRef.current.lang = 'en-BD'
+        voiceRef.current.interimResults = false
+        voiceRef.current.continuous = true
         voiceRef.current.onresult = function (event) {
-          const spokenText = event.results[event.results.length - 1][0].transcript;
-          const lowerCaseSpokenText = spokenText.toLowerCase();
+          const spokenText = event.results[event.results.length - 1][0].transcript
+          const lowerCaseSpokenText = spokenText.toLowerCase()
+          dispatch(voicecommandActions.add(lowerCaseSpokenText))
           if (lowerCaseSpokenText.includes('profile')) {
-            navigate('/profile');
+            navigate('/profile')
           } else if (lowerCaseSpokenText.includes('dashboard')) {
-            navigate('/dashboard');
+            navigate('/dashboard')
           } else if (lowerCaseSpokenText.includes('history')) {
-            navigate('/history');
+            navigate('/history')
           } else if (lowerCaseSpokenText.includes('upload')) {
-            navigate('/upload');
+            navigate('/upload')
           }
-        };
+        }
         if (voiceRef.current) {
-          voiceRef.current.start();
+          voiceRef.current.start()
         }
       }
     } else if (voiceRef.current) {
-      alert("sd")
-      voiceRef.current.stop();
+      voiceRef.current.stop()
     }
-  };
+  }
 
   return (
     <div className='app-navbar flex-shrink-0'>
@@ -64,11 +67,11 @@ const Navbar = () => {
       </div>
       <div className={clsx('app-navbar-item', itemClass)}>
         <a onClick={logout} className='menu-link px-5 mt-2'>
-          <FontAwesomeIcon icon={faSignOutAlt} style={{ height: '15px' }} />
+          <FontAwesomeIcon icon={faSignOutAlt} style={{height: '15px'}} />
         </a>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export { Navbar };
+export {Navbar}
