@@ -24,6 +24,8 @@ const PdfView: React.FC = () => {
   } catch (error) {
     console.error('Error decoding URI component:', error)
   }
+  console.log(fileId)
+  console.log(filename)
 
   const [viewPdf, setViewPdf] = useState<string | null>(pdfLocation)
   const fileType = ['application/pdf']

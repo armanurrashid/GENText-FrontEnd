@@ -1,11 +1,12 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faEye, faDownload} from '@fortawesome/free-solid-svg-icons'
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
 import clsx from 'clsx'
 import {Tooltip} from 'react-tooltip'
 import pdf_icon from '../../../assets/images/pdf.svg'
 import './TableWidget.css'
+import {useSelector} from 'react-redux'
 
 const itemClass = 'ms-1 ms-md-4'
 const getStatusStyle = (status: string): string => {
@@ -50,10 +51,59 @@ const formatTime = (inputTime) => {
 }
 
 const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
+  const navigate = useNavigate()
+  const {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
   const [query, setQuery] = useState('')
   const [entriesPerPage, setEntriesPerPage] = useState(5)
   const [currentPage, setCurrentPage] = useState(1)
-  const totalPages = Math.ceil(tableData.length / entriesPerPage)
+  var totalPages = Math.ceil(tableData.length / entriesPerPage)
+  
+  function formatFileName(fileName) {
+    const formattedFileName = fileName
+      .replace(/\.[^.]+$/, '')
+      .replace(/\d+[_/.\-]+/g, ' ')
+      .replace(/_/g, ' ')
+      .replace(/[^\w\s]/g, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+    return formattedFileName+".pdf"
+  }
+
+  useEffect(() => {
+    const fetchData = async () => {
+      console.log(command[command.length - 1])
+      try {
+        if (command) {
+          const lastCommand = command[command.length - 1]
+          if (lastCommand.startsWith('search')) {
+            setQuery(lastCommand.substr(7))
+          } else if (lastCommand.startsWith('open')) {
+            const fileNameToOpen = lastCommand.substr(5)
+            const fileNameToOpenWithPdf = fileNameToOpen.toLowerCase() + '.pdf'
+            tableData.forEach((file, index) => {
+              const formattedName = formatFileName(file['pdf_file_name'])
+              if (formattedName.toLowerCase() === fileNameToOpenWithPdf) {
+                const pdfFize = SizeCalculator(file['total_size'])
+                navigate('/pdfView', {
+                  state: dataToPass(
+                    file['id'],
+                    file['pdf_file_name'],
+                    file['total_page'],
+                    pdfFize,
+                    file['file_location']
+                  ),
+                })
+              }
+            })
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+    fetchData()
+  }, [command])
+
   const handlePageChange = (newPage) => {
     setCurrentPage(newPage)
   }
@@ -77,7 +127,17 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
     fileSize: string,
     fileLocation: string
   ) => ({key1: fileId, key2: fileName, key3: filePage, key4: fileSize, key5: fileLocation})
+
   let size = 'N/A'
+  const filteredData = tableData
+    ? tableData.filter((file) =>
+        Object.values(file).some(
+          (field) => typeof field === 'string' && field.toLowerCase().includes(query.toLowerCase())
+        )
+      )
+    : '0'
+  totalPages = Math.ceil(filteredData.length / entriesPerPage)
+  console.log(filteredData)
 
   return (
     <div className={`card ${className}`}>
@@ -108,6 +168,7 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
               <input
                 placeholder='Search'
                 className='searchInput'
+                value={query}
                 onChange={(e) => setQuery(e.target.value)}
               />
             </div>
@@ -117,6 +178,10 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
           <table className='table table-row-dashed table-row-gray-300 align-middle gs-0 gy-4'>
             <thead>
               <tr className='fw-bold text-muted'>
+                {/* <th className='min-w-100px text-center ' style={{width: '5%'}}>
+                  {' '}
+                  SL No{' '}
+                </th> */}
                 <th className='min-w-100px text-center ' style={{width: '40%'}}>
                   {' '}
                   File Name{' '}
@@ -145,15 +210,19 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
             </thead>
             <tbody>
               {tableData
-                ? tableData.slice((currentPage - 1) * entriesPerPage, currentPage * entriesPerPage).filter((file) =>
+                ? tableData
+                    .filter((file) =>
                       Object.values(file).some(
                         (field) =>
-                        typeof field === 'string' && field.toLowerCase().includes(query.toLowerCase())
+                          typeof field === 'string' &&
+                          field.toLowerCase().includes(query.toLowerCase())
                       )
                     )
+                    .slice((currentPage - 1) * entriesPerPage, currentPage * entriesPerPage)
                     .slice(0, entriesPerPage)
                     .map((file, index) => (
                       <tr key={index}>
+                        {/* <td className=''>{file['id']}</td> */}
                         <td style={{wordBreak: 'break-word'}}>
                           <div className='d-flex align-items-center'>
                             <div className='symbol symbol-45px me-5'>

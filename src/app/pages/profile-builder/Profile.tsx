@@ -9,11 +9,7 @@ import {useAuth} from '../../../app/modules/auth/core/Auth'
 import {getAuth} from '../../modules/auth/core/AuthHelpers'
 import {URL} from '../../modules/auth/core/_requests'
 import {useSelector} from 'react-redux'
-// import voicecommandStore from '../store/index'
-const initialValues = {
-  name: '',
-  loginID: '',
-}
+const initialValues = {name: '', loginID: ''}
 const passwordFormValidationSchema = Yup.object().shape({
   currentPassword: Yup.string()
     .min(3, 'Minimum 3 symbols')
@@ -45,9 +41,7 @@ const loginIDFormValidationSchema = Yup.object().shape({
 })
 
 const Profile: React.FC = () => {
-  const { command } = useSelector((state: { voicecommand: { command: string } }) => state.voicecommand);
-  // alert(command)
-  // console.log(command)
+  const {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
   const {currentUser, setCurrentUser} = useAuth()
   const [count, setCount] = useState(0)
   const token = getAuth()
@@ -55,9 +49,10 @@ const Profile: React.FC = () => {
   const [showPasswordForm, setPasswordForm] = useState<boolean>(false)
   const [showNameForm, setNameForm] = useState<boolean>(false)
   const [showLoginIDForm, setLoginIDForm] = useState<boolean>(false)
-
   const [loading2, setLoading2] = useState(false)
-
+  const [reloadData, setReloadData] = useState(false);
+  console.log(command)
+  console.log(command[command.length - 1])
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -75,12 +70,144 @@ const Profile: React.FC = () => {
         if (response.status !== 200) {
           alert('Error Fetching Data')
         }
+        if(command && command[command.length - 1].includes('cancel')) {
+          formik3.resetForm()
+          setNameForm(false)
+          formik4.resetForm()
+          setLoginIDForm(false)
+          formik2.resetForm()
+          setPasswordForm(false)
+        }
+        else if (command && command[command.length - 1].includes('change name')) {
+          setNameForm(true)
+          setLoginIDForm(false)
+          setPasswordForm(false)
+        } 
+        else if (command && command[command.length - 1].includes('change user id')) {
+          setNameForm(false)
+          setLoginIDForm(true)
+          setPasswordForm(false)
+        } 
+        else if (command && command[command.length-1].includes('reset password')) {
+          setNameForm(false)
+          setLoginIDForm(false)
+          setPasswordForm(true)
+        }
+        else if(command && command[command.length-1].startsWith("current password")){
+          const newCommandIndex = command.reduceRight((acc, item, index) => {
+            if (item.includes('current password') && acc === -1) {
+              return index;
+            }
+            return acc;
+          }, -1);
+          if (newCommandIndex !== -1) {
+            const newNameCommand = command[newCommandIndex]
+            const newNameValue = newNameCommand.replace('current password', '').trim()
+            formik2.setFieldValue('currentPassword', newNameValue)
+          }
+        }
+        else if(command && command[command.length-1].startsWith("new password")){
+          const newCommandIndex = command.reduceRight((acc, item, index) => {
+            if (item.includes('new password') && acc === -1) {
+              return index;
+            }
+            return acc;
+          }, -1);
+          if (newCommandIndex !== -1) {
+            const newNameCommand = command[newCommandIndex]
+            const newNameValue = newNameCommand.replace('new password', '').trim()
+            formik2.setFieldValue('newPassword', newNameValue)
+          }
+        }
+        else if(command && command[command.length-1].startsWith("confirm password")){
+          const newCommandIndex = command.reduceRight((acc, item, index) => {
+            if (item.includes('confirm password') && acc === -1) {
+              return index;
+            }
+            return acc;
+          }, -1);
+          if (newCommandIndex !== -1) {
+            const newNameCommand = command[newCommandIndex]
+            const newNameValue = newNameCommand.replace('confirm password', '').trim()
+            formik2.setFieldValue('passwordConfirmation', newNameValue)
+          }
+        }
+        else if (command && command[command.length-1].includes('update password')) {
+          formik2.handleSubmit()
+        }
+        
+        // const setFieldValueFromCommand = (command, keyword, formik, fieldName) => {
+        //   const newCommandIndex = command.reduceRight((acc, item, index) => {
+        //     if (item.includes(keyword) && acc === -1) {
+        //       return index;
+        //     }
+        //     return acc;
+        //   }, -1);
+        
+        //   if (newCommandIndex !== -1) {
+        //     const newCommand = command[newCommandIndex];
+        //     const newValue = newCommand.replace(keyword, '').trim();
+        //     formik.setFieldValue(fieldName, newValue);
+        //   }
+        // };
+        // if (command && command[command.length - 1].startsWith('new name')) {
+        //   setFieldValueFromCommand(command, 'new name', formik3, 'name');
+        // }
+        // else if(command && command[command.length - 1].startsWith('new user id')){
+        //   setFieldValueFromCommand(command, 'new user id', formik4, 'loginID');
+        // }
+        // else if (command && command[command.length - 1].startsWith("current password")) {
+        //   setFieldValueFromCommand(command, 'current password', formik2, 'currentPassword');
+        // } 
+        // else if (command && command[command.length - 1].startsWith("new password")) {
+        //   setFieldValueFromCommand(command, 'new password', formik2, 'newPassword');
+        // } 
+        // else if (command && command[command.length - 1].startsWith("confirm password")) {
+        //   setFieldValueFromCommand(command, 'confirm password', formik2, 'passwordConfirmation');
+        // }
+        else if (command && command[command.length - 1].startsWith('new name')) {
+          const newCommandIndex = command.reduceRight((acc, item, index) => {
+            if (item.includes('new name') && acc === -1) {
+              return index;
+            }
+            return acc;
+          }, -1);
+          if (newCommandIndex !== -1) {
+            const newNameCommand = command[newCommandIndex]
+            const newNameValue = newNameCommand.replace('new name', '').trim()
+            formik3.setFieldValue('name', newNameValue)
+          }
+        } 
+        else if(command && command[command.length - 1].includes('update name')){
+          formik3.handleSubmit()
+          setReloadData(prev => !prev);
+        }
+        else if(command &&  command[command.length - 1].startsWith('new user id')){
+          const newCommandIndex = command.reduceRight((acc, item, index) => {
+            if (item.includes('new user id') && acc === -1) {
+              return index;
+            }
+            return acc;
+          }, -1);
+          if (newCommandIndex !== -1) {
+            const newUserIdCommand = command[newCommandIndex]
+            const newUserIdValue = newUserIdCommand.replace('new user id', '').trim()
+            formik4.setFieldValue('loginID', newUserIdValue)
+          }
+        }
+        else if(command && command[command.length - 1].includes('update user id')){
+          formik4.handleSubmit()
+          setReloadData(prev => !prev);
+        }
+        if(command && command[command.length - 1].includes('update password')){
+          formik2.handleSubmit()
+        }
       } catch (error) {
         console.error('Error fetching user data:', error)
       }
     }
     fetchData()
-  }, [count])
+  }, [command, reloadData])
 
   const formik2 = useFormik<IUpdatePassword>({
     initialValues: {
@@ -144,13 +271,13 @@ const Profile: React.FC = () => {
           setNameForm(false)
           setCount((preCount) => preCount + 1)
           formik3.resetForm()
-          alert('Name Successfully Changed')
+          // alert('Name Successfully Changed')
         }
         if (response.status !== 200) {
           formik3.resetForm()
           setLoading2(false)
           setNameForm(false)
-          alert('Name not changed')
+          alert('The name has not changed.')
         }
       } catch (error) {
         console.error('Error fetching user data:', error)
@@ -181,7 +308,7 @@ const Profile: React.FC = () => {
           setLoginIDForm(false)
           setCount((preCount) => preCount + 1)
           formik4.resetForm()
-          alert(data.message)
+          // alert(data.message)
         }
         if (response.status !== 200) {
           const data = await response.json()
@@ -242,7 +369,7 @@ const Profile: React.FC = () => {
                     type='submit'
                     className='btn btn-primary me-2 px-6'
                   >
-                    {!loading2 && 'Change Name'}
+                    {!loading2 && 'Update Name'}
                     {loading2 && (
                       <span className='indicator-progress' style={{display: 'block'}}>
                         Please wait...{' '}
@@ -269,6 +396,8 @@ const Profile: React.FC = () => {
               <button
                 onClick={() => {
                   setNameForm(true)
+                  setLoginIDForm(false)
+                  setPasswordForm(false)
                 }}
                 className='btn btn-light btn-active-light-primary'
               >
@@ -319,7 +448,7 @@ const Profile: React.FC = () => {
                     type='submit'
                     className='btn btn-primary me-2 px-6'
                   >
-                    {!loading2 && 'Change UserID'}
+                    {!loading2 && 'Update UserID'}
                     {loading2 && (
                       <span className='indicator-progress' style={{display: 'block'}}>
                         Please wait...{' '}
@@ -347,7 +476,9 @@ const Profile: React.FC = () => {
             >
               <button
                 onClick={() => {
+                  setNameForm(false)
                   setLoginIDForm(true)
+                  setPasswordForm(false)
                 }}
                 className='btn btn-light btn-active-light-primary'
               >
@@ -482,6 +613,8 @@ const Profile: React.FC = () => {
             >
               <button
                 onClick={() => {
+                  setNameForm(false)
+                  setLoginIDForm(false)
                   setPasswordForm(true)
                 }}
                 className='btn btn-light btn-active-light-primary'

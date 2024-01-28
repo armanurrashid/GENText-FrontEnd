@@ -1,15 +1,22 @@
-import {useState} from 'react'
+import {useEffect, useState, useRef} from 'react'
 import {Document, pdfjs} from 'react-pdf'
 import {useNavigate} from 'react-router-dom'
 import {getAuth, useAuth} from '../../modules/auth'
 import './Upload.css'
 import {URL} from '../../modules/auth/core/_requests'
-import { useSelector } from 'react-redux'
+import {useSelector} from 'react-redux'
 pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.js`
 
 const Upload: React.FC = () => {
-  // const command=useSelector((state)=>state.voicecommand);
-  const dataToPass = (fileId: string, fileName: string, numPages: string, fileSize: String, pdfLocation:string) => ({
+  // const fileInputRef = useRef<HTMLInputElement>(null)
+  const {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
+  const dataToPass = (
+    fileId: string,
+    fileName: string,
+    numPages: string,
+    fileSize: String,
+    pdfLocation: string
+  ) => ({
     key1: fileId,
     key2: fileName,
     key3: numPages,
@@ -23,6 +30,30 @@ const Upload: React.FC = () => {
   const [sameFileRequest, setSameFileRequest] = useState<number | null>(null)
   const token = getAuth()
   const {currentUser} = useAuth()
+  const [renderPage, setRenderPage] = useState(false);
+  console.log(command)
+  console.log(command[command.length - 1])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (command) {
+          const lastCommand = command[command.length - 1]
+          if (lastCommand.includes('process')) {
+            uploadFile(`${URL}/api/ocr/upload-pdf/`)
+          } else if (lastCommand.includes('browse pdf')) {
+            browseFile()
+          } else if (lastCommand.includes('continue')) {
+            uploadFile(`${URL}/api/ocr/upload-pdf/force/`)
+          } else if (lastCommand.includes('cancel file')) {
+            cancelFile()
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+    fetchData()
+  }, [command])
 
   const uploadFile = async (url) => {
     try {
@@ -57,7 +88,7 @@ const Upload: React.FC = () => {
     }
   }
 
-  const pdf2image = async (fileID,pdfLocation) => {
+  const pdf2image = async (fileID, pdfLocation) => {
     try {
       setLoading(true)
 
@@ -74,7 +105,7 @@ const Upload: React.FC = () => {
       }
 
       if (response.ok) {
-        await image2text(fileID,pdfLocation)
+        await image2text(fileID, pdfLocation)
         setLoading(false)
       }
     } catch (error) {
@@ -82,10 +113,9 @@ const Upload: React.FC = () => {
     }
   }
 
-  const image2text = async (fileID,pdfLocation) => {
+  const image2text = async (fileID, pdfLocation) => {
     try {
       setLoading(true)
-
       const response = await fetch(`${URL}/api/ocr/image2text/${fileID}/`, {
         method: 'POST',
         headers: {
@@ -116,7 +146,19 @@ const Upload: React.FC = () => {
   }
 
   const browseFile = () => {
+    setRenderPage(true)
     document.getElementById('file-input')?.click()
+  }
+
+  var myButton = document.getElementById('file-input')
+  const simulateKeyPress = ()=> {
+    if (myButton) {
+      var event = new KeyboardEvent('keypress', {
+        key: 'Enter',
+        keyCode: 13,
+      })
+      myButton.dispatchEvent(event)
+    }
   }
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -127,6 +169,10 @@ const Upload: React.FC = () => {
     } else {
       alert('Please select a PDF file.')
     }
+  }
+
+  const anc = () => {
+    console.log("cknc")
   }
 
   const cancelFile = () => {
@@ -214,15 +260,22 @@ const Upload: React.FC = () => {
           </button>
         ) : (
           <button
-            type='submit'
-            id='kt_password_reset_submit'
+            type='button'
+            id='mybutton'
             onClick={browseFile}
-            className='btn btn-primary'
+            className='btn btn-primary browsePdf'
           >
             <span className='indicator-label'>Browse PDF File</span>
           </button>
         )}
-        <input type='file' accept='.pdf' hidden id='file-input' onChange={handleFile} />
+        <input
+          type='file'
+          accept='.pdf'
+          hidden
+          id='file-input'
+          onChange={handleFile}
+        />
+        {/* <button onClick={anc} id='hiddenButton'>ss</button> */}
       </div>
     </main>
   )
