@@ -49,6 +49,7 @@ const formatTime = (inputTime) => {
 }
 
 const TablesWidget10: React.FC<{className: any; tableData: any}> = ({className, tableData}) => {
+  console.log(tableData)
   let size = "N/A"
   const dataToPass = (fileId: string, fileName: string, filePage: string, fileSize: string, fileLocation:string) => ({
     key1: fileId,

@@ -9,7 +9,7 @@ import {useDispatch} from 'react-redux'
 import {voicecommandActions} from '../../../../app/pages/store/voice-command'
 
 const itemClass = 'ms-1 ms-md-4'
-
+let lowerCaseSpokenText
 const Navbar = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -19,20 +19,23 @@ const Navbar = () => {
 
   const handleMicrophoneClick = () => {
     setMicrophoneClicked((prev) => !prev)
-
     if (!isMicrophoneClicked) {
-      // alert(isMicrophoneClicked)
       voiceRef.current = new (window.SpeechRecognition || window.webkitSpeechRecognition)()
       if (voiceRef.current) {
         voiceRef.current.lang = 'en-BD'
         voiceRef.current.interimResults = false
         voiceRef.current.continuous = true
+        // const spokenWordArray: string[] = [];
         voiceRef.current.onresult = function (event) {
           const spokenText = event.results[event.results.length - 1][0].transcript
-          const lowerCaseSpokenText = spokenText.toLowerCase()
-          dispatch(voicecommandActions.add(lowerCaseSpokenText))
+          lowerCaseSpokenText = spokenText.toLowerCase()
+          console.log(spokenText)
+          // spokenWordArray.push(lowerCaseSpokenText)
+          // console.log(spokenWordArray)
+          dispatch(voicecommandActions.addSpokenWord(lowerCaseSpokenText))
+          // dispatch(voicecommandActions.addSpokenWord(spokenWordArray))
           if (lowerCaseSpokenText.includes('profile')) {
-            navigate('/profile')
+            navigate('/profile');
           } else if (lowerCaseSpokenText.includes('dashboard')) {
             navigate('/dashboard')
           } else if (lowerCaseSpokenText.includes('history')) {
@@ -46,6 +49,7 @@ const Navbar = () => {
         }
       }
     } else if (voiceRef.current) {
+      // lowerCaseSpokenText = ''
       voiceRef.current.stop()
     }
   }

@@ -1,20 +1,22 @@
 import {FC, useState, useEffect, useRef} from 'react'
-import {Link, useLocation} from 'react-router-dom'
+import {Link, useLocation, useNavigate} from 'react-router-dom'
 import './Process.css'
 import pdf_icon from '../../../_metronic/assets/images/pdf.svg'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faPlus, faMinus} from '@fortawesome/free-solid-svg-icons'
 import '../../../../src/_metronic/partials/layout/activity-drawer/ActivityDrawer.css'
 import {getAuth} from '../../modules/auth'
-import { URL } from '../../modules/auth/core/_requests'
+import {URL} from '../../modules/auth/core/_requests'
+import {useSelector} from 'react-redux'
 
 const Process: FC = () => {
+  const navigate = useNavigate()
   const dataToPass = (
     fileId: string | null,
     fileName: string | null,
     filePage: string | null,
     fileSize: string | null,
-    fileLocation: string | null,
+    fileLocation: string | null
   ) => ({
     key1: fileId,
     key2: fileName,
@@ -34,6 +36,7 @@ const Process: FC = () => {
   let filePage: string | null = null
   let fileSize: string | null = null
   let fileLocation: string | null = null
+
   try {
     const fileState = location.state
     fileId = fileState ? fileState.key1 : null
@@ -44,11 +47,13 @@ const Process: FC = () => {
   } catch (error) {
     console.error('Error decoding URI component:', error)
   }
-
+  // console.log(fileId)
 
   const [selectedText, setSelectedText] = useState('')
   const [selectedImage, setSelectedImage] = useState('')
-  const [allImg, setAllImg] = useState([]);
+  const [allImg, setAllImg] = useState([])
+  const {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
+  console.log(command)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +67,7 @@ const Process: FC = () => {
         if (response.ok) {
           const result = await response.json()
           setData(result)
-          const imageLocations = result.map(page => page.image_location);
+          const imageLocations = result.map((page) => page.image_location)
           setAllImg(imageLocations)
           setSelectedImage(`${URL}/${imageLocations[0]}`)
           setSelectedText(result[0].text)
@@ -74,6 +79,23 @@ const Process: FC = () => {
     }
     fetchData()
   }, [])
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (command && command[command.length - 1].includes('abc')) {
+          navigate('/pdfView', {
+            state: dataToPass(fileId, fileName, filePage, fileSize, fileLocation)
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+    fetchData()
+  }, [command])
+
+  
 
   const handleImageClick = (index: number) => {
     setSelectedImage(`${URL}/${allImg[index]}`)
@@ -164,7 +186,7 @@ const Process: FC = () => {
             <div className='mx-5 d-flex text-muted fw-semibold d-block fs-6'>Page: {filePage} </div>
             <div className='mx-5 '>
               <span className='text-muted fw-semibold d-block fs-6'>
-                {fileSize? fileSize: "N/A"}
+                {fileSize ? fileSize : 'N/A'}
               </span>
             </div>
           </div>
@@ -225,7 +247,12 @@ const Process: FC = () => {
             </div>
             <div
               className='col solluclass'
-              style={{overflow: 'auto', maxHeight: '400px', whiteSpace: 'pre-line', fontFamily: 'SolaimanLipi'}}
+              style={{
+                overflow: 'auto',
+                maxHeight: '400px',
+                whiteSpace: 'pre-line',
+                fontFamily: 'SolaimanLipi',
+              }}
             >
               <p style={{color: 'black', whiteSpace: 'pre-line'}}>{selectedText}</p>
             </div>
