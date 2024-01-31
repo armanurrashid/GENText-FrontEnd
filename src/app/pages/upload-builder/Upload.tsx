@@ -9,7 +9,7 @@ pdfjs.GlobalWorkerOptions.workerSrc = `https://unpkg.com/pdfjs-dist@${pdfjs.vers
 
 const Upload: React.FC = () => {
   // const fileInputRef = useRef<HTMLInputElement>(null)
-  const {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
+  var {command} = useSelector((state: {voicecommand: {command: string[]}}) => state.voicecommand)
   const dataToPass = (
     fileId: string,
     fileName: string,
@@ -33,20 +33,36 @@ const Upload: React.FC = () => {
   const [renderPage, setRenderPage] = useState(false);
   console.log(command)
   console.log(command[command.length - 1])
+
+const commandActions = [
+  {keyword: 'process', action: () => uploadFile(`${URL}/api/ocr/upload-pdf/`)},
+  {keyword: 'browse pdf', action: () => browseFile()},
+  {keyword: 'continue', action: () => uploadFile(`${URL}/api/ocr/upload-pdf/force/`)},
+  {keyword: 'cancel file', action: () => cancelFile()}
+];
+
+function executeCommand(command) {
+    const matchingAction = commandActions.find(action => command.includes(action.keyword));
+    if (matchingAction) {
+        matchingAction.action();
+    }
+}
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (command) {
           const lastCommand = command[command.length - 1]
-          if (lastCommand.includes('process')) {
-            uploadFile(`${URL}/api/ocr/upload-pdf/`)
-          } else if (lastCommand.includes('browse pdf')) {
-            browseFile()
-          } else if (lastCommand.includes('continue')) {
-            uploadFile(`${URL}/api/ocr/upload-pdf/force/`)
-          } else if (lastCommand.includes('cancel file')) {
-            cancelFile()
-          }
+          executeCommand(lastCommand);
+          // if (lastCommand.includes('process')) {
+          //   uploadFile(`${URL}/api/ocr/upload-pdf/`)
+          // } else if (lastCommand.includes('browse pdf')) {
+          //   browseFile()
+          // } else if (lastCommand.includes('continue')) {
+          //   uploadFile(`${URL}/api/ocr/upload-pdf/force/`)
+          // } else if (lastCommand.includes('cancel file')) {
+          //   cancelFile()
+          // }
         }
       } catch (error) {
         console.error('Error fetching user data:', error)

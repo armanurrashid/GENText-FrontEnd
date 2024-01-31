@@ -69,33 +69,54 @@ const TablesWidget11: React.FC<{className: any; tableData: any}> = ({className, 
     return formattedFileName+".pdf"
   }
 
+const commandActions = [
+   {prefix: 'search', action: (command) => { setQuery(command.substr(7));}},
+   {prefix: 'open', action: (command) => { processFile(command, '/pdfView');}},
+   {prefix: 'view', action: (command) => { processFile(command, '/process');}}
+];
+
+function executeCommand(command) {
+    const matchingAction = commandActions.find(action => command.startsWith(action.prefix));
+    if (matchingAction) {
+        matchingAction.action(command);
+    }
+}
+
+  const processFile = (lastCommand, navigationPath) => {
+    const fileName = lastCommand.substr(5);
+    const fileNameWithPdf = fileName.toLowerCase() + '.pdf';
+    tableData.forEach((file, index) => {
+      const formattedName = formatFileName(file['pdf_file_name']);
+      if (formattedName.toLowerCase() === fileNameWithPdf) {
+        const size = SizeCalculator(file['total_size']);
+        navigate(navigationPath, {
+          state: dataToPass(
+            file['id'],
+            file['pdf_file_name'],
+            file['total_page'],
+            size,
+            file['file_location']
+          ),
+        });
+      }
+    });
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       console.log(command[command.length - 1])
       try {
         if (command) {
           const lastCommand = command[command.length - 1]
-          if (lastCommand.startsWith('search')) {
-            setQuery(lastCommand.substr(7))
-          } else if (lastCommand.startsWith('open')) {
-            const fileNameToOpen = lastCommand.substr(5)
-            const fileNameToOpenWithPdf = fileNameToOpen.toLowerCase() + '.pdf'
-            tableData.forEach((file, index) => {
-              const formattedName = formatFileName(file['pdf_file_name'])
-              if (formattedName.toLowerCase() === fileNameToOpenWithPdf) {
-                const pdfFize = SizeCalculator(file['total_size'])
-                navigate('/pdfView', {
-                  state: dataToPass(
-                    file['id'],
-                    file['pdf_file_name'],
-                    file['total_page'],
-                    pdfFize,
-                    file['file_location']
-                  ),
-                })
-              }
-            })
-          }
+          executeCommand(lastCommand);
+          // if (lastCommand.startsWith('search')) {
+          //   setQuery(lastCommand.substr(7))
+          // } 
+          // else if (lastCommand.startsWith('open')) {
+          //   processFile(lastCommand, '/pdfView');
+          // } else if (lastCommand.startsWith('view')) {
+          //   processFile(lastCommand, '/process');
+          // }
         }
       } catch (error) {
         console.error('Error fetching user data:', error)

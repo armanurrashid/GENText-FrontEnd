@@ -83,7 +83,7 @@ const Process: FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (command && command[command.length - 1].includes('abc')) {
+        if (command && command[command.length - 1].includes('abcd')) {
           navigate('/pdfView', {
             state: dataToPass(fileId, fileName, filePage, fileSize, fileLocation)
           });

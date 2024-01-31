@@ -11,6 +11,12 @@ import {voicecommandActions} from '../../../../app/pages/store/voice-command'
 const itemClass = 'ms-1 ms-md-4'
 let lowerCaseSpokenText
 const Navbar = () => {
+  var routes = {
+    dashboard: '/dashboard',
+    upload: '/upload',
+    history: '/history',
+    profile: '/profile',
+  }
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const {logout} = useAuth()
@@ -25,24 +31,23 @@ const Navbar = () => {
         voiceRef.current.lang = 'en-BD'
         voiceRef.current.interimResults = false
         voiceRef.current.continuous = true
-        // const spokenWordArray: string[] = [];
         voiceRef.current.onresult = function (event) {
           const spokenText = event.results[event.results.length - 1][0].transcript
           lowerCaseSpokenText = spokenText.toLowerCase()
           console.log(spokenText)
-          // spokenWordArray.push(lowerCaseSpokenText)
-          // console.log(spokenWordArray)
           dispatch(voicecommandActions.addSpokenWord(lowerCaseSpokenText))
-          // dispatch(voicecommandActions.addSpokenWord(spokenWordArray))
-          if (lowerCaseSpokenText.includes('profile')) {
-            navigate('/profile');
-          } else if (lowerCaseSpokenText.includes('dashboard')) {
-            navigate('/dashboard')
-          } else if (lowerCaseSpokenText.includes('history')) {
-            navigate('/history')
-          } else if (lowerCaseSpokenText.includes('upload')) {
-            navigate('/upload')
+          if (routes.hasOwnProperty(lowerCaseSpokenText)) {
+            navigate(routes[lowerCaseSpokenText])
           }
+          // if (lowerCaseSpokenText.includes('profile')) {
+          //   navigate('/profile');
+          // } else if (lowerCaseSpokenText.includes('dashboard')) {
+          //   navigate('/dashboard')
+          // } else if (lowerCaseSpokenText.includes('history')) {
+          //   navigate('/history')
+          // } else if (lowerCaseSpokenText.includes('upload')) {
+          //   navigate('/upload')
+          // }
         }
         if (voiceRef.current) {
           voiceRef.current.start()

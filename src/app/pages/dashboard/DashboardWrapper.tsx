@@ -45,6 +45,7 @@ const DashboardWrapper: FC = () => {
   const [tableData,setTableData] =useState(0)
   const [total,setTotal] =useState(0)
 
+  
   useEffect(() => {
     const fetchData = async () => {
       try {

@@ -53,6 +53,73 @@ const Profile: React.FC = () => {
   const [reloadData, setReloadData] = useState(false);
   console.log(command)
   console.log(command[command.length - 1])
+
+  const commandActions = [
+    {keyword: 'cancel', action: () => {
+      formik3.resetForm();
+      setNameForm(false); 
+      formik4.resetForm();
+      setLoginIDForm(false);
+      formik2.resetForm();
+      setPasswordForm(false);
+    }},
+    {keyword: 'change name', action: () => {
+      setNameForm(true);
+      setLoginIDForm(false);
+      setPasswordForm(false);
+    }},
+    {keyword: 'change user id', action: () => {
+      setNameForm(false);
+      setLoginIDForm(true);
+      setPasswordForm(false);
+    }},
+    {keyword: 'reset password', action: () => {
+      setNameForm(false);
+      setLoginIDForm(false);
+      setPasswordForm(true);
+    }}
+];
+
+const commandRoutes = [
+  { prefix: 'update password', action: () => { formik2.handleSubmit(); } },
+  { prefix: 'new name', action: () => { setFieldValueFromCommand(command, 'new name', formik3, 'name'); } },
+  { prefix: 'new user id', action: () => { setFieldValueFromCommand(command, 'new user id', formik4, 'loginID'); } },
+  { prefix: 'current password', action: () => { setFieldValueFromCommand(command, 'current password', formik2, 'currentPassword'); } },
+  { prefix: 'new password', action: () => { setFieldValueFromCommand(command, 'new password', formik2, 'newPassword'); } },
+  { prefix: 'confirm password', action: () => { setFieldValueFromCommand(command, 'confirm password', formik2, 'passwordConfirmation'); } },
+  { prefix: 'update name', action: () => { formik3.handleSubmit(); setReloadData(prev => !prev); } },
+  { prefix: 'update user id', action: () => { formik4.handleSubmit(); setReloadData(prev => !prev); } },
+];
+
+  function executeCommand(command) {
+    const matchingAction = commandActions.find(action => command[command.length - 1].includes(action.keyword));
+    if (matchingAction) {
+        matchingAction.action();
+    }
+}
+
+function processCommand(command) {
+  const matchingRoute = commandRoutes.find(route => command[command.length - 1].includes(route.prefix));
+  if (matchingRoute) {
+      matchingRoute.action();
+  }
+}
+
+  const setFieldValueFromCommand = (command, keyword, formik, fieldName) => {
+    const newCommandIndex = command.reduceRight((acc, item, index) => {
+      if (item.includes(keyword) && acc === -1) {
+        return index;
+      }
+      return acc;
+    }, -1);
+  
+    if (newCommandIndex !== -1) {
+      const newCommand = command[newCommandIndex];
+      const newValue = newCommand.replace(keyword, '').trim();
+      formik.setFieldValue(fieldName, newValue);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -70,87 +137,80 @@ const Profile: React.FC = () => {
         if (response.status !== 200) {
           alert('Error Fetching Data')
         }
-        if(command && command[command.length - 1].includes('cancel')) {
-          formik3.resetForm()
-          setNameForm(false)
-          formik4.resetForm()
-          setLoginIDForm(false)
-          formik2.resetForm()
-          setPasswordForm(false)
-        }
-        else if (command && command[command.length - 1].includes('change name')) {
-          setNameForm(true)
-          setLoginIDForm(false)
-          setPasswordForm(false)
-        } 
-        else if (command && command[command.length - 1].includes('change user id')) {
-          setNameForm(false)
-          setLoginIDForm(true)
-          setPasswordForm(false)
-        } 
-        else if (command && command[command.length-1].includes('reset password')) {
-          setNameForm(false)
-          setLoginIDForm(false)
-          setPasswordForm(true)
-        }
-        else if(command && command[command.length-1].startsWith("current password")){
-          const newCommandIndex = command.reduceRight((acc, item, index) => {
-            if (item.includes('current password') && acc === -1) {
-              return index;
-            }
-            return acc;
-          }, -1);
-          if (newCommandIndex !== -1) {
-            const newNameCommand = command[newCommandIndex]
-            const newNameValue = newNameCommand.replace('current password', '').trim()
-            formik2.setFieldValue('currentPassword', newNameValue)
-          }
-        }
-        else if(command && command[command.length-1].startsWith("new password")){
-          const newCommandIndex = command.reduceRight((acc, item, index) => {
-            if (item.includes('new password') && acc === -1) {
-              return index;
-            }
-            return acc;
-          }, -1);
-          if (newCommandIndex !== -1) {
-            const newNameCommand = command[newCommandIndex]
-            const newNameValue = newNameCommand.replace('new password', '').trim()
-            formik2.setFieldValue('newPassword', newNameValue)
-          }
-        }
-        else if(command && command[command.length-1].startsWith("confirm password")){
-          const newCommandIndex = command.reduceRight((acc, item, index) => {
-            if (item.includes('confirm password') && acc === -1) {
-              return index;
-            }
-            return acc;
-          }, -1);
-          if (newCommandIndex !== -1) {
-            const newNameCommand = command[newCommandIndex]
-            const newNameValue = newNameCommand.replace('confirm password', '').trim()
-            formik2.setFieldValue('passwordConfirmation', newNameValue)
-          }
-        }
-        else if (command && command[command.length-1].includes('update password')) {
-          formik2.handleSubmit()
-        }
-        
-        // const setFieldValueFromCommand = (command, keyword, formik, fieldName) => {
+        executeCommand(command);
+        processCommand(command);
+        // if(command && command[command.length - 1].includes('cancel')) {
+        //   formik3.resetForm()
+        //   setNameForm(false)
+        //   formik4.resetForm()
+        //   setLoginIDForm(false)
+        //   formik2.resetForm()
+        //   setPasswordForm(false)
+        // }
+        // else if (command && command[command.length - 1].includes('change name')) {
+        //   setNameForm(true)
+        //   setLoginIDForm(false)
+        //   setPasswordForm(false)
+        // } 
+        // else if (command && command[command.length - 1].includes('change user id')) {
+        //   setNameForm(false)
+        //   setLoginIDForm(true)
+        //   setPasswordForm(false)
+        // } 
+        // else if (command && command[command.length-1].includes('reset password')) {
+        //   setNameForm(false)
+        //   setLoginIDForm(false)
+        //   setPasswordForm(true)
+        // }
+
+/* aubfa */
+
+        // else if(command && command[command.length-1].startsWith("current password")){
         //   const newCommandIndex = command.reduceRight((acc, item, index) => {
-        //     if (item.includes(keyword) && acc === -1) {
+        //     if (item.includes('current password') && acc === -1) {
         //       return index;
         //     }
         //     return acc;
         //   }, -1);
-        
         //   if (newCommandIndex !== -1) {
-        //     const newCommand = command[newCommandIndex];
-        //     const newValue = newCommand.replace(keyword, '').trim();
-        //     formik.setFieldValue(fieldName, newValue);
+        //     const newNameCommand = command[newCommandIndex]
+        //     const newNameValue = newNameCommand.replace('current password', '').trim()
+        //     formik2.setFieldValue('currentPassword', newNameValue)
         //   }
-        // };
-        // if (command && command[command.length - 1].startsWith('new name')) {
+        // }
+        // else if(command && command[command.length-1].startsWith("new password")){
+        //   const newCommandIndex = command.reduceRight((acc, item, index) => {
+        //     if (item.includes('new password') && acc === -1) {
+        //       return index;
+        //     }
+        //     return acc;
+        //   }, -1);
+        //   if (newCommandIndex !== -1) {
+        //     const newNameCommand = command[newCommandIndex]
+        //     const newNameValue = newNameCommand.replace('new password', '').trim()
+        //     formik2.setFieldValue('newPassword', newNameValue)
+        //   }
+        // }
+        // else if(command && command[command.length-1].startsWith("confirm password")){
+        //   const newCommandIndex = command.reduceRight((acc, item, index) => {
+        //     if (item.includes('confirm password') && acc === -1) {
+        //       return index;
+        //     }
+        //     return acc;
+        //   }, -1);
+        //   if (newCommandIndex !== -1) {
+        //     const newNameCommand = command[newCommandIndex]
+        //     const newNameValue = newNameCommand.replace('confirm password', '').trim()
+        //     formik2.setFieldValue('passwordConfirmation', newNameValue)
+        //   }
+        // }
+
+/*asfsaf */
+        
+        // if (command && command[command.length-1].includes('update password')) {
+        //   formik2.handleSubmit()
+        // }
+        // else if (command && command[command.length - 1].startsWith('new name')) {
         //   setFieldValueFromCommand(command, 'new name', formik3, 'name');
         // }
         // else if(command && command[command.length - 1].startsWith('new user id')){
@@ -165,43 +225,43 @@ const Profile: React.FC = () => {
         // else if (command && command[command.length - 1].startsWith("confirm password")) {
         //   setFieldValueFromCommand(command, 'confirm password', formik2, 'passwordConfirmation');
         // }
-        else if (command && command[command.length - 1].startsWith('new name')) {
-          const newCommandIndex = command.reduceRight((acc, item, index) => {
-            if (item.includes('new name') && acc === -1) {
-              return index;
-            }
-            return acc;
-          }, -1);
-          if (newCommandIndex !== -1) {
-            const newNameCommand = command[newCommandIndex]
-            const newNameValue = newNameCommand.replace('new name', '').trim()
-            formik3.setFieldValue('name', newNameValue)
-          }
-        } 
-        else if(command && command[command.length - 1].includes('update name')){
-          formik3.handleSubmit()
-          setReloadData(prev => !prev);
-        }
-        else if(command &&  command[command.length - 1].startsWith('new user id')){
-          const newCommandIndex = command.reduceRight((acc, item, index) => {
-            if (item.includes('new user id') && acc === -1) {
-              return index;
-            }
-            return acc;
-          }, -1);
-          if (newCommandIndex !== -1) {
-            const newUserIdCommand = command[newCommandIndex]
-            const newUserIdValue = newUserIdCommand.replace('new user id', '').trim()
-            formik4.setFieldValue('loginID', newUserIdValue)
-          }
-        }
-        else if(command && command[command.length - 1].includes('update user id')){
-          formik4.handleSubmit()
-          setReloadData(prev => !prev);
-        }
-        if(command && command[command.length - 1].includes('update password')){
-          formik2.handleSubmit()
-        }
+        // else if (command && command[command.length - 1].startsWith('new name')) {
+        //   const newCommandIndex = command.reduceRight((acc, item, index) => {
+        //     if (item.includes('new name') && acc === -1) {
+        //       return index;
+        //     }
+        //     return acc;
+        //   }, -1);
+        //   if (newCommandIndex !== -1) {
+        //     const newNameCommand = command[newCommandIndex]
+        //     const newNameValue = newNameCommand.replace('new name', '').trim()
+        //     formik3.setFieldValue('name', newNameValue)
+        //   }
+        // } 
+        // else if(command && command[command.length - 1].includes('update name')){
+        //   formik3.handleSubmit()
+        //   setReloadData(prev => !prev);
+        // }
+        // else if(command &&  command[command.length - 1].startsWith('new user id')){
+        //   const newCommandIndex = command.reduceRight((acc, item, index) => {
+        //     if (item.includes('new user id') && acc === -1) {
+        //       return index;
+        //     }
+        //     return acc;
+        //   }, -1);
+        //   if (newCommandIndex !== -1) {
+        //     const newUserIdCommand = command[newCommandIndex]
+        //     const newUserIdValue = newUserIdCommand.replace('new user id', '').trim()
+        //     formik4.setFieldValue('loginID', newUserIdValue)
+        //   }
+        // }
+        // else if(command && command[command.length - 1].includes('update user id')){
+        //   formik4.handleSubmit()
+        //   setReloadData(prev => !prev);
+        // }
+        // if(command && command[command.length - 1].includes('update password')){
+        //   formik2.handleSubmit()
+        // }
       } catch (error) {
         console.error('Error fetching user data:', error)
       }
